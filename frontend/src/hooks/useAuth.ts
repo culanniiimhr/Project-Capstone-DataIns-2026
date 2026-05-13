@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import Cookies from "js-cookie";
-import api from "@/lib/api";
+import api from "../lib/api";
 
 interface User {
   email: string;
@@ -15,11 +15,11 @@ interface AuthState {
   fetchMe: () => Promise<void>;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthState>((set: any) => ({
   user: null,
   isLoading: false,
 
-  login: async (email, password) => {
+  login: async (email: string, password: string) => {
     set({ isLoading: true });
     const form = new FormData();
     form.append("username", email);
