@@ -1,12 +1,56 @@
-import React from 'react';
+import { useEffect } from "react";
+import {
+  Routes,
+  Route,
+  Navigate,
+  useNavigationType,
+  useLocation,
+} from "react-router-dom";
+import Login from "./pages/Login";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
+  const action = useNavigationType();
+  const location = useLocation();
+  const pathname = location.pathname;
+
+  useEffect(() => {
+    if (action !== "POP") {
+      window.scrollTo(0, 0);
+    }
+  }, [action, pathname]);
+
+  useEffect(() => {
+    let title = "";
+    let metaDescription = "";
+
+    switch (pathname) {
+      case "/":
+        title = "";
+        metaDescription = "";
+        break;
+    }
+
+    if (title) {
+      document.title = title;
+    }
+
+    if (metaDescription) {
+      const metaDescriptionTag: HTMLMetaElement | null = document.querySelector(
+        'head > meta[name="description"]'
+      );
+      if (metaDescriptionTag) {
+        metaDescriptionTag.content = metaDescription;
+      }
+    }
+  }, [pathname]);
+
   return (
-    <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <h1>🚀 Datains React is LIVE!</h1>
-      <p>Nginx, Docker, dan React sudah sinkron.</p>
-    </div>
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/" element={<Navigate to="/login" replace />} />
+    </Routes>
   );
 }
-
 export default App;
