@@ -1,5 +1,12 @@
+# Kredensial & Framework Backend/Frontend
 .env
 node_modules/
+.cache/
+
+# Cache Python Python
 __pycache__/
 *.pyc
-.cache/
+
+# Khusus Modul ETL & Data Generator 
+etl-generator/env_fix/
+etl-generator/raw_data/
