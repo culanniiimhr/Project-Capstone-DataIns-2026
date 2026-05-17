@@ -1,11 +1,18 @@
-import React from 'react';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import DashboardUtama from "./pages/DashboardUtama";
+import DashboardAkademik from "./pages/DashboardAkademik";
+import DashboardPimpinan from "./pages/DashboardPimpinan";
 
 function App() {
   return (
-    <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <h1>🚀 Datains React is LIVE!</h1>
-      <p>Nginx, Docker, dan React sudah sinkron.</p>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<DashboardUtama />} />
+        <Route path="/akademik" element={<DashboardAkademik />} />
+        <Route path="/pimpinan" element={<DashboardPimpinan />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
