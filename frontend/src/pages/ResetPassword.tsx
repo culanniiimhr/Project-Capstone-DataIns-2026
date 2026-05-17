@@ -1,5 +1,11 @@
 import { FunctionComponent, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Logo from "../assets/Logo.png";
+import Wave3 from "../assets/Wave3.png";
+import Wave4 from "../assets/Wave4.png";
+import SuccessIcon from "../assets/Success.png";
+import ResetPasswordIcon from "../assets/ResetPassword.png";
+import { RiLockPasswordLine } from "react-icons/ri";
 
 const ResetPassword: FunctionComponent = () => {
   const [newPassword, setNewPassword] = useState("");
@@ -35,7 +41,7 @@ const ResetPassword: FunctionComponent = () => {
           {/* Logo */}
           <div className="flex items-center gap-3">
             <img
-              src="/assets/Logo@2x.png"
+              src={Logo}
               alt="logo"
               className="w-[36px] h-[36px]"
             />
@@ -54,7 +60,7 @@ const ResetPassword: FunctionComponent = () => {
           {/* Illustration */}
           <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center">
             <img
-              src="/assets/ResetPassword.png"
+              src={ResetPasswordIcon}
               alt="reset password"
               className="w-[420px] max-w-full object-contain mb-5"
             />
@@ -73,13 +79,13 @@ const ResetPassword: FunctionComponent = () => {
             <img
                 className="absolute top-[-500px] left-[-40px] w-[650px] h-[680px] shrink-0"
                 alt=""
-                src="/assets/Vector5.png"
+                src={Wave3}
             />
             <img
                 className="absolute top-[-330px] left-[-40px] w-[680px] h-[410px] shrink-0"
                 loading="lazy"
                 alt=""
-                src="/assets/Vector6.png"
+                src={Wave4}
             />
           </div>
 
@@ -96,11 +102,7 @@ const ResetPassword: FunctionComponent = () => {
           {!isSuccess && (
             <div className="flex justify-center mb-5">
                 <div className="w-[36px] h-[36px] rounded-full bg-[#dce7ff] flex items-center justify-center">
-                <img
-                    src="/assets/Lock.png"
-                    alt=""
-                    className="w-8 h-8"
-                />
+                <RiLockPasswordLine className="w-4 h-4 text-[#1d5be3]" />
                 </div>
             </div>
             )}
@@ -168,7 +170,7 @@ const ResetPassword: FunctionComponent = () => {
                 {/* Success Icon */}
                 <div className="flex justify-center mb-6">
                     <img
-                        src="/assets/Success.png"
+                        src={SuccessIcon}
                         alt="success"
                         className="w-[72px] h-[72px] object-contain"
                     />

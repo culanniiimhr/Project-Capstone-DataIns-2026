@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import Login from "./pages/Login";
 import ResetPassword from "./pages/ResetPassword";
+import DashboardIKU from "./pages/DashboardIKU";
 
 function App() {
   const action = useNavigationType();
@@ -50,6 +51,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="/dashboard/iku" element={<DashboardIKU />} />
     </Routes>
   );
 }
