@@ -1,4 +1,4 @@
-import Logo from "../assets/Logo.png";
+import Layout from "../components/Layout";
 import { FunctionComponent } from "react";
 import { FiAlertTriangle, FiHome, FiInfo } from "react-icons/fi";
 import { LuGraduationCap, LuSparkles } from "react-icons/lu";
@@ -51,93 +51,6 @@ const EmbedBox: FunctionComponent<EmbedProps> = ({
         )
       )}
     </div>
-  );
-};
-
-const Sidebar = () => {
-  const menu = [
-    { icon: <FiHome size={20} />, label: "Dashboard Utama", active: false },
-    { icon: <FaRegUser size={20} />, label: "Pimpinan", active: false },
-    { icon: <LuGraduationCap size={20} />, label: "Akademik", active: false },
-    { icon: <TbDeviceDesktopAnalytics size={20} />, label: "Monitoring IKU", active: true },
-    { icon: <IoSettingsOutline size={20} />, label: "Manajemen Sistem", active: false },
-  ];
-
-  return (
-    <aside className="fixed left-0 top-0 z-20 h-screen w-[200px] bg-white px-[20px] py-[33px]">
-      <div className="flex items-center gap-[14px]">
-        <div className="mb-11 flex items-center gap-3">
-          <img src={Logo} alt="logo" className="h-[36px] w-[36px]" />
-
-          <div className="flex flex-1 flex-col items-start px-0 pb-0 pt-[0px]">
-            <div className="flex flex-col items-start justify-center self-stretch">
-              <h2 className="m-0 text-[20px] font-semibold leading-none text-black">
-                Satu Data
-              </h2>
-
-              <div className="mt-1 text-[9px] font-medium tracking-[1px] text-black">
-                PERGURUAN TINGGI
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <nav className="mt-[20px] flex flex-col gap-[3px]">
-        {menu.map((item) => (
-          <div
-            key={item.label}
-            className={`flex h-[60px] items-center gap-[16px] rounded-[8px] px-[14px] text-[14px] font-medium ${
-              item.active ? "bg-[#155EEF] text-white" : "text-[#111827]"
-            }`}
-          >
-            <div className="flex items-center justify-center">{item.icon}</div>
-            <span>{item.label}</span>
-          </div>
-        ))}
-      </nav>
-    </aside>
-  );
-};
-
-const Navbar = () => {
-  return (
-    <header className="flex h-[96px] items-start justify-between px-[17px] pt-[22px]">
-      <h1 className="text-[24px] font-semibold leading-none text-[#0B3478]">
-        Dashboard Monitoring IKU
-      </h1>
-
-      <div className="flex items-start gap-[10px]">
-        <div className="w-[255px]">
-          <div className="mb-[6px] text-[16px] font-medium leading-[18px] text-[#111827]">
-            Tahun Akademik
-          </div>
-          <div className="flex h-[43px] items-center justify-between rounded-[8px] bg-white px-[14px] text-[14px] font-medium text-[#C5CBD5]">
-            <span>Pilih tahun akademik</span>
-            <span className="text-[20px]">⌄</span>
-          </div>
-        </div>
-
-        <div className="w-[207px]">
-          <div className="mb-[6px] text-[16px] font-medium leading-[18px] text-[#111827]">
-            Semester
-          </div>
-          <div className="flex h-[43px] items-center justify-between rounded-[8px] bg-white px-[14px] text-[14px] font-medium text-[#C5CBD5]">
-            <span>Pilih semester</span>
-            <span className="text-[20px]">⌄</span>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-[15px] pt-[27px]">
-          <FaRegBell className="h-5 w-5 text-[#111827]" />
-          <FaRegCircleUser className="h-6 w-6 text-[#155EEF]" />
-          <div className="w-[74px] text-[12px] font-medium leading-[14px] text-[#111827]">
-            <div>Pimpinan</div>
-            <div className="font-semibold text-[#0B3478]">Rektor</div>
-          </div>
-        </div>
-      </div>
-    </header>
   );
 };
 
@@ -289,119 +202,114 @@ const DashboardIKU: FunctionComponent<DashboardIKUProps> = ({
   perbandinganUrl,
 }) => {
   return (
-    <div className="min-h-screen bg-[#EAF2FF] font-['SF_Pro',Inter,Arial,sans-serif]">
-      <Sidebar />
+     <Layout
+        title="Dashboard Monitoring IKU"
+        active="Monitoring IKU"
+      >
+        <section className="grid grid-cols-4 gap-[12px]">
+          <EmbedBox
+            src={kpiCapaianUrl}
+            title="KPI Capaian IKU Institusi"
+            className="h-[102px]"
+          >
+            <KpiIKUPlaceholder
+              icon={<TfiTarget className="h-9 w-9" />}
+              title="Capaian IKU Institusi"
+              value="76,8%"
+              change="4,35 dari semester lalu"
+              description="Total Capaian 23 dari 30 Indikator"
+              tone="blue"
+            />
+          </EmbedBox>
 
-      <main className="min-h-screen ml-[240px]">
-        <Navbar />
+          <EmbedBox
+            src={kpiTargetUrl}
+            title="KPI Target Tahunan"
+            className="h-[102px]"
+          >
+            <KpiIKUPlaceholder
+              icon={<TbTargetArrow className="h-8 w-8" />}
+              title="Target Tahunan"
+              value="85,0%"
+              change="Target akhir tahun"
+              description="Sisa 8,2% untuk mencapai target"
+              tone="yellow"
+            />
+          </EmbedBox>
 
-        <div className="px-[16px] pb-[28px]">
-          <section className="grid grid-cols-4 gap-[12px]">
-            <EmbedBox
-              src={kpiCapaianUrl}
-              title="KPI Capaian IKU Institusi"
-              className="h-[102px]"
-            >
-              <KpiIKUPlaceholder
-                icon={<TfiTarget className="h-9 w-9" />}
-                title="Capaian IKU Institusi"
-                value="76,8%"
-                change="4,35 dari semester lalu"
-                description="Total Capaian 23 dari 30 Indikator"
-                tone="blue"
-              />
-            </EmbedBox>
+          <EmbedBox
+            src={kpiTercapaiUrl}
+            title="KPI IKU Tercapai"
+            className="h-[102px]"
+          >
+            <KpiIKUPlaceholder
+              icon={<RiMedalLine className="h-8 w-8" />}
+              title="IKU Tercapai"
+              value="15"
+              change="50% dari total indikator"
+              description="IKU tercapai atau melebihi target"
+              tone="green"
+            />
+          </EmbedBox>
 
-            <EmbedBox
-              src={kpiTargetUrl}
-              title="KPI Target Tahunan"
-              className="h-[102px]"
-            >
-              <KpiIKUPlaceholder
-                icon={<TbTargetArrow className="h-8 w-8" />}
-                title="Target Tahunan"
-                value="85,0%"
-                change="Target akhir tahun"
-                description="Sisa 8,2% untuk mencapai target"
-                tone="yellow"
-              />
-            </EmbedBox>
+          <EmbedBox
+            src={kpiPerhatianUrl}
+            title="KPI IKU Perlu Perhatian"
+            className="h-[102px]"
+          >
+            <KpiIKUPlaceholder
+              icon={<FiAlertTriangle className="h-8 w-8" />}
+              title="IKU Perlu Perhatian"
+              value="85,0%"
+              change="Target akhir tahun"
+              description="Sisa 8,2% untuk mencapai target"
+              tone="red"
+            />
+          </EmbedBox>
+        </section>
 
-            <EmbedBox
-              src={kpiTercapaiUrl}
-              title="KPI IKU Tercapai"
-              className="h-[102px]"
-            >
-              <KpiIKUPlaceholder
-                icon={<RiMedalLine className="h-8 w-8" />}
-                title="IKU Tercapai"
-                value="15"
-                change="50% dari total indikator"
-                description="IKU tercapai atau melebihi target"
-                tone="green"
-              />
-            </EmbedBox>
+        <section className="mt-[10px] grid grid-cols-[1fr_1fr_200px] gap-[10px]">
+          <EmbedBox
+            src={trendIkuUrl}
+            title="Tren Capaian IKU Institusi"
+            className="h-[300px]"
+          >
+            <ChartFallback title="Tren Capaian IKU Institusi" />
+          </EmbedBox>
 
-            <EmbedBox
-              src={kpiPerhatianUrl}
-              title="KPI IKU Perlu Perhatian"
-              className="h-[102px]"
-            >
-              <KpiIKUPlaceholder
-                icon={<FiAlertTriangle className="h-8 w-8" />}
-                title="IKU Perlu Perhatian"
-                value="85,0%"
-                change="Target akhir tahun"
-                description="Sisa 8,2% untuk mencapai target"
-                tone="red"
-              />
-            </EmbedBox>
-          </section>
+          <EmbedBox
+            src={perspektifIkuUrl}
+            title="Capaian IKU per Perspektif"
+            className="h-[300px]"
+          >
+            <ChartFallback title="Capaian IKU per Perspektif" />
+          </EmbedBox>
 
-          <section className="mt-[10px] grid grid-cols-[1fr_1fr_200px] gap-[10px]">
-            <EmbedBox
-              src={trendIkuUrl}
-              title="Tren Capaian IKU Institusi"
-              className="h-[300px]"
-            >
-              <ChartFallback title="Tren Capaian IKU Institusi" />
-            </EmbedBox>
+          <InsightOtomatis />
+        </section>
 
-            <EmbedBox
-              src={perspektifIkuUrl}
-              title="Capaian IKU per Perspektif"
-              className="h-[300px]"
-            >
-              <ChartFallback title="Capaian IKU per Perspektif" />
-            </EmbedBox>
+        <section className="mt-[10px] grid grid-cols-[1.48fr_1fr] gap-[10px]">
+          <EmbedBox
+            src={indikatorTableUrl}
+            title="Capaian per Indikator Kinerja Utama"
+            className="h-[308px]"
+          >
+            <ChartFallback title="Capaian per Indikator Kinerja Utama" />
+          </EmbedBox>
 
-            <InsightOtomatis />
-          </section>
-
-          <section className="mt-[10px] grid grid-cols-[1.48fr_1fr] gap-[10px]">
-            <EmbedBox
-              src={indikatorTableUrl}
-              title="Capaian per Indikator Kinerja Utama"
-              className="h-[308px]"
-            >
-              <ChartFallback title="Capaian per Indikator Kinerja Utama" />
-            </EmbedBox>
-
-            <EmbedBox
-              src={perbandinganUrl}
-              title="Perbandingan Capaian"
-              className="h-[308px]"
-            >
-              <ChartFallback title="Perbandingan Capaian" />
-            </EmbedBox>
-          </section>
-        </div>
+          <EmbedBox
+            src={perbandinganUrl}
+            title="Perbandingan Capaian"
+            className="h-[308px]"
+          >
+            <ChartFallback title="Perbandingan Capaian" />
+          </EmbedBox>
+        </section>
 
         <button className="fixed bottom-[30px] right-[31px] flex h-[54px] w-[54px] items-center justify-center rounded-[9px] bg-[#155EEF] text-[25px] text-white shadow-lg">
           <VscHubot className="h-10 w-10 text-white" />
         </button>
-      </main>
-    </div>
+      </Layout>
   );
 };
 
