@@ -1,0 +1,62 @@
+nidn,nama_dosen,email_instansi,jenis_kelamin,id_prodi,jabatan,status_kepegawaian,asal_daerah,id_univ
+60000000,"Dt. Darsirah Aryani, S.Pd","dt..darsirah.aryani,.s.pd@univ.ac.id",L,PRODI11,Asisten Ahli,Dosen Tetap,Aceh,2
+60000001,Samiah Rahayu,samiah.rahayu@univ.ac.id,L,PRODI18,Asisten Ahli,Dosen Tetap,Kalimantan Selatan,2
+60000002,Lutfan Wijayanti,lutfan.wijayanti@univ.ac.id,L,PRODI33,Lektor,Dosen Tetap,Kalimantan Selatan,2
+60000004,Nugraha Salahudin,nugraha.salahudin@univ.ac.id,L,PRODI27,Lektor,Dosen Tetap,Nusa Tenggara Timur,2
+60000009,Tgk. Putri Thamrin,tgk..putri.thamrin@univ.ac.id,P,PRODI11,Guru Besar,Dosen Tetap,Kepulauan Riau,2
+60000010,"Rina Lazuardi, S.E.I","rina.lazuardi,.s.e.i@univ.ac.id",L,PRODI23,Guru Besar,Dosen Tetap,Sulawesi Tenggara,2
+60000011,Almira Dongoran,almira.dongoran@univ.ac.id,L,PRODI25,Guru Besar,Dosen Tetap,Sulawesi Tengah,2
+60000013,Gandi Purnawati,gandi.purnawati@univ.ac.id,L,PRODI10,Lektor Kepala,Dosen Tetap,Nusa Tenggara Timur,1
+60000014,H. Prima Hastuti,h..prima.hastuti@univ.ac.id,L,PRODI34,Lektor,Dosen Tetap,Bali,2
+60000021,Ir. Lulut Hassanah,ir..lulut.hassanah@univ.ac.id,P,PRODI11,Asisten Ahli,Dosen Tetap,Nusa Tenggara Barat,2
+60000022,Rini Nurdiyanti,rini.nurdiyanti@univ.ac.id,P,PRODI34,Lektor,Dosen Tetap,Bengkulu,2
+60000024,Cinta Irawan,cinta.irawan@univ.ac.id,L,PRODI07,Lektor,Dosen Tetap,Bali,2
+60000025,"Yessi Haryanti, S.I.Kom","yessi.haryanti,.s.i.kom@univ.ac.id",L,PRODI32,Lektor,Dosen Tetap,Maluku Utara,2
+60000026,T. Panji Kusumo,t..panji.kusumo@univ.ac.id,L,PRODI21,Lektor,Dosen Tetap,Sulawesi Utara,2
+60000028,Drs. Putri Nasyiah,drs..putri.nasyiah@univ.ac.id,L,PRODI14,Guru Besar,Dosen Tetap,Jawa Tengah,2
+60000031,"drg. Puspa Pratiwi, S.Kom","drg..puspa.pratiwi,.s.kom@univ.ac.id",P,PRODI34,Lektor Kepala,Dosen Tetap,Jawa Barat,2
+60000032,Eluh Yolanda,eluh.yolanda@univ.ac.id,L,PRODI36,Guru Besar,Dosen Tetap,Sumatera Barat,2
+60000033,"KH. Daniswara Kusmawati, M.TI.","kh..daniswara.kusmawati,.m.ti.@univ.ac.id",L,PRODI27,Lektor,Dosen Tetap,Aceh,2
+60000034,"Daryani Firmansyah, S.Psi","daryani.firmansyah,.s.psi@univ.ac.id",L,PRODI09,Lektor Kepala,Dosen Tetap,Sulawesi Barat,1
+60000035,Karya Najmudin,karya.najmudin@univ.ac.id,P,PRODI18,Lektor,Dosen Tetap,Gorontalo,2
+60000036,"Tedi Mahendra, S.Pd","tedi.mahendra,.s.pd@univ.ac.id",P,PRODI36,Lektor,Dosen Tetap,Sulawesi Utara,2
+60000037,"Tari Rahayu, S.Pt","tari.rahayu,.s.pt@univ.ac.id",L,PRODI37,Guru Besar,Dosen Tetap,Kalimantan Selatan,2
+60000039,Gaman Oktaviani,gaman.oktaviani@univ.ac.id,P,PRODI04,Lektor Kepala,Dosen Tetap,Sulawesi Selatan,1
+60000042,Lala Natsir,lala.natsir@univ.ac.id,P,PRODI07,Lektor Kepala,Dosen Tetap,Papua,2
+60000043,Nugraha Saputra,nugraha.saputra@univ.ac.id,L,PRODI34,Lektor,Dosen Tetap,Banten,2
+60000045,"dr. Lintang Hidayanto, S.IP","dr..lintang.hidayanto,.s.ip@univ.ac.id",L,PRODI29,Lektor Kepala,Dosen Tetap,Bali,2
+60000046,Siska Pertiwi,siska.pertiwi@univ.ac.id,L,PRODI29,Lektor Kepala,Dosen Tetap,Kepulauan Riau,2
+60000047,Hj. Laila Anggriawan,hj..laila.anggriawan@univ.ac.id,L,PRODI33,Guru Besar,Dosen Tetap,Kalimantan Utara,2
+60000048,Puti Amelia Setiawan,puti.amelia.setiawan@univ.ac.id,L,PRODI18,Lektor,Dosen Tetap,Nusa Tenggara Barat,2
+60000050,"drg. Rendy Melani, S.H.","drg..rendy.melani,.s.h.@univ.ac.id",P,PRODI25,Asisten Ahli,Dosen Tetap,Sumatera Barat,2
+60000051,Malik Sudiati,malik.sudiati@univ.ac.id,P,PRODI07,Lektor,Dosen Tetap,Aceh,2
+60000052,"T. Harjo Sihotang, M.Ak","t..harjo.sihotang,.m.ak@univ.ac.id",P,PRODI09,Asisten Ahli,Dosen Tetap,Maluku,1
+60000053,Arta Mayasari,arta.mayasari@univ.ac.id,P,PRODI11,Guru Besar,Dosen Tetap,Gorontalo,2
+60000054,"Tedi Siregar, S.Pd","tedi.siregar,.s.pd@univ.ac.id",P,PRODI33,Lektor,Dosen Tetap,Maluku,2
+60000055,Kuncara Laksmiwati,kuncara.laksmiwati@univ.ac.id,P,PRODI23,Lektor Kepala,Dosen Tetap,Jawa Tengah,2
+60000056,drg. Zalindra Rahimah,drg..zalindra.rahimah@univ.ac.id,L,PRODI37,Lektor Kepala,Dosen Tetap,Banten,2
+60000058,Hendri Nurdiyanti,hendri.nurdiyanti@univ.ac.id,L,PRODI33,Lektor Kepala,Dosen Tetap,Banten,2
+60000060,Adiarja Hassanah,adiarja.hassanah@univ.ac.id,P,PRODI34,Lektor Kepala,Dosen Tetap,Kalimantan Utara,2
+60000065,Belinda Hassanah,belinda.hassanah@univ.ac.id,P,PRODI23,Lektor,Dosen Tetap,Maluku,2
+60000066,"Purwa Kusumo, S.H.","purwa.kusumo,.s.h.@univ.ac.id",L,PRODI33,Lektor Kepala,Dosen Tetap,Sulawesi Tenggara,2
+60000068,Alika Widodo,alika.widodo@univ.ac.id,P,PRODI35,Lektor,Dosen Tetap,Jawa Tengah,2
+60000069,"Diana Nuraini, S.Farm","diana.nuraini,.s.farm@univ.ac.id",P,PRODI07,Lektor Kepala,Dosen Tetap,Banten,2
+60000071,Jinawi Yolanda,jinawi.yolanda@univ.ac.id,P,PRODI37,Guru Besar,Dosen Tetap,Bali,2
+60000072,Panca Santoso,panca.santoso@univ.ac.id,P,PRODI35,Guru Besar,Dosen Tetap,Sulawesi Tenggara,2
+60000073,Dina Hardiansyah,dina.hardiansyah@univ.ac.id,P,PRODI37,Lektor Kepala,Dosen Tetap,Sumatera Selatan,2
+60000075,KH. Omar Wasita,kh..omar.wasita@univ.ac.id,L,PRODI37,Guru Besar,Dosen Tetap,Sumatera Selatan,2
+60000076,"Cut Yunita Pudjiastuti, S.Pd","cut.yunita.pudjiastuti,.s.pd@univ.ac.id",P,PRODI35,Asisten Ahli,Dosen Tetap,Lampung,2
+60000077,"Mila Irawan, S.Kom","mila.irawan,.s.kom@univ.ac.id",L,PRODI21,Guru Besar,Dosen Tetap,Kalimantan Timur,2
+60000078,"Fathonah Rajata, M.Pd","fathonah.rajata,.m.pd@univ.ac.id",P,PRODI11,Asisten Ahli,Dosen Tetap,Papua,2
+60000079,"Genta Kusmawati, S.E.","genta.kusmawati,.s.e.@univ.ac.id",L,PRODI35,Lektor Kepala,Dosen Tetap,Sumatera Barat,2
+60000080,"Asman Uyainah, S.I.Kom","asman.uyainah,.s.i.kom@univ.ac.id",P,PRODI36,Lektor,Dosen Tetap,Sumatera Selatan,2
+60000081,"Jane Wijaya, S.E.","jane.wijaya,.s.e.@univ.ac.id",L,PRODI13,Asisten Ahli,Dosen Tetap,Papua Barat,2
+60000082,Liman Nasyiah,liman.nasyiah@univ.ac.id,P,PRODI32,Lektor,Dosen Tetap,Sulawesi Selatan,2
+60000083,Balijan Sirait,balijan.sirait@univ.ac.id,P,PRODI30,Lektor Kepala,Dosen Tetap,Kalimantan Tengah,2
+60000084,Puji Usamah,puji.usamah@univ.ac.id,P,PRODI36,Guru Besar,Dosen Tetap,Jawa Tengah,2
+60000087,Puji Prakasa,puji.prakasa@univ.ac.id,L,PRODI37,Guru Besar,Dosen Tetap,DKI Jakarta,2
+60000092,"KH. Mumpuni Prasetya, M.Kom.","kh..mumpuni.prasetya,.m.kom.@univ.ac.id",L,PRODI09,Lektor,Dosen Tetap,Gorontalo,1
+60000094,Kemal Mayasari,kemal.mayasari@univ.ac.id,L,PRODI12,Asisten Ahli,Dosen Tetap,Sumatera Utara,2
+60000095,Teguh Mulyani,teguh.mulyani@univ.ac.id,L,PRODI12,Asisten Ahli,Dosen Tetap,Nusa Tenggara Barat,2
+60000096,Jaeman Sihombing,jaeman.sihombing@univ.ac.id,P,PRODI23,Guru Besar,Dosen Tetap,Sumatera Selatan,2
+60000098,"Jaya Marpaung, M.Farm","jaya.marpaung,.m.farm@univ.ac.id",P,PRODI16,Lektor Kepala,Dosen Tetap,Sulawesi Tenggara,2

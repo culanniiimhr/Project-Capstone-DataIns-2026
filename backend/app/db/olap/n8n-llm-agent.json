@@ -1,0 +1,208 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tanya-grok",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "a1e4c425-3a1f-4ef4-90c2-151f8761766d",
+      "name": "Webhook",
+      "webhookId": "e97ad1c8-38cd-4908-bf9d-709d3d0de338"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "5d259cfa-034c-4bd9-8edd-fe74b207bec5",
+      "name": "When chat message received",
+      "webhookId": "17f7aca1-8be4-4f96-8b2d-a231374f0283"
+    },
+    {
+      "parameters": {
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are an expert AI Data Engineer. Your sole task is to convert the user's natural language question into a valid, single PostgreSQL query based on the available SQL Views.       CRITICAL RULES:   1. You MUST ONLY respond with the raw SQL query text. Do not include markdown blocks or conversational fillers. 2. GENDER MAPPING: Column 'jenis_kelamin' only contains 'L' (Laki-laki) or 'P' (Perempuan). 3. HOW TO HANDLE QUANTITIES (TOTAL/COUNT):    - If user asks about the number of STUDENTS in view 5, use: SUM(jumlah_mahasiswa) AS sum    - If user asks about the number of DOSEN (lecturer) in view 4 or 6, use: COUNT(DISTINCT nama_dosen) AS sum    - If user asks about AVERAGE GRADES (rata-rata nilai) in view 4, use: AVG(rata_rata_nilai_kelas) AS sum 4. CRITICAL RULE FOR LISTING NAMES (Sebutkan/Apa saja):     - If the user asks to LIST multiple names (e.g., list of majors 'prodi', faculties 'fakultas', or courses), you MUST use STRING_AGG(DISTINCT column_name, ', ') AS sum to combine multiple rows into a single text item! This is strictly required to prevent n8n paired item index errors. 5. CRITICAL JOIN FOR VIEW 2 (v_ip_semester): View 2 DOES NOT have 'nama_univ' or 'nama_prodi'. JOIN v_ip_semester with v_rekap_mahasiswa_lengkap on nim to get them. 6. DATA LIMITATION: If the columns or criteria asked truly do not exist in the views below, return: SELECT 0 AS sum;  Here is the list of available SQL Views you can use:   1. v_rekap_mahasiswa_lengkap (Columns: nim, ipk, nama_prodi, nama_univ)   2. v_ip_semester (Student IPS recap per semester, has student identifier column 'nim')   3. v_analisis_kelulusan (Data on total_sks_ditempuh, status_mahasiswa, and kategori_kelulusan)   4. v_evaluasi_akademik (Columns: nama_dosen, nama_matakuliah, sks, nama_prodi, nama_univ, rata_rata_nilai_kelas, total_mahasiswa_diajar, jumlah_mahasiswa_remidi)   5. v_demografi_mahasiswa (Student count breakdown based on jenis_kelamin, angkatan, asal_daerah, nama_fakultas, nama_prodi, and nama_univ) 6. v_profil_dosen (Columns: nama_dosen, nama_jabatan, status_kepegawaian, asal_daerah, nama_univ)  Example Input: sebutkan fakultas apa aja di Universitas Muhammadiyah Yogyakarta tersebut! Your Expected Response: SELECT STRING_AGG(DISTINCT nama_fakultas, ', ') AS sum FROM v_demografi_mahasiswa WHERE nama_univ = 'Universitas Muhammadiyah Yogyakarta';"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        416,
+        0
+      ],
+      "id": "38c16258-e862-4780-95fe-939c924905ca",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        624,
+        0
+      ],
+      "id": "eb91677e-4195-4f56-83d6-cfe833d5d7d3",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "5X0dhxk6bVqTq2kP",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "{{ $json.text }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        768,
+        0
+      ],
+      "id": "33f426f5-c64a-41c2-b7d9-0c7dbc475734",
+      "name": "Execute a SQL query",
+      "credentials": {
+        "postgres": {
+          "id": "Ufb1JjgGmxbCcbBN",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Pertanyaan User: {{ $node[\"When chat message received\"].json[\"chatInput\"] }}\nAngka Hasil Database: {{ $json.sum }}\n\nUbah angka hasil database di atas menjadi kalimat jawaban bahasa Indonesia yang natural, singkat, dan langsung menjawab esensi dari Pertanyaan User.",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are a smart and direct campus academic data assistant. Your job is to format the SQL query result number into a natural Indonesian response based on the user's question.  CRITICAL RULES: 1. Be concise, professional, and direct. DO NOT sound like a marketing agent or mention welcoming new students. 2. If the input number is 0, simply say: \"Mohon maaf, data untuk kriteria tersebut saat ini tidak tersedia di database.\" 3. Adjust the subject of your sentence contextually. If the user asks about \"dosen\", answer with \"dosen\". If they ask about \"mahasiswa\", answer with \"mahasiswa/orang\". 4. Always state the exact number from the database input clearly."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        976,
+        0
+      ],
+      "id": "c0dc10de-da61-4c33-a545-c2a3e6db9d54",
+      "name": "Basic LLM Chain1"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        912,
+        67.67813110351562
+      ],
+      "id": "fcef3285-2529-4239-b420-293022020541",
+      "name": "Groq Chat Model1",
+      "credentials": {
+        "groqApi": {
+          "id": "5X0dhxk6bVqTq2kP",
+          "name": "Groq account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "0c0dbdf7-2e3f-4011-9f0d-64296c0785b4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "353d7ac7b5d35b7907e0263f1fed9f415dd5da3efe8a51966bf1338ca4c6e67a"
+  },
+  "id": "coQmDhj61E2EHV5J",
+  "tags": []
+}
