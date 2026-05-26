@@ -10,3 +10,5 @@ __pycache__/
 # Khusus Modul ETL & Data Generator 
 etl-generator/env_fix/
 etl-generator/raw_data/
+*.csv
+**/raw_data/
