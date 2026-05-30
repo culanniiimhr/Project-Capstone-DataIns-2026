@@ -5,6 +5,7 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid,
   Tooltip, Legend, ResponsiveContainer
 } from "recharts";
+import { VscHubot } from "react-icons/vsc";
 
 /* ─── DATA ───────────────────────────────────────────── */
 const trenPerforma = [
@@ -405,11 +406,8 @@ export default function DashboardPimpinan() {
             </div>
 
         {/* FAB */}
-        <button className="fab-btn" style={{ position:"fixed", bottom:26, right:26, width:48, height:48, borderRadius:"50%", background:"#1D4ED8", border:"none", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 4px 16px rgba(29,78,216,0.38)", zIndex:100 }}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-            <line x1="9" y1="10" x2="15" y2="10"/><line x1="12" y1="7" x2="12" y2="13"/>
-          </svg>
+        <button className="fixed bottom-[30px] right-[31px] flex h-[36px] w-[36px] items-center justify-center rounded-[9px] bg-[#155EEF] text-[25px] text-white shadow-lg">
+          <VscHubot className="h-10 w-10 text-white" />
         </button>
 
       </Layout>

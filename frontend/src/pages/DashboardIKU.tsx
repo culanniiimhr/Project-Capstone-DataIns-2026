@@ -306,7 +306,7 @@ const DashboardIKU: FunctionComponent<DashboardIKUProps> = ({
           </EmbedBox>
         </section>
 
-        <button className="fixed bottom-[30px] right-[31px] flex h-[54px] w-[54px] items-center justify-center rounded-[9px] bg-[#155EEF] text-[25px] text-white shadow-lg">
+        <button className="fixed bottom-[30px] right-[31px] flex h-[36px] w-[36px] items-center justify-center rounded-[9px] bg-[#155EEF] text-[25px] text-white shadow-lg">
           <VscHubot className="h-10 w-10 text-white" />
         </button>
       </Layout>
