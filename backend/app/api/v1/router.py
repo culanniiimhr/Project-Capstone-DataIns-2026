@@ -1,11 +1,14 @@
 from fastapi import APIRouter
-# Kita cuma import yang filenya benar-benar ada di folder endpoints
-from app.api.v1.endpoints import akademik
+# Kita tambahin import superset di sini
+from app.api.v1.endpoints import akademik, superset
 
 api_router = APIRouter()
 
-# Register yang ada saja dulu supaya backend bisa UP
+# Register endpoint akademik yang udah ada
 api_router.include_router(akademik.router, prefix="/akademik", tags=["Operasional Akademik"])
+
+# Register endpoint superset baru buatan lu!
+api_router.include_router(superset.router, prefix="/superset", tags=["superset"])
 
 # Baris di bawah ini di-comment (dimatikan) dulu. 
 # Nanti kalau file dari teman kamu sudah ada, tinggal buka comment-nya.
