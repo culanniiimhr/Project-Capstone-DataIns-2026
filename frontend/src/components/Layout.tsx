@@ -19,7 +19,7 @@ const Layout = ({
   showFilters = true,
 }: LayoutProps) => {
   return (
-    <div className="min-h-screen bg-[#EAF2FF] font-['SF_Pro',Inter,Arial,sans-serif]">
+    <div className="min-h-screen bg-[#E7EFFE] font-['SF_Pro',Inter,Arial,sans-serif]">
       <Sidebar active={active} />
 
       <main className="min-h-screen ml-[240px]">
