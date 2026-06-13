@@ -1,4 +1,5 @@
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Logo from "../assets/Logo.png";
 import Wave1 from "../assets/Wave1.png";
 import Wave2 from "../assets/Wave2.png";
@@ -21,16 +22,42 @@ const Login: FunctionComponent = () => {
   const [resetEmail, setResetEmail] = useState("");
 
   const [isResetSent, setIsResetSent] = useState(false);
+  const navigate = useNavigate();
+
+  // Initialize dummy account in local storage
+  useEffect(() => {
+    const dummyAccount = localStorage.getItem("dummyAccount");
+    if (!dummyAccount) {
+      localStorage.setItem(
+        "dummyAccount",
+        JSON.stringify({ 
+          email: "admin@gmail.com", 
+          password: "admin",
+          name: "Admin Utama",
+          position: "Super Admin"
+        })
+      );
+    }
+  }, []);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log({
-      email,
-      password,
-    });
-
-    // TODO: Integrasi API Login
+    const storedAccount = localStorage.getItem("dummyAccount");
+    if (storedAccount) {
+      const parsedAccount = JSON.parse(storedAccount);
+      if (
+        email === parsedAccount.email &&
+        password === parsedAccount.password
+      ) {
+        localStorage.setItem("isAuthenticated", "true");
+        navigate("/dashboard");
+      } else {
+        alert("Email atau kata sandi salah!");
+      }
+    } else {
+      alert("Akun percobaan tidak ditemukan di local storage!");
+    }
   };
 
   const handleForgotPassword = (e: React.FormEvent) => {

@@ -13,6 +13,7 @@ import DashboardUtama from "./pages/DashboardUtama";
 import DashboardAkademik from "./pages/DashboardAkademik";
 import DashboardPimpinan from "./pages/DashboardPimpinan";
 import DashboardSistem from "./pages/DashboardSistem";
+import Profil from "./pages/Profil";
 
 function App() {
   const action = useNavigationType();
@@ -60,6 +61,7 @@ function App() {
       <Route path="/dashboard/pimpinan" element={<DashboardPimpinan />} />
       <Route path="/dashboard/iku" element={<DashboardIKU />} />
       <Route path="/dashboard/system" element={<DashboardSistem />} />
+      <Route path="/profil" element={<Profil />} />
     </Routes>
   );
 }
