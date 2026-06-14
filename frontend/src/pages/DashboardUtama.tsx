@@ -6,6 +6,8 @@ import {
   Tooltip, Legend, ResponsiveContainer,
 } from "recharts";
 import { VscHubot } from "react-icons/vsc";
+import SupersetEmbed from "../components/SupersetEmbed";
+import { supersetDashboards } from "../config/SupersetDb";
 
 /* ─── DATA ─────────────────────────────────────────── */
 const ipkData = [
@@ -296,9 +298,14 @@ export default function DashboardUtama() {
               </HoverCard>
 
               <HoverCard style={{ padding:"18px 18px" }}>
-                <p style={{ fontSize:13.5, fontWeight:600, color:"#334155", margin:"0 0 12px" }}>Sebaran Mahasiswa di Setiap Wilayah</p>
-                <div style={{ height:235, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                  <IndonesiaMap/>
+                <p style={{fontSize:13.5, fontWeight:600, color:"#334155", margin:"0 0 12px"}}>
+                  Sebaran Mahasiswa di Setiap Wilayah
+                </p>
+
+                <div className="h-[260px] w-full overflow-hidden">
+                  <SupersetEmbed
+                    dashboardId={supersetDashboards.sebaranMahasiswa}
+                  />
                 </div>
               </HoverCard>
             </div>
@@ -336,10 +343,10 @@ export default function DashboardUtama() {
                 <p style={{ fontSize:13.5, fontWeight:600, color:"#334155", margin:"0 0 16px" }}>Akses Cepat</p>
                 <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12 }}>
                   {[
-                    { icon:<IconAkademik/>, label:"Dashboard Akademik", path: "/akademik" },
-                    { icon:<IconPerson/>,   label:"Dashboard Pimpinan", path: "/pimpinan" },
-                    { icon:<IconMonitor/>,  label:"Monitoring IKU", path: "/" },
-                    { icon:<IconSettings/>, label:"Manajemen Sistem", path: "/" },
+                    { icon:<IconAkademik/>, label:"Dashboard Akademik", path: "/dashboard/akademik" },
+                    { icon:<IconPerson/>,   label:"Dashboard Pimpinan", path: "/dashboard/pimpinan" },
+                    { icon:<IconMonitor/>,  label:"Monitoring IKU", path: "/dashboard/iku" },
+                    { icon:<IconSettings/>, label:"Manajemen Sistem", path: "/dashboard/system" },
                   ].map(({ icon, label, path }) => (
                     <button key={label} className="card-hover-sm" onClick={() => navigate(path)} style={{
                       display:"flex", alignItems:"center", gap:10, padding:"13px 14px",

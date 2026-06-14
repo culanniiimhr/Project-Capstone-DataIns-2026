@@ -9,43 +9,77 @@ const SupersetEmbed = ({ dashboardId }: SupersetEmbedProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    const embed = async () => {
+      if (!containerRef.current) return;
 
-    containerRef.current.innerHTML = "";
+      containerRef.current.innerHTML = "";
 
-    embedDashboard({
-      id: dashboardId,
-      supersetDomain: "http://localhost:8088",
+      try {
+        await embedDashboard({
+          id: dashboardId,
+          supersetDomain: "http://localhost:8088",
+          mountPoint: containerRef.current,
 
-      mountPoint: containerRef.current,
+          fetchGuestToken: async () => {
+            const response = await fetch(
+              "http://localhost:8000/api/v1/superset/guest-token"
+            );
 
-      fetchGuestToken: async () => {
-        const response = await fetch(
-          "http://localhost:8000/api/v1/superset/guest-token"
-        );
+            if (!response.ok) {
+              const errorText = await response.text();
+              throw new Error(`Gagal ambil guest token: ${errorText}`);
+            }
 
-        const data = await response.json();
+            const data = await response.json();
 
-        return data.token;
-      },
+            if (!data.token) {
+              throw new Error("Guest token kosong dari backend");
+            }
 
-      dashboardUiConfig: {
-        hideTitle: true,
-        hideTab: true,
-        hideChartControls: true,
+            return data.token;
+          },
 
-        filters: {
-          expanded: false,
-        },
-      },
-    });
+          dashboardUiConfig: {
+            hideTitle: true,
+            hideTab: true,
+            hideChartControls: true,
+            filters: {
+              expanded: false,
+            },
+          },
+        });
+
+        // Supaya iframe dashboard kelihatan penuh
+        const iframe = containerRef.current.querySelector("iframe");
+        if (iframe) {
+          iframe.style.width = "100%";
+          iframe.style.height = "100%";
+          iframe.style.border = "none";
+        }
+      } catch (error) {
+        console.error("Superset embed error:", error);
+      }
+    };
+
+    setTimeout(() => {
+      const iframe = containerRef.current?.querySelector("iframe");
+
+      if (iframe) {
+        iframe.style.width = "100%";
+        iframe.style.height = "100%";
+        iframe.style.border = "none";
+      }
+    }, 1000);
+    embed();
   }, [dashboardId]);
 
   return (
-    <div
-      ref={containerRef}
-      className="h-full w-full"
-    />
+    <div className="w-full h-full overflow-hidden rounded-[16px] bg-white">
+      <div
+        ref={containerRef}
+        className="w-[130%] h-[150%] -translate-x-[90px] -translate-y-[170px] scale-[1.08] origin-top-left"
+      />
+    </div>
   );
 };
 

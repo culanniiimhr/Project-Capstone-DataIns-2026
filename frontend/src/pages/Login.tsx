@@ -1,4 +1,5 @@
 import { FunctionComponent, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Logo from "../assets/Logo.png";
 import Wave1 from "../assets/Wave1.png";
 import Wave2 from "../assets/Wave2.png";
@@ -14,6 +15,7 @@ import { RiGraduationCapFill } from "react-icons/ri"
 import { MdLockOutline, MdOutlineEmail, MdOutlineInfo, MdOutlineMarkEmailRead } from "react-icons/md";
 
 const Login: FunctionComponent = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -30,7 +32,8 @@ const Login: FunctionComponent = () => {
       password,
     });
 
-    // TODO: Integrasi API Login
+    // sementara langsung masuk dashboard
+    navigate("/dashboard");
   };
 
   const handleForgotPassword = (e: React.FormEvent) => {
@@ -46,7 +49,7 @@ const Login: FunctionComponent = () => {
   };
 
   return (
-    <div className="h-screen w-screen grid grid-cols-2 overflow-hidden bg-[#f7f7f7] font-['SF Pro Display']">
+    <div className="h-screen w-screen grid grid-cols-2 overflow-hidden bg-[#f7f7f7]">
       {/* LEFT */}
       <div className="relative bg-[#eef3ff] px-10 pt-10 pb-0 flex flex-col overflow-hidden">
         {!isForgotPassword ? (
