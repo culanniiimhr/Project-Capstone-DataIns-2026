@@ -1,68 +1,23 @@
-import { useEffect } from "react";
-import {
-  Routes,
-  Route,
-  Navigate,
-  useNavigationType,
-  useLocation,
-} from "react-router-dom";
-import Login from "./pages/Login";
-import ResetPassword from "./pages/ResetPassword";
-import DashboardIKU from "./pages/DashboardIKU";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import DashboardUtama from "./pages/DashboardUtama";
 import DashboardAkademik from "./pages/DashboardAkademik";
 import DashboardPimpinan from "./pages/DashboardPimpinan";
-import DashboardSistem from "./pages/DashboardSistem";
-import Profil from "./pages/Profil";
+// 1. TAMBAHIN IMPORT INI DI BAWAHNYA
+import Login from "./pages/Login"; 
 
 function App() {
-  const action = useNavigationType();
-  const location = useLocation();
-  const pathname = location.pathname;
-
-  useEffect(() => {
-    if (action !== "POP") {
-      window.scrollTo(0, 0);
-    }
-  }, [action, pathname]);
-
-  useEffect(() => {
-    let title = "";
-    let metaDescription = "";
-
-    switch (pathname) {
-      case "/":
-        title = "";
-        metaDescription = "";
-        break;
-    }
-
-    if (title) {
-      document.title = title;
-    }
-
-    if (metaDescription) {
-      const metaDescriptionTag: HTMLMetaElement | null = document.querySelector(
-        'head > meta[name="description"]'
-      );
-      if (metaDescriptionTag) {
-        metaDescriptionTag.content = metaDescription;
-      }
-    }
-  }, [pathname]);
-
   return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="/" element={<Navigate to="/login" replace />} />
-      <Route path="/dashboard" element={<DashboardUtama />} />
-      <Route path="/dashboard/akademik" element={<DashboardAkademik />} />
-      <Route path="/dashboard/pimpinan" element={<DashboardPimpinan />} />
-      <Route path="/dashboard/iku" element={<DashboardIKU />} />
-      <Route path="/dashboard/system" element={<DashboardSistem />} />
-      <Route path="/profil" element={<Profil />} />
-    </Routes>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<DashboardUtama />} />
+        <Route path="/akademik" element={<DashboardAkademik />} />
+        <Route path="/pimpinan" element={<DashboardPimpinan />} />
+        {/* 2. TAMBAHIN ROUTE INI DI BAWAHNYA */}
+        <Route path="/login" element={<Login />} /> 
+      </Routes>
+    </BrowserRouter>
   );
 }
+
 export default App;

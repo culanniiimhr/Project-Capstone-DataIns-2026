@@ -118,7 +118,7 @@
     # ─────────────────────────────────────────
     etl:
       build:
-        context: ./etl
+        context: ./backend/app/etl-generator
         dockerfile: Dockerfile
       container_name: datains_etl
       restart: unless-stopped
