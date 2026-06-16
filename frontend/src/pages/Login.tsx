@@ -1,6 +1,21 @@
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import Logo from "../assets/Logo.png";
+import Wave1 from "../assets/Wave1.png";
+import Wave2 from "../assets/Wave2.png";
+import Wave3 from "../assets/Wave3.png";
+import Wave4 from "../assets/Wave4.png";
+import ForgotPassword from "../assets/ForgotPassword.png";
+import IconGoogle from "../assets/IconGoogle.png";
+import { FaChartLine } from "react-icons/fa6";
+import { BsLightbulbFill } from "react-icons/bs";
+import { AiFillSafetyCertificate } from "react-icons/ai";
+import { GoLock } from "react-icons/go";
+import { RiGraduationCapFill } from "react-icons/ri"
+import { MdLockOutline, MdOutlineEmail, MdOutlineInfo, MdOutlineMarkEmailRead } from "react-icons/md";
 
 const Login: FunctionComponent = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -9,15 +24,40 @@ const Login: FunctionComponent = () => {
 
   const [isResetSent, setIsResetSent] = useState(false);
 
+  // Initialize dummy account in local storage
+  useEffect(() => {
+    const dummyAccount = localStorage.getItem("dummyAccount");
+    if (!dummyAccount) {
+      localStorage.setItem(
+        "dummyAccount",
+        JSON.stringify({ 
+          email: "admin@gmail.com", 
+          password: "admin",
+          name: "Admin Utama",
+          position: "Super Admin"
+        })
+      );
+    }
+  }, []);
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log({
-      email,
-      password,
-    });
-
-    // TODO: Integrasi API Login
+    const storedAccount = localStorage.getItem("dummyAccount");
+    if (storedAccount) {
+      const parsedAccount = JSON.parse(storedAccount);
+      if (
+        email === parsedAccount.email &&
+        password === parsedAccount.password
+      ) {
+        localStorage.setItem("isAuthenticated", "true");
+        navigate("/dashboard");
+      } else {
+        alert("Email atau kata sandi salah!");
+      }
+    } else {
+      alert("Akun percobaan tidak ditemukan di local storage!");
+    }
   };
 
   const handleForgotPassword = (e: React.FormEvent) => {
@@ -33,7 +73,7 @@ const Login: FunctionComponent = () => {
   };
 
   return (
-    <div className="h-screen w-screen grid grid-cols-2 overflow-hidden bg-[#f7f7f7] font-['SF Pro Display']">
+    <div className="h-screen w-screen grid grid-cols-2 overflow-hidden bg-[#f7f7f7]">
       {/* LEFT */}
       <div className="relative bg-[#eef3ff] px-10 pt-10 pb-0 flex flex-col overflow-hidden">
         {!isForgotPassword ? (
@@ -56,7 +96,7 @@ const Login: FunctionComponent = () => {
               {/* Logo */}
               <div className="flex items-center gap-3 mb-11">
                 <img
-                  src="/assets/Logo@2x.png"
+                  src={Logo}
                   alt="logo"
                   className="w-[36px] h-[36px]"
                 />
@@ -99,11 +139,7 @@ const Login: FunctionComponent = () => {
                   <div className="self-stretch flex-1 flex items-center flex-wrap content-center gap-[13px]">
                     <div className="h-5 w-5 relative rounded-[7px] bg-[#fff]">
                       <div className="absolute top-[0px] left-[0px] rounded-[7px] bg-[#fff] w-full h-full hidden" />
-                      <img
-                        className="absolute top-[0.5px] left-[2px] w-[15px] h-5 z-[1]"
-                        alt=""
-                        src="./assets/Vector.svg"
-                      />
+                      <RiGraduationCapFill className="absolute top-[0px] left-[2px] w-[15px] h-5 z-[1]"/>
                     </div>
                     <div className="flex-1 relative font-medium inline-block min-w-[335px]">
                       Ringkasan KPI Utama
@@ -111,33 +147,30 @@ const Login: FunctionComponent = () => {
                   </div>
                   <div className="w-[301px] h-px relative border-foundation-grey-light-active border-solid border-t-[1px] box-border max-w-[180px]" />
                   <div className="self-stretch h-5 flex items-center flex-wrap content-center gap-[13px]">
-                    <img
-                      className="h-5 w-5 relative object-contain"
-                      alt=""
-                      src="./assets/Frame-1000001590@2x.png"
-                    />
+                    <div className="h-5 w-5 relative rounded-[7px] bg-[#fff]">
+                      <div className="absolute top-[0px] left-[0px] rounded-[7px] bg-[#fff] w-full h-full hidden" />
+                      <FaChartLine className="absolute top-[2px] left-[2px] w-[15px] h-4 z-[1]" />
+                    </div>
                     <div className="flex-1 relative font-medium inline-block min-w-[335px]">
                       Visualisasi Data Interaktif
                     </div>
                   </div>
                   <div className="w-[301px] h-px relative border-foundation-grey-light-active border-solid border-t-[1px] box-border max-w-[180px]" />
                   <div className="self-stretch h-5 flex items-center flex-wrap content-center gap-[13px]">
-                    <img
-                      className="h-5 w-5 relative object-contain"
-                      alt=""
-                      src="./assets/Frame-1000001591@2x.png"
-                    />
+                    <div className="h-5 w-5 relative rounded-[7px] bg-[#fff]">
+                      <div className="absolute top-[0px] left-[0px] rounded-[7px] bg-[#fff] w-full h-full hidden" />
+                      <BsLightbulbFill className="absolute top-[2px] left-[2px] w-[15px] h-4 z-[1]" />
+                    </div>
                     <div className="flex-1 relative font-medium inline-block min-w-[335px]">
                       Insight Otomatis berbasis AI
                     </div>
                   </div>
                   <div className="w-[301px] h-px relative border-foundation-grey-light-active border-solid border-t-[1px] box-border max-w-[180px]" />
                   <div className="self-stretch h-5 flex items-center flex-wrap content-center gap-[13px]">
-                    <img
-                      className="h-5 w-5 relative object-contain"
-                      alt=""
-                      src="./assets/Frame-1000001592@2x.png"
-                    />
+                    <div className="h-5 w-5 relative rounded-[7px] bg-[#fff]">
+                      <div className="absolute top-[0px] left-[0px] rounded-[7px] bg-[#fff] w-full h-full hidden" />
+                      <AiFillSafetyCertificate className="absolute top-[2px] left-[2px] w-[15px] h-4 z-[1]" />
+                    </div>
                     <div className="flex-1 relative font-medium inline-block min-w-[335px]">
                       Akses cepat dan Aman
                     </div>
@@ -148,13 +181,13 @@ const Login: FunctionComponent = () => {
                   <img
                     className="absolute top-[-45px] left-[-50px] w-[665px] h-[346px] shrink-0"
                     alt=""
-                    src="./assets/Vector1.png"
+                    src={Wave1}
                   />
                   <img
                     className="absolute left-[-40px] w-[720px] h-[245px] shrink-0"
                     loading="lazy"
                     alt=""
-                    src="./assets/Vector2.png"
+                    src={Wave2}
                   />
                 </div>
               </main>
@@ -167,7 +200,7 @@ const Login: FunctionComponent = () => {
               {/* Logo */}
               <div className="flex items-center gap-3">
                 <img
-                  src="/assets/Logo@2x.png"
+                  src={Logo}
                   alt="logo"
                   className="w-[36px] h-[36px]"
                 />
@@ -185,7 +218,7 @@ const Login: FunctionComponent = () => {
 
               <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center">
                 <img
-                  src="/assets/Group.png"
+                  src={ForgotPassword}
                   alt="forgot password"
                   className="w-[520px] max-w-full object-contain mb-7"
                 />
@@ -203,13 +236,13 @@ const Login: FunctionComponent = () => {
                 <img
                   className="absolute top-[-500px] left-[-40px] w-[720px] h-[600px] shrink-0"
                   alt=""
-                  src="/assets/Vector5.png"
+                  src={Wave3}
                 />
                 <img
                   className="absolute top-[-350px] left-[-40px] w-[680px] h-[443px] shrink-0"
                   loading="lazy"
                   alt=""
-                  src="/assets/Vector6.png"
+                  src={Wave4}
                 />
               </div>
 
@@ -231,11 +264,7 @@ const Login: FunctionComponent = () => {
                 {/* Icon */}
                 <div className="flex justify-center mb-5">
                   <div className="w-[28px] h-[28px] rounded-full bg-[#dce7ff] flex items-center justify-center">
-                    <img
-                      src="/assets/Lock-Icon.svg"
-                      alt=""
-                      className="w-8 h-8"
-                    />
+                    <GoLock className="w-4 h-4" />
                   </div>
                 </div>
 
@@ -260,11 +289,7 @@ const Login: FunctionComponent = () => {
                     </label>
 
                     <div className="self-stretch h-[54px] rounded-[10px] border-foundation-grey-normal border-solid border-[1px] box-border flex items-center py-2.5 px-[10px] gap-3">
-                      <img
-                        src="/assets/Password-Icon.svg"
-                        alt=""
-                        className="w-4 h-4"
-                      />
+                      <MdOutlineEmail className="w-5 h-5" />
 
                       <input
                         type="email"
@@ -284,11 +309,7 @@ const Login: FunctionComponent = () => {
                     </label>
 
                     <div className="self-stretch h-[54px] rounded-[10px] border-foundation-grey-normal border-solid border-[1px] box-border flex items-center py-2.5 px-[10px] gap-3">
-                      <img
-                        src="/assets/mdi-password-outline.svg"
-                        alt=""
-                        className="w-5 h-5"
-                      />
+                      <MdLockOutline className="w-5 h-5" />
 
                       <input
                         type="password"
@@ -338,7 +359,7 @@ const Login: FunctionComponent = () => {
                     className="h-[40px] border border-[#404040] rounded-[10px] flex items-center justify-center gap-4 bg-white hover:bg-gray-100 transition mt-1"
                   >
                     <img
-                      src="/assets/Icon-jpeg@2x.png"
+                      src={IconGoogle}
                       alt=""
                       className="w-5 h-5"
                     />
@@ -354,11 +375,7 @@ const Login: FunctionComponent = () => {
                 {/* Icon */}
                 <div className="flex justify-center mb-5">
                   <div className="w-[28px] h-[28px] rounded-full bg-[#dce7ff] flex items-center justify-center">
-                    <img
-                      src="/assets/Lock-Icon.svg"
-                      alt=""
-                      className="w-8 h-8"
-                    />
+                    <GoLock className="w-4 h-4" />
                   </div>
                 </div>
 
@@ -385,11 +402,7 @@ const Login: FunctionComponent = () => {
                     </label>
 
                     <div className="self-stretch h-[44px] rounded-[10px] border-foundation-grey-normal border-solid border-[1px] box-border flex items-center px-[10px] gap-3">
-                      <img
-                        src="/assets/Password-Icon.svg"
-                        alt=""
-                        className="w-4 h-4"
-                      />
+                      <MdOutlineEmail className="w-5 h-5" />
 
                       <input
                         type="email"
@@ -433,11 +446,7 @@ const Login: FunctionComponent = () => {
                 {/* Icon */}
                 <div className="flex justify-center mb-5">
                   <div className="w-[28px] h-[28px] rounded-full bg-[#dce7ff] flex items-center justify-center">
-                    <img
-                      src="/assets/Lock Icon.png"
-                      alt=""
-                      className="w-8 h-8"
-                    />
+                    <MdOutlineMarkEmailRead className="w-4 h-4 text-[#1d5be3]" />
                   </div>
                 </div>
 
@@ -462,11 +471,7 @@ const Login: FunctionComponent = () => {
                     </label>
 
                     <div className="self-stretch h-[44px] rounded-[10px] border-foundation-grey-normal border-solid border-[1px] box-border flex items-center px-[10px] gap-3">
-                      <img
-                        src="/assets/Password-Icon.svg"
-                        alt=""
-                        className="w-4 h-4"
-                      />
+                      <MdOutlineEmail className="w-5 h-5" />
 
                       <input
                         type="email"
@@ -479,9 +484,7 @@ const Login: FunctionComponent = () => {
 
                   {/* Info */}
                   <div className="rounded-[8px] bg-[#dce7ff] px-3 py-2 flex items-start gap-2">
-                    <div className="text-[#1d5be3] text-[12px] font-bold mt-[1px]">
-                      ⓘ
-                    </div>
+                    <MdOutlineInfo className="text-[#1d5be3] w-4 h-4" />
 
                     <p className="text-[11px] text-[#2b2b2b] leading-[1.3] m-0">
                       Silahkan cek inbox atau Spam jika instruksi
@@ -523,13 +526,9 @@ const Login: FunctionComponent = () => {
             <div className="h-px w-[700px] relative border-foundation-grey-normal border-solid border-t-[1px] box-border mt-1" />
             <div className="flex flex-col items-center gap-1">
               <div className="flex items-center gap-2 mt-1">
-                <img
-                  src="/assets/Protect@2x.png"
-                  alt=""
-                  className="w-4 h-4"
-                />
+                <AiFillSafetyCertificate className="w-3.5 h-3.5" />
 
-                <span className="text-[15px] font-semibold text-[#2b2b2b] mt-1">
+                <span className="text-[15px] font-semibold text-[#2b2b2b] mt-0">
                   Keamanan data adalah prioritas kami.
                 </span>
               </div>

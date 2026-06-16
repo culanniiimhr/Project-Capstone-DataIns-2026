@@ -8,6 +8,12 @@ import {
 } from "react-router-dom";
 import Login from "./pages/Login";
 import ResetPassword from "./pages/ResetPassword";
+import DashboardIKU from "./pages/DashboardIKU";
+import DashboardUtama from "./pages/DashboardUtama";
+import DashboardAkademik from "./pages/DashboardAkademik";
+import DashboardPimpinan from "./pages/DashboardPimpinan";
+import DashboardSistem from "./pages/DashboardSistem";
+import Profil from "./pages/Profil";
 
 function App() {
   const action = useNavigationType();
@@ -50,6 +56,12 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="/dashboard" element={<DashboardUtama />} />
+      <Route path="/dashboard/akademik" element={<DashboardAkademik />} />
+      <Route path="/dashboard/pimpinan" element={<DashboardPimpinan />} />
+      <Route path="/dashboard/iku" element={<DashboardIKU />} />
+      <Route path="/dashboard/system" element={<DashboardSistem />} />
+      <Route path="/profil" element={<Profil />} />
     </Routes>
   );
 }
