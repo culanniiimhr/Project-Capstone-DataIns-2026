@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
+import SupersetEmbedDefault from "../components/SupersetEmbedDefault";
+import { supersetDashboards } from "../config/SupersetDb";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid,
   Tooltip, Legend, ResponsiveContainer
@@ -219,48 +221,34 @@ export default function DashboardPimpinan() {
               ))}
             </div>
 
-            {/* Row 2 — Tren Performa + Perbandingan Fakultas */}
+            {/* Row 2 — Distribusi Status Mahasiswa + Perbandingan Prodi */}
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14, marginBottom:14 }}>
 
-              {/* Tren Performa Akademik */}
-              <HoverCard style={{ padding:"18px 18px 10px" }}>
-                <p style={{ fontSize:13.5, fontWeight:600, color:"#334155", margin:"0 0 14px" }}>Tren Performa Akademik</p>
-                <ResponsiveContainer width="100%" height={240}>
-                  <LineChart data={trenPerforma} margin={{ top:14, right:16, left:-8, bottom:0 }}>
-                    <CartesianGrid strokeDasharray="4 4" stroke="#F1F5F9"/>
-                    <XAxis dataKey="year" tick={{ fontSize:10, fill:"#94A3B8" }} axisLine={{ stroke:"#E2E8F0" }} tickLine={false}/>
-                    <YAxis tick={{ fontSize:10, fill:"#94A3B8" }} axisLine={false} tickLine={false}/>
-                    <Tooltip content={<CustomTooltip/>}/>
-                    <Legend iconType="circle" iconSize={7} wrapperStyle={{ fontSize:11, color:"#64748B", paddingTop:6 }}/>
-                    <Line type="linear" dataKey="ipk"       name="IPK Rata-rata"     stroke="#EF4444" strokeWidth={2} dot={{ r:4, fill:"#fff", stroke:"#EF4444", strokeWidth:2 }} activeDot={{ r:5 }} label={{ position:"top", fontSize:9, fill:"#555", dy:-5 }}/>
-                    <Line type="linear" dataKey="kelulusan" name="Tingkat Kelulusan (%)" stroke="#3B82F6" strokeWidth={2} dot={{ r:4, fill:"#fff", stroke:"#3B82F6", strokeWidth:2 }} activeDot={{ r:5 }} label={{ position:"top", fontSize:9, fill:"#555", dy:-5 }}/>
-                    <Line type="linear" dataKey="kehadiran" name="Kehadiran (%)"      stroke="#22C55E" strokeWidth={2} dot={{ r:4, fill:"#fff", stroke:"#22C55E", strokeWidth:2 }} activeDot={{ r:5 }} label={{ position:"top", fontSize:9, fill:"#555", dy:-5 }}/>
-                  </LineChart>
-                </ResponsiveContainer>
+              {/* Distribusi Status Mahasiswa */}
+              <HoverCard style={{ padding: "18px 18px" }}>
+                <p style={{fontSize: 13.5, fontWeight: 600, color: "#334155", margin: "0 0 14px",}}>
+                  Distribusi Status Mahasiswa Berdasarkan Fakultas
+                </p>
+
+                <div className="h-[320px] w-full overflow-hidden">
+                  <SupersetEmbedDefault
+                    dashboardId={supersetDashboards.statusMahasiswa}
+                    contentClassName="w-[125%] h-[160%] -translate-x-[70px] -translate-y-[65px] scale-[1.07] origin-top-left"
+                  />
+                </div>
               </HoverCard>
 
-              {/* Perbandingan Performa Fakultas */}
-              <HoverCard style={{ padding:"18px 20px" }}>
-                <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:18 }}>
-                  <p style={{ fontSize:13.5, fontWeight:600, color:"#334155", margin:0 }}>Perbandingan Performa Fakultas (IPK Rata-rata)</p>
-                  <IconInfo/>
-                </div>
-                <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-                  {perbandinganFakultas.map(({ name, ipk }) => (
-                    <div key={name}>
-                      <div style={{ display:"flex", justifyContent:"space-between", marginBottom:5 }}>
-                        <span style={{ fontSize:12, color:"#475569" }}>{name}</span>
-                        <span style={{ fontSize:12, fontWeight:700, color:"#1E3A8A" }}>{ipk.toFixed(2)}</span>
-                      </div>
-                      <div style={{ height:7, background:"#EFF6FF", borderRadius:99 }}>
-                        <div style={{ height:"100%", borderRadius:99, background:"#1D4ED8", width:`${(ipk / 4) * 100}%`, transition:"width 0.7s ease" }}/>
-                      </div>
-                    </div>
-                  ))}
-                  {/* X axis labels */}
-                  <div style={{ display:"flex", justifyContent:"space-between", marginTop:4 }}>
-                    {[0,1,2,3,4].map(v => <span key={v} style={{ fontSize:10, color:"#94A3B8" }}>{v}</span>)}
-                  </div>
+              {/* Perbandingan Performa Prodi */}
+              <HoverCard style={{ padding: "18px 18px" }}>
+                <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: "0 0 14px" }}>
+                  Perbandingan Performa Prodi (IPK Rata-rata)
+                </p>
+
+                <div className="h-[320px] w-full overflow-hidden">
+                  <SupersetEmbedDefault
+                    dashboardId={supersetDashboards.performaProdi}
+                    contentClassName="w-[125%] h-[118%] -translate-x-[70px] -translate-y-[75px] scale-[1.03] origin-top-left"
+                  />
                 </div>
               </HoverCard>
             </div>

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 import requests
 
 router = APIRouter()
@@ -7,13 +7,10 @@ SUPERSET_URL = "http://datains_superset:8088"
 SUPERSET_USERNAME = "admin"
 SUPERSET_PASSWORD = "admin123"
 
-DASHBOARD_UUID = "39e5c66f-4870-419b-adfe-20ad48c3ef1b"
-
 
 @router.get("/guest-token")
-def get_superset_guest_token():
+def get_superset_guest_token(dashboard_id: str = Query(...)):
     try:
-        # 1. Login ke Superset
         login_data = {
             "username": SUPERSET_USERNAME,
             "password": SUPERSET_PASSWORD,
@@ -35,13 +32,6 @@ def get_superset_guest_token():
 
         access_token = login_res.json().get("access_token")
 
-        if not access_token:
-            raise HTTPException(
-                status_code=500,
-                detail="Access token tidak ditemukan dari response Superset"
-            )
-
-        # 2. Generate guest token
         headers = {
             "Authorization": f"Bearer {access_token}",
             "Content-Type": "application/json"
@@ -56,7 +46,7 @@ def get_superset_guest_token():
             "resources": [
                 {
                     "type": "dashboard",
-                    "id": DASHBOARD_UUID
+                    "id": dashboard_id
                 }
             ],
             "rls": []
@@ -72,30 +62,13 @@ def get_superset_guest_token():
         if token_res.status_code != 200:
             raise HTTPException(
                 status_code=500,
-                detail=f"Gagal generate guest token dari Superset: {token_res.status_code} - {token_res.text}"
+                detail=f"Gagal generate guest token: {token_res.status_code} - {token_res.text}"
             )
 
-        token = token_res.json().get("token")
-
-        if not token:
-            raise HTTPException(
-                status_code=500,
-                detail=f"Token tidak ditemukan dari response Superset: {token_res.text}"
-            )
-
-        return {"token": token}
-
-    except HTTPException:
-        raise
-
-    except requests.exceptions.RequestException as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Tidak bisa konek ke Superset: {str(e)}"
-        )
+        return {"token": token_res.json().get("token")}
 
     except Exception as e:
         raise HTTPException(
             status_code=500,
-            detail=f"Unexpected backend error: {str(e)}"
+            detail=str(e)
         )

@@ -7,6 +7,7 @@ import {
 } from "recharts";
 import { VscHubot } from "react-icons/vsc";
 import SupersetEmbed from "../components/SupersetEmbed";
+import SupersetEmbedDefault from "../components/SupersetEmbedDefault";
 import { supersetDashboards } from "../config/SupersetDb";
 
 /* ─── DATA ─────────────────────────────────────────── */
@@ -278,23 +279,17 @@ export default function DashboardUtama() {
 
             {/* Row 2 — Chart + Map */}
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14, marginBottom:14 }}>
-              <HoverCard style={{ padding:"18px 18px 10px" }}>
-                <p style={{ fontSize:13.5, fontWeight:600, color:"#334155", margin:"0 0 14px" }}>Tren IPK Setiap Tahun</p>
-                <ResponsiveContainer width="100%" height={235}>
-                  <LineChart data={ipkData} margin={{ top:14, right:20, left:-14, bottom:0 }}>
-                    <CartesianGrid strokeDasharray="4 4" stroke="#F1F5F9"/>
-                    <XAxis dataKey="year" tick={{ fontSize:11, fill:"#94A3B8" }} axisLine={{ stroke:"#E2E8F0" }} tickLine={false}/>
-                    <YAxis domain={[2.8,4.05]} ticks={[2.80,3.10,3.30,3.50,3.70,4.00]} tick={{ fontSize:11, fill:"#94A3B8" }} axisLine={false} tickLine={false} tickFormatter={v => v.toFixed(2)}/>
-                    <Tooltip content={<CustomTooltip/>}/>
-                    <Legend iconType="circle" iconSize={7} wrapperStyle={{ fontSize:12, color:"#64748B", paddingTop:6 }}/>
-                    <Line type="linear" dataKey="ganjil" name="ganjil" stroke="#EF4444" strokeWidth={2}
-                      dot={{ r:4.5, fill:"#fff", stroke:"#EF4444", strokeWidth:2 }} activeDot={{ r:6 }}
-                      label={{ position:"top", fontSize:10, fill:"#555", dy:-5 }}/>
-                    <Line type="linear" dataKey="genap" name="genap" stroke="#3B82F6" strokeWidth={2}
-                      dot={{ r:4.5, fill:"#fff", stroke:"#3B82F6", strokeWidth:2 }} activeDot={{ r:6 }}
-                      label={{ position:"top", fontSize:10, fill:"#555", dy:-5 }}/>
-                  </LineChart>
-                </ResponsiveContainer>
+              <HoverCard style={{ padding:"18px 18px" }}>
+                <p style={{ fontSize:13.5, fontWeight:600, color:"#334155", margin:"0 0 14px" }}>
+                  Rata-rata IPK Berdasarkan Angkatan
+                </p>
+
+                <div className="h-[260px] w-full overflow-hidden">
+                  <SupersetEmbedDefault
+                    dashboardId={supersetDashboards.trenIpk}
+                    contentClassName="w-[125%] h-[118%] -translate-x-[70px] -translate-y-[75px] scale-[1.03] origin-top-left"
+                  />
+                </div>
               </HoverCard>
 
               <HoverCard style={{ padding:"18px 18px" }}>

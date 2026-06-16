@@ -1,11 +1,12 @@
 import { useEffect, useRef } from "react";
 import { embedDashboard } from "@superset-ui/embedded-sdk";
 
-interface SupersetEmbedProps {
+interface SupersetEmbedDefaultProps {
   dashboardId: string;
+  contentClassName?: string;
 }
 
-const SupersetEmbed = ({ dashboardId }: SupersetEmbedProps) => {
+const SupersetEmbedDefault = ({dashboardId, contentClassName = "w-full h-full",}: SupersetEmbedDefaultProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -49,8 +50,8 @@ const SupersetEmbed = ({ dashboardId }: SupersetEmbedProps) => {
           },
         });
 
-        // Supaya iframe dashboard kelihatan penuh
         const iframe = containerRef.current.querySelector("iframe");
+
         if (iframe) {
           iframe.style.width = "100%";
           iframe.style.height = "100%";
@@ -61,15 +62,6 @@ const SupersetEmbed = ({ dashboardId }: SupersetEmbedProps) => {
       }
     };
 
-    setTimeout(() => {
-      const iframe = containerRef.current?.querySelector("iframe");
-
-      if (iframe) {
-        iframe.style.width = "100%";
-        iframe.style.height = "100%";
-        iframe.style.border = "none";
-      }
-    }, 1000);
     embed();
   }, [dashboardId]);
 
@@ -77,10 +69,10 @@ const SupersetEmbed = ({ dashboardId }: SupersetEmbedProps) => {
     <div className="w-full h-full overflow-hidden rounded-[16px] bg-white">
       <div
         ref={containerRef}
-        className="w-[130%] h-[150%] -translate-x-[90px] -translate-y-[170px] scale-[1.08] origin-top-left"
+        className={contentClassName}
       />
     </div>
   );
 };
 
-export default SupersetEmbed;
+export default SupersetEmbedDefault;
