@@ -1,5 +1,6 @@
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
+import Chatbot from "./Chatbot";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -34,6 +35,7 @@ const Layout = ({
           {children}
         </div>
       </main>
+      <Chatbot />
     </div>
   );
 };
