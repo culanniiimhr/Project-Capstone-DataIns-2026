@@ -281,7 +281,7 @@ export default function DashboardUtama() {
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14, marginBottom:14 }}>
               <HoverCard style={{ padding:"18px 18px" }}>
                 <p style={{ fontSize:13.5, fontWeight:600, color:"#334155", margin:"0 0 14px" }}>
-                  Rata-rata IPK Berdasarkan Angkatan
+                  Tren IPK Setiap Tahun
                 </p>
 
                 <div className="h-[260px] w-full overflow-hidden">

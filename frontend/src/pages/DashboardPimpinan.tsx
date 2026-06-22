@@ -227,13 +227,13 @@ export default function DashboardPimpinan() {
               {/* Distribusi Status Mahasiswa */}
               <HoverCard style={{ padding: "18px 18px" }}>
                 <p style={{fontSize: 13.5, fontWeight: 600, color: "#334155", margin: "0 0 14px",}}>
-                  Distribusi Status Mahasiswa Berdasarkan Fakultas
+                  Tren Performa Akademik
                 </p>
 
                 <div className="h-[320px] w-full overflow-hidden">
                   <SupersetEmbedDefault
                     dashboardId={supersetDashboards.statusMahasiswa}
-                    contentClassName="w-[125%] h-[160%] -translate-x-[70px] -translate-y-[65px] scale-[1.07] origin-top-left"
+                    contentClassName="w-[125%] h-[118%] -translate-x-[70px] -translate-y-[75px] scale-[1.03] origin-top-left"
                   />
                 </div>
               </HoverCard>
@@ -241,7 +241,7 @@ export default function DashboardPimpinan() {
               {/* Perbandingan Performa Prodi */}
               <HoverCard style={{ padding: "18px 18px" }}>
                 <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: "0 0 14px" }}>
-                  Perbandingan Performa Prodi (IPK Rata-rata)
+                  Perbandingan Performa Fakultas (IPK Rata-rata)
                 </p>
 
                 <div className="h-[320px] w-full overflow-hidden">
