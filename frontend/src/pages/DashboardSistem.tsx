@@ -5,7 +5,6 @@ import { FaRegUser, FaLink } from "react-icons/fa6";
 import { LuPencil, LuShieldCheck } from "react-icons/lu";
 import { TbDatabase, TbTrash } from "react-icons/tb";
 import { IoAnalyticsOutline, IoCheckmarkCircleOutline } from "react-icons/io5";
-import { VscHubot } from "react-icons/vsc";
 import { AiOutlineSafetyCertificate } from "react-icons/ai";
 import { FiChevronDown, FiRefreshCw, FiCalendar, FiClock, FiChevronRight } from "react-icons/fi";
 import { BsBuilding, BsBook, BsCloud, BsCloudArrowUp } from "react-icons/bs";
@@ -1211,9 +1210,7 @@ const DashboardSistem = () => {
       )}
       </section>
 
-      <button className="fixed bottom-[30px] right-[31px] flex h-[36px] w-[36px] items-center justify-center rounded-[9px] bg-[#155EEF] text-[25px] text-white shadow-lg">
-        <VscHubot className="h-10 w-10 text-white" />
-      </button>
+
     </Layout>
   );
 };
