@@ -355,6 +355,85 @@ export default function DashboardUtama() {
             </div>
           </HoverCard>
 
+            {/* Row 2 — Chart + Map */}
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14, marginBottom:14 }}>
+              <HoverCard style={{ padding:"18px 18px" }}>
+                <p style={{ fontSize:13.5, fontWeight:600, color:"#334155", margin:"0 0 14px" }}>
+                  Tren IPK Setiap Tahun
+                </p>
+
+                <div className="h-[260px] w-full overflow-hidden">
+                  <SupersetEmbedDefault
+                    dashboardId={supersetDashboards.trenIpk}
+                    contentClassName="w-[125%] h-[118%] -translate-x-[70px] -translate-y-[75px] scale-[1.03] origin-top-left"
+                  />
+                </div>
+              </HoverCard>
+
+              <HoverCard style={{ padding:"18px 18px" }}>
+                <p style={{fontSize:13.5, fontWeight:600, color:"#334155", margin:"0 0 12px"}}>
+                  Sebaran Mahasiswa di Setiap Wilayah
+                </p>
+
+                <div className="h-[260px] w-full overflow-hidden">
+                  <SupersetEmbed
+                    dashboardId={supersetDashboards.sebaranMahasiswa}
+                  />
+                </div>
+              </HoverCard>
+            </div>
+
+            {/* Row 3 — Insight + Quick Access */}
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14 }}>
+
+              {/* Insight */}
+              <HoverCard style={{ padding:"18px 20px 16px" }}>
+                <p style={{ fontSize:13.5, fontWeight:600, color:"#334155", margin:"0 0 16px" }}>Insight Otomatis</p>
+                {[
+                  { up:true,  text:"IPK rata-rata meningkat",      highlight:"0.08 poin", color:"#16A34A" },
+                  { up:true,  text:"Tingkat kelulusan meningkat",   highlight:"2,37%",     color:"#16A34A" },
+                  { up:false, text:"Kehadiran mahasiswa",           highlight:"turun 1,8%",color:"#DC2626" },
+                ].map(({ up, text, highlight, color }, i) => (
+                  <div key={i} className="insight-row" style={{ display:"flex", alignItems:"flex-start", gap:12, marginBottom:10 }}>
+                    {up ? <IconInsightUp/> : <IconInsightDown/>}
+                    <div>
+                      <div style={{ fontSize:13, color:"#334155", lineHeight:1.5 }}>
+                        {text} <span style={{ color, fontWeight:700 }}>{highlight}</span>
+                      </div>
+                      <div style={{ fontSize:12, color:"#94A3B8" }}>dibandingkan semester lalu.</div>
+                    </div>
+                  </div>
+                ))}
+                <div style={{ borderTop:"1px solid #F1F5F9", paddingTop:12, textAlign:"center", marginTop:6 }}>
+                  <button style={{ background:"none", border:"none", color:"#2563EB", fontWeight:600, fontSize:13, cursor:"pointer" }}>
+                    Lihat Insight selengkapnya
+                  </button>
+                </div>
+              </HoverCard>
+
+              {/* Quick Access */}
+              <HoverCard style={{ padding:"18px 20px" }}>
+                <p style={{ fontSize:13.5, fontWeight:600, color:"#334155", margin:"0 0 16px" }}>Akses Cepat</p>
+                <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12 }}>
+                  {[
+                    { icon:<IconAkademik/>, label:"Dashboard Akademik", path: "/dashboard/akademik" },
+                    { icon:<IconPerson/>,   label:"Dashboard Pimpinan", path: "/dashboard/pimpinan" },
+                    { icon:<IconMonitor/>,  label:"Monitoring IKU", path: "/dashboard/iku" },
+                    { icon:<IconSettings/>, label:"Manajemen Sistem", path: "/dashboard/system" },
+                  ].map(({ icon, label, path }) => (
+                    <button key={label} className="card-hover-sm" onClick={() => navigate(path)} style={{
+                      display:"flex", alignItems:"center", gap:10, padding:"13px 14px",
+                      border:"1px solid #E2E8F0", borderRadius:10,
+                      background:"#fff", fontSize:13, color:"#334155", fontWeight:500, textAlign:"left",
+                    }}>
+                      <QIcon>{icon}</QIcon>
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </HoverCard>
+
+            </div>
         </div>
 
         {/* FAB */}

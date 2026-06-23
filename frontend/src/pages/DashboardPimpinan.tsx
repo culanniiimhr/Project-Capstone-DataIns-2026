@@ -223,7 +223,18 @@ export default function DashboardPimpinan() {
 
                 {/* Row 2 — Distribusi Status Mahasiswa + Perbandingan Prodi */}
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 14 }}>
+                </div>
+              {/* Distribusi Status Mahasiswa */}
+              <HoverCard style={{ padding: "18px 18px" }}>
+                <p style={{fontSize: 13.5, fontWeight: 600, color: "#334155", margin: "0 0 14px",}}>
+                  Tren Performa Akademik
+                </p>
 
+                <div className="h-[320px] w-full overflow-hidden">
+                  <SupersetEmbedDefault
+                    dashboardId={supersetDashboards.statusMahasiswa}
+                    contentClassName="w-[125%] h-[118%] -translate-x-[70px] -translate-y-[75px] scale-[1.03] origin-top-left"
+                  />
                     {/* Distribusi Status Mahasiswa */}
                     <HoverCard style={{ padding: "18px 18px" }}>
                         <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: "0 0 14px", }}>
@@ -252,7 +263,13 @@ export default function DashboardPimpinan() {
                         </div>
                     </HoverCard>
                 </div>
+                </HoverCard>
 
+              {/* Perbandingan Performa Prodi */}
+              <HoverCard style={{ padding: "18px 18px" }}>
+                <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: "0 0 14px" }}>
+                  Perbandingan Performa Fakultas (IPK Rata-rata)
+                </p>
                 {/* Row 3 — Sorotan Utama + Insight */}
                 <div style={{ display: "grid", gridTemplateColumns: "3fr 1.2fr", gap: 14, marginBottom: 14 }}>
 
@@ -322,7 +339,7 @@ export default function DashboardPimpinan() {
                         </button>
                     </div>
                 </div>
-
+                </HoverCard>
                 {/* Row 4 — Top 5 Fakultas + Fakultas Perlu Perhatian */}
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
 
@@ -397,7 +414,6 @@ export default function DashboardPimpinan() {
                 <button className="fixed bottom-[30px] right-[31px] flex h-[36px] w-[36px] items-center justify-center rounded-[9px] bg-[#155EEF] text-[25px] text-white shadow-lg">
                     <VscHubot className="h-10 w-10 text-white" />
                 </button>
-
             </Layout>
         </>
     );
