@@ -223,18 +223,6 @@ export default function DashboardPimpinan() {
 
                 {/* Row 2 — Distribusi Status Mahasiswa + Perbandingan Prodi */}
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 14 }}>
-                </div>
-              {/* Distribusi Status Mahasiswa */}
-              <HoverCard style={{ padding: "18px 18px" }}>
-                <p style={{fontSize: 13.5, fontWeight: 600, color: "#334155", margin: "0 0 14px",}}>
-                  Tren Performa Akademik
-                </p>
-
-                <div className="h-[320px] w-full overflow-hidden">
-                  <SupersetEmbedDefault
-                    dashboardId={supersetDashboards.statusMahasiswa}
-                    contentClassName="w-[125%] h-[118%] -translate-x-[70px] -translate-y-[75px] scale-[1.03] origin-top-left"
-                  />
                     {/* Distribusi Status Mahasiswa */}
                     <HoverCard style={{ padding: "18px 18px" }}>
                         <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: "0 0 14px", }}>
@@ -252,7 +240,7 @@ export default function DashboardPimpinan() {
                     {/* Perbandingan Performa Prodi */}
                     <HoverCard style={{ padding: "18px 18px" }}>
                         <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: "0 0 14px" }}>
-                            Perbandingan Performa Prodi (IPK Rata-rata)
+                            Perbandingan Performa Fakultas (IPK Rata-rata)
                         </p>
 
                         <div className="h-[320px] w-full overflow-hidden">
@@ -263,13 +251,7 @@ export default function DashboardPimpinan() {
                         </div>
                     </HoverCard>
                 </div>
-                </HoverCard>
 
-              {/* Perbandingan Performa Prodi */}
-              <HoverCard style={{ padding: "18px 18px" }}>
-                <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: "0 0 14px" }}>
-                  Perbandingan Performa Fakultas (IPK Rata-rata)
-                </p>
                 {/* Row 3 — Sorotan Utama + Insight */}
                 <div style={{ display: "grid", gridTemplateColumns: "3fr 1.2fr", gap: 14, marginBottom: 14 }}>
 
@@ -339,42 +321,22 @@ export default function DashboardPimpinan() {
                         </button>
                     </div>
                 </div>
-                </HoverCard>
+
                 {/* Row 4 — Top 5 Fakultas + Fakultas Perlu Perhatian */}
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
 
                     {/* Top 5 Fakultas */}
-                    <HoverCard style={{ padding: "18px 20px" }}>
+                    <HoverCard style={{ padding: "10px 17px" }}>
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
                             <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: 0 }}>Top 5 Fakultas (berdasarkan IPK)</p>
                             <button style={{ background: "none", border: "none", color: "#2563EB", fontWeight: 600, fontSize: 12, cursor: "pointer" }}>Lihat selengkapnya</button>
                         </div>
-                        <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                            <thead>
-                                <tr style={{ background: "#EFF6FF" }}>
-                                    {["No.", "Fakultas", "Rata-rata IPK", "Perubahan"].map(h => (
-                                        <th key={h} style={{ padding: "9px 12px", textAlign: "left", fontSize: 12, fontWeight: 600, color: "#1E3A8A", borderBottom: "1px solid #E2E8F0" }}>{h}</th>
-                                    ))}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {topFakultas.map(({ no, nama, ipk, delta, up }, i) => (
-                                    <tr key={no} className="tr-hover" style={{ background: i % 2 === 0 ? "#fff" : "#FAFBFF", borderBottom: "1px solid #F1F5F9" }}>
-                                        <td style={{ padding: "10px 12px", fontSize: 13, color: "#64748B" }}>{no}.</td>
-                                        <td style={{ padding: "10px 12px", fontSize: 13, fontWeight: 500, color: "#1E293B" }}>{nama}</td>
-                                        <td style={{ padding: "10px 12px", fontSize: 13, fontWeight: 700, color: "#1E3A8A" }}>{ipk}</td>
-                                        <td style={{ padding: "10px 12px" }}>
-                                            <span style={{ fontSize: 12, fontWeight: 700, color: up ? "#16A34A" : "#DC2626", display: "flex", alignItems: "center", gap: 3 }}>
-                                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={up ? "#16A34A" : "#DC2626"} strokeWidth="3" strokeLinecap="round">
-                                                    <polyline points={up ? "18 15 12 9 6 15" : "6 9 12 15 18 9"} />
-                                                </svg>
-                                                {delta}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                        <div className="h-[320px] w-full overflow-hidden">
+                            <SupersetEmbedDefault
+                                dashboardId={supersetDashboards.topFakultas}
+                                contentClassName="w-[125%] h-[118%] -translate-x-[70px] -translate-y-[75px] scale-[1.03] origin-top-left"
+                            />
+                        </div>
                     </HoverCard>
 
                     {/* Fakultas Perlu Perhatian */}
@@ -383,29 +345,12 @@ export default function DashboardPimpinan() {
                             <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: 0 }}>Fakultas Perlu Perhatian</p>
                             <button style={{ background: "none", border: "none", color: "#2563EB", fontWeight: 600, fontSize: 12, cursor: "pointer" }}>Lihat selengkapnya</button>
                         </div>
-                        <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                            <thead>
-                                <tr style={{ background: "#EFF6FF" }}>
-                                    {["No.", "Fakultas", "Indikator", "Status"].map(h => (
-                                        <th key={h} style={{ padding: "9px 12px", textAlign: "left", fontSize: 12, fontWeight: 600, color: "#1E3A8A", borderBottom: "1px solid #E2E8F0" }}>{h}</th>
-                                    ))}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {fakultasPerhatian.map(({ no, nama, indikator, status, color, bg }, i) => (
-                                    <tr key={no} className="tr-hover" style={{ background: i % 2 === 0 ? "#fff" : "#FAFBFF", borderBottom: "1px solid #F1F5F9" }}>
-                                        <td style={{ padding: "10px 12px", fontSize: 13, color: "#64748B" }}>{no}.</td>
-                                        <td style={{ padding: "10px 12px", fontSize: 13, fontWeight: 500, color: "#1E293B" }}>{nama}</td>
-                                        <td style={{ padding: "10px 12px", fontSize: 13, color: "#64748B" }}>{indikator}</td>
-                                        <td style={{ padding: "10px 12px" }}>
-                                            <span style={{ background: bg, color, fontSize: 11, fontWeight: 600, borderRadius: 20, padding: "3px 12px", whiteSpace: "nowrap" }}>
-                                                {status}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                        <div className="h-[320px] w-full overflow-hidden">
+                            <SupersetEmbedDefault
+                                dashboardId={supersetDashboards.monitoringFakultas}
+                                contentClassName="w-[125%] h-[118%] -translate-x-[70px] -translate-y-[75px] scale-[1.03] origin-top-left"
+                            />
+                        </div>
                     </HoverCard>
 
                 </div>
