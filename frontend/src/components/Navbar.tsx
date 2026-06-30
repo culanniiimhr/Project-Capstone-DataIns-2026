@@ -20,6 +20,7 @@ const Navbar = ({
   const [profileName, setProfileName] = useState(propRoleName);
   const [profilePosition, setProfilePosition] = useState(propRolePosition);
   const [profileEmail, setProfileEmail] = useState("");
+  const [profileImage, setProfileImage] = useState<string | null>(null);
   const [selectedTahun, setSelectedTahun] = useState("");
   const [selectedSemester, setSelectedSemester] = useState("");
   const [isTahunOpen, setIsTahunOpen] = useState(false);
@@ -31,14 +32,22 @@ const Navbar = ({
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedAccount = localStorage.getItem("dummyAccount");
-    const isAuthenticated = localStorage.getItem("isAuthenticated");
-    if (storedAccount && isAuthenticated === "true") {
-      const parsedAccount = JSON.parse(storedAccount);
-      if (parsedAccount.name) setProfileName(parsedAccount.name);
-      if (parsedAccount.position) setProfilePosition(parsedAccount.position);
-      if (parsedAccount.email) setProfileEmail(parsedAccount.email);
-    }
+    const loadProfile = () => {
+      const storedAccount = localStorage.getItem("dummyAccount");
+      const isAuthenticated = localStorage.getItem("isAuthenticated");
+      if (storedAccount && isAuthenticated === "true") {
+        const parsedAccount = JSON.parse(storedAccount);
+        if (parsedAccount.name) setProfileName(parsedAccount.name);
+        if (parsedAccount.position) setProfilePosition(parsedAccount.position);
+        if (parsedAccount.email) setProfileEmail(parsedAccount.email);
+        setProfileImage(parsedAccount.image || null);
+      }
+    };
+
+    loadProfile();
+    
+    window.addEventListener("profileImageUpdated", loadProfile);
+    return () => window.removeEventListener("profileImageUpdated", loadProfile);
   }, []);
 
   const handleLogout = () => {
@@ -117,19 +126,34 @@ const Navbar = ({
           </>
         )}
 
-        <div className="relative flex items-center gap-[15px] pt-[27px]">
-          <FaRegBell className="h-5 w-5 text-[#111827]" />
+        <div className="relative flex items-center gap-2 pt-[18px]">
+          <div className="p-2.5 rounded-full hover:bg-gray-100 cursor-pointer transition-colors relative">
+            <FaRegBell className="h-5 w-5 text-[#4B5563]" />
+            <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
+          </div>
           
           <div 
-            className="flex items-center gap-[15px] cursor-pointer" 
+            className={`flex items-center gap-3 cursor-pointer p-2 rounded-xl transition-all duration-200 border ${isProfileOpen ? 'bg-blue-50 border-blue-100' : 'border-transparent hover:bg-gray-50 hover:border-gray-100'}`}
             onClick={() => { setIsProfileOpen(!isProfileOpen); setIsTahunOpen(false); setIsSemesterOpen(false); }}
           >
-            <FaRegCircleUser className="h-6 w-6 text-[#155EEF]" />
+            {profileImage ? (
+              <div className="relative">
+                <img src={profileImage} alt="Profile" className="h-[40px] w-[40px] rounded-full object-cover shadow-sm ring-2 ring-white" />
+                <div className="absolute bottom-0 right-0 h-[10px] w-[10px] bg-green-500 rounded-full ring-2 ring-white"></div>
+              </div>
+            ) : (
+              <div className="relative h-[40px] w-[40px] rounded-full bg-blue-100 flex items-center justify-center shadow-sm ring-2 ring-white">
+                <FaRegCircleUser className="h-5 w-5 text-[#155EEF]" />
+                <div className="absolute bottom-0 right-0 h-[10px] w-[10px] bg-green-500 rounded-full ring-2 ring-white"></div>
+              </div>
+            )}
 
-            <div className="w-[74px] text-[12px] font-medium leading-[14px] text-[#111827]">
-              <div className="truncate">{profileName}</div>
-              <div className="font-semibold text-[#0B3478] truncate">{profilePosition}</div>
+            <div className="hidden sm:block text-[13px] font-medium leading-[16px] text-[#111827] w-auto max-w-[180px] min-w-[80px]">
+              <div className="truncate font-semibold text-gray-900">{profileName}</div>
+              <div className="font-medium text-[#155EEF] truncate text-[11.5px] mt-0.5">{profilePosition}</div>
             </div>
+
+            <FaChevronDown className={`text-[12px] text-gray-400 ml-1 transition-transform duration-200 hidden sm:block ${isProfileOpen ? 'rotate-180 text-[#155EEF]' : ''}`} />
           </div>
 
           {/* Dropdown Profil */}

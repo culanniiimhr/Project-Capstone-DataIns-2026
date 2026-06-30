@@ -41,14 +41,20 @@ export default function Chatbot() {
     }
   }, [messages, isOpen]);
 
+<<<<<<< HEAD
   // 🚀 INTEGRASI FETCH N8N - FIX URL NGROK & BYPASS WARNING
   const handleSend = async (text: string) => {
     if (!text.trim() || isTyping) return;
+=======
+  const handleSend = (text: string) => {
+    if (!text.trim()) return;
+>>>>>>> 1e0e680da448d42e6ee8aec6aef77397f9416ffa
 
     setMessages((prev) => [...prev, { role: "user", content: text }]);
     setInput("");
     setIsTyping(true);
 
+<<<<<<< HEAD
     try {
       // ✅ JALUR UTAMA WAJIB TEMBAK NGROK LU, BUKAN LOCALHOST!
       const response = await fetch("https://michale-noninfluential-aracelis.ngrok-free.dev/webhook-test/fab7a9d3-d3b5-4cd0-8736-4a5f119fb806", {
@@ -88,10 +94,15 @@ export default function Chatbot() {
         }
       }
 
+=======
+    // Simulate AI response
+    setTimeout(() => {
+>>>>>>> 1e0e680da448d42e6ee8aec6aef77397f9416ffa
       setMessages((prev) => [
         ...prev,
         { 
           role: "assistant", 
+<<<<<<< HEAD
           content: String(aiReply) 
         },
       ]);
@@ -107,6 +118,13 @@ export default function Chatbot() {
     } finally {
       setIsTyping(false);
     }
+=======
+          content: "Ini adalah balasan simulasi lokal AI. Integrasi dengan N8N saat ini belum aktif, ini hanya tampilan sementara." 
+        },
+      ]);
+      setIsTyping(false);
+    }, 1000);
+>>>>>>> 1e0e680da448d42e6ee8aec6aef77397f9416ffa
   };
 
   return (
@@ -226,7 +244,11 @@ export default function Chatbot() {
                       className={`flex ${msg.role === "user" ? "justify-end pr-2" : "justify-start pl-2"}`}
                     >
                       <div
+<<<<<<< HEAD
                         className={`max-w-[75%] px-3.5 py-2 text-[13.5px] leading-[1.4] shadow-sm whitespace-pre-wrap ${
+=======
+                        className={`max-w-[75%] px-3.5 py-2 text-[13.5px] leading-[1.4] shadow-sm ${
+>>>>>>> 1e0e680da448d42e6ee8aec6aef77397f9416ffa
                           msg.role === "user"
                             ? "imessage-user"
                             : "imessage-assistant"
@@ -258,9 +280,13 @@ export default function Chatbot() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => {
+<<<<<<< HEAD
                     if (e.key === "Enter" && input.trim() && !isTyping) {
                       handleSend(input);
                     }
+=======
+                    if (e.key === "Enter") handleSend(input);
+>>>>>>> 1e0e680da448d42e6ee8aec6aef77397f9416ffa
                   }}
                   placeholder="Ketik pertanyaan..."
                   className="w-full rounded-[10px] bg-[#F1F5F9] py-[12px] pl-4 pr-12 text-[13px] text-[#334155] placeholder:text-[#64748B] focus:outline-none focus:ring-1 focus:ring-[#155EEF] focus:bg-white transition-all border border-transparent focus:border-[#155EEF]"
