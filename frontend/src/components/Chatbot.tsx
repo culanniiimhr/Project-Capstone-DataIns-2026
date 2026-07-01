@@ -41,24 +41,70 @@ export default function Chatbot() {
     }
   }, [messages, isOpen]);
 
-  const handleSend = (text: string) => {
-    if (!text.trim()) return;
+  // 🚀 INTEGRASI FETCH N8N - PARSING FIX & FORMAT PRE-WRAP
+  const handleSend = async (text: string) => {
+    if (!text.trim() || isTyping) return;
 
     setMessages((prev) => [...prev, { role: "user", content: text }]);
     setInput("");
     setIsTyping(true);
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      const response = await fetch("http://localhost:5678/webhook/fab7a9d3-d3b5-4cd0-8736-4a5f119fb806", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: text,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Gagal terhubung ke n8n");
+      }
+
+      const data = await response.json();
+      
+      let aiReply = "Maaf, chatbot tidak memberikan respon.";
+
+      if (data) {
+        const targetData = Array.isArray(data) ? data[0] : data;
+
+        if (typeof targetData === "string") {
+          aiReply = targetData;
+        } else if (targetData && typeof targetData === "object") {
+          if (targetData.text && typeof targetData.text === "string") {
+            aiReply = targetData.text;
+          } else if (targetData.text && typeof targetData.text === "object") {
+            aiReply = targetData.text.text || JSON.stringify(targetData.text);
+          } else {
+            const values = Object.values(targetData);
+            const firstString = values.find(v => typeof v === "string");
+            aiReply = firstString ? (firstString as string) : JSON.stringify(targetData);
+          }
+        }
+      }
+
       setMessages((prev) => [
         ...prev,
         { 
           role: "assistant", 
-          content: "Ini adalah balasan simulasi lokal AI. Integrasi dengan N8N saat ini belum aktif, ini hanya tampilan sementara." 
+          content: String(aiReply) 
         },
       ]);
+    } catch (error) {
+      console.error("Error chatbot n8n:", error);
+      setMessages((prev) => [
+        ...prev,
+        { 
+          role: "assistant", 
+          content: "Maaf, koneksi ke AI terputus. Pastikan n8n lu aktif." 
+        },
+      ]);
+    } finally {
       setIsTyping(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -177,8 +223,9 @@ export default function Chatbot() {
                       key={idx}
                       className={`flex ${msg.role === "user" ? "justify-end pr-2" : "justify-start pl-2"}`}
                     >
+                      {/* ✨ FIXED: whitespace-pre-wrap di imessage-assistant & imessage-user */}
                       <div
-                        className={`max-w-[75%] px-3.5 py-2 text-[13.5px] leading-[1.4] shadow-sm ${
+                        className={`max-w-[75%] px-3.5 py-2 text-[13.5px] leading-[1.4] shadow-sm whitespace-pre-wrap ${
                           msg.role === "user"
                             ? "imessage-user"
                             : "imessage-assistant"
@@ -210,7 +257,9 @@ export default function Chatbot() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") handleSend(input);
+                    if (e.key === "Enter" && input.trim() && !isTyping) {
+                      handleSend(input);
+                    }
                   }}
                   placeholder="Ketik pertanyaan..."
                   className="w-full rounded-[10px] bg-[#F1F5F9] py-[12px] pl-4 pr-12 text-[13px] text-[#334155] placeholder:text-[#64748B] focus:outline-none focus:ring-1 focus:ring-[#155EEF] focus:bg-white transition-all border border-transparent focus:border-[#155EEF]"

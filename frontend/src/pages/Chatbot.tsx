@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import api from "@/lib/api";
 
 interface Message {
   role: "user" | "assistant";
@@ -39,12 +38,32 @@ export default function ChatbotPage() {
     setLoading(true);
 
     try {
-      const { data } = await api.post("/chatbot/chat", { message: text });
-      setMessages((prev) => [...prev, { role: "assistant", content: data.reply }]);
-    } catch {
+      // 🚀 INTEGRASI LANGSUNG KE WEBHOOK N8N LU, BAR!
+      const response = await fetch("http://localhost:5678/webhook-test/tanya-grok", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: text, // Mengirim pesan user ke properti 'message' di node Webhook n8n
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Gagal terhubung ke n8n");
+      }
+
+      const data = await response.json();
+
+      // 🎯 MENYESUAIKAN OUTPUT 'text' DARI NODE BASIC LLM CHAIN N8N LU
+      const aiReply = data.text || "Maaf, chatbot tidak memberikan respon.";
+
+      setMessages((prev) => [...prev, { role: "assistant", content: aiReply }]);
+    } catch (error) {
+      console.error("Error chatbot n8n:", error);
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: "Maaf, terjadi kesalahan. Coba lagi sebentar." },
+        { role: "assistant", content: "Maaf, koneksi ke AI terputus. Pastikan n8n lu aktif." },
       ]);
     } finally {
       setLoading(false);

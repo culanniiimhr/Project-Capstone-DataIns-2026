@@ -1,17 +1,19 @@
 from fastapi import APIRouter
-# 1. Kita buka import auth di sini (auth ditambahin di paling kanan)
-from app.api.v1.endpoints import akademik, superset, auth
+from app.api.v1.endpoints import akademik, superset, auth, summarydashboardutama # 1. Tambahkan import di sini
 
 api_router = APIRouter()
 
 # Register endpoint akademik yang udah ada
 api_router.include_router(akademik.router, prefix="/akademik", tags=["Operasional Akademik"])
 
-# Register endpoint superset baru buatan lu!
+# Register endpoint superset baru
 api_router.include_router(superset.router, prefix="/superset", tags=["superset"])
 
-# 2. KITA AKTIFKAN ROUTER AUTH-NYA (Comment-nya dihapus!)
+# KITA AKTIFKAN ROUTER AUTH-NYA
 api_router.include_router(auth.router, prefix="/auth", tags=["Auth"])
+
+# 2. DAFTARKAN ROUTER INSIGHT DASHBOARD UTAMA KAMU DI SINI
+api_router.include_router(summarydashboardutama.router, prefix="/dashboard-utama", tags=["Dashboard Utama"])
 
 # Baris di bawah ini tetap di-comment dulu sampai file lainnya dibuat sama temen lu
 # api_router.include_router(mahasiswa.router,  prefix="/mahasiswa",  tags=["Mahasiswa"])

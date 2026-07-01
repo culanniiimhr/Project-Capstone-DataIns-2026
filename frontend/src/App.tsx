@@ -1,20 +1,36 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import DashboardUtama from "./pages/DashboardUtama";
 import DashboardAkademik from "./pages/DashboardAkademik";
 import DashboardPimpinan from "./pages/DashboardPimpinan";
-// 1. TAMBAHIN IMPORT INI DI BAWAHNYA
+import DashboardIKU from "./pages/DashboardIKU";
+import DashboardSistem from "./pages/DashboardSistem";
 import Login from "./pages/Login"; 
+import Profil from "./pages/Profil";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Halaman Utama / Landing */}
         <Route path="/" element={<DashboardUtama />} />
-        <Route path="/akademik" element={<DashboardAkademik />} />
-        <Route path="/pimpinan" element={<DashboardPimpinan />} />
-        {/* 2. TAMBAHIN ROUTE INI DI BAWAHNYA */}
+        
+        {/* Rute Dashboard Utama (Prefix /dashboard) */}
+        <Route path="/dashboard/utama" element={<DashboardUtama />} />
+        <Route path="/dashboard/akademik" element={<DashboardAkademik />} />
+        <Route path="/dashboard/pimpinan" element={<DashboardPimpinan />} />
+        <Route path="/dashboard/iku" element={<DashboardIKU />} />
+        <Route path="/dashboard/sistem" element={<DashboardSistem />} />
+        
+        {/* Fitur Pendukung */}
         <Route path="/login" element={<Login />} /> 
+        <Route path="/profil" element={<Profil />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+
+        {/* Auto-Redirect / Fallback: kalau ngetik rute lama tanpa /dashboard, langsung dioper ke rute yang bener */}
+        <Route path="/akademik" element={<Navigate to="/dashboard/akademik" replace />} />
+        <Route path="/pimpinan" element={<Navigate to="/dashboard/pimpinan" replace />} />
       </Routes>
     </BrowserRouter>
   );
