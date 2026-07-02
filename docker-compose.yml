@@ -55,7 +55,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: db_warehouse
     ports:
-      - "127.0.0.1:5432:5432" # 🔒 Konek lewat pgAdmin port 5432 untuk data lama lu
+      - "127.0.0.1:5435:5432" # 🔒 Dipindah ke 5435 agar tidak bentrok dengan postgres n8n lama server
     volumes:
       - warehouse_data:/var/lib/postgresql/data
       - ./backend/app/db/olap/init_warehouse.sql:/docker-entrypoint-initdb.d/init_warehouse.sql
@@ -103,7 +103,7 @@ services:
     restart: unless-stopped
     env_file: .env
     ports:
-      - "127.0.0.1:3000:3000"
+      - "127.0.0.1:3005:3000" # 🔒 Digeser ke port lokal 3005 (tidak bentrok varguard)
     depends_on:
       - backend
     volumes:
@@ -144,7 +144,7 @@ services:
     environment:
       SUPERSET_SECRET_KEY: ${SUPERSET_SECRET_KEY}
     ports:
-      - "127.0.0.1:8088:8088"
+      - "127.0.0.1:8089:8088" # 🔒 Digeser ke port lokal 8089
     depends_on:
       db_warehouse:
         condition: service_healthy
@@ -162,7 +162,7 @@ services:
     container_name: datains_n8n
     restart: unless-stopped
     ports:
-      - "127.0.0.1:5678:5678"
+      - "127.0.0.1:5679:5678" # 🔒 Digeser ke port lokal 5679 (tidak bentrok n8n server)
     environment:
       N8N_BASIC_AUTH_ACTIVE: "true"
       N8N_BASIC_AUTH_USER: ${N8N_USER}
@@ -174,26 +174,10 @@ services:
     networks:
       - datains_net
 
-  # ─────────────────────────────────────────
-  # NGINX (Reverse Proxy)
-  # ─────────────────────────────────────────
-  nginx:
-    image: nginx:alpine
-    container_name: datains_nginx
-    restart: unless-stopped
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - frontend
-      - backend
-      - superset
-    networks:
-      - datains_net
+# (⚠️ SERVICE NGINX DIHAPUS KARENA AKAN DI-HANDLE NGINX UTAMA MAS SUGENG)
 
 # ─────────────────────────────────────────
-# VOLUMES - Paksa membaca data lama bawaan clone capstone
+# VOLUMES
 # ─────────────────────────────────────────
 volumes:
   oltp_data:
