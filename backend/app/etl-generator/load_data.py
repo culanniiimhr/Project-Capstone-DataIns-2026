@@ -100,7 +100,7 @@ def load_data():
     last_id_khs = int(df_khs['id_nilai'].max()) if df_khs is not None and 'id_nilai' in df_khs.columns else 1
     last_id_presensi = int(df_presensi['id_presensi'].max()) if df_presensi is not None and 'id_presensi' in df_presensi.columns else 1
 
-    # Loop khusus untuk menembak mahasiswa yang "nganggur"
+    # Loop khusus untuk menembak mahasiswa yang nganggur
     for nim in nim_belum_aktif:
         mk_pilihan = random.sample(list_mk_valid, 2) if len(list_mk_valid) >= 2 else list_mk_valid
         semester_pilihan = random.choice([1, 2, 3, 4])

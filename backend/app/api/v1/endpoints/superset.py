@@ -1,34 +1,43 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 import requests
 
 router = APIRouter()
 
-SUPERSET_URL = "http://datains_superset:8088" 
+SUPERSET_URL = "http://datains_superset:8088"
 SUPERSET_USERNAME = "admin"
-SUPERSET_PASSWORD = "admin123" 
-
-# ID asli 
-DASHBOARD_UUID = "363c7032-3690-4c02-bd0d-4be7e43a425d"
+SUPERSET_PASSWORD = "admin123"
 
 @router.get("/guest-token")
-def get_superset_guest_token():
+def get_superset_guest_token(dashboard_id: str = Query(...)):
     try:
-        # 1. Login ke internal Superset
+        # 1. Login ke Superset menggunakan API Security resmi
         login_data = {
             "username": SUPERSET_USERNAME,
             "password": SUPERSET_PASSWORD,
             "provider": "db",
             "refresh": True
         }
-        login_res = requests.post(f"{SUPERSET_URL}/api/v1/auth/login", json=login_data)
-        
+
+        login_res = requests.post(
+            f"{SUPERSET_URL}/api/v1/security/login",
+            json=login_data,
+            timeout=10
+        )
+
         if login_res.status_code != 200:
-            raise HTTPException(status_code=500, detail="Backend gagal login ke internal Superset")
-            
-        access_token = login_res.json()["access_token"]
-        
-        # 2. Minta Guest Token pake access_token admin
-        headers = {"Authorization": f"Bearer {access_token}"}
+            raise HTTPException(
+                status_code=500,
+                detail=f"Gagal login ke Superset: {login_res.status_code} - {login_res.text}"
+            )
+
+        access_token = login_res.json().get("access_token")
+
+        headers = {
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type": "application/json"
+        }
+
+        # 2. Minta Guest Token sesuai dengan dashboard_id yang dikirim oleh Front-End
         guest_token_data = {
             "user": {
                 "username": "guest_user",
@@ -38,22 +47,29 @@ def get_superset_guest_token():
             "resources": [
                 {
                     "type": "dashboard",
-                    "id": DASHBOARD_UUID
+                    "id": dashboard_id
                 }
             ],
-            "rls": []
+            "rls": [] 
         }
-        
+
         token_res = requests.post(
-            f"{SUPERSET_URL}/api/v1/security/guest_token", 
-            json=guest_token_data, 
-            headers=headers
+            f"{SUPERSET_URL}/api/v1/security/guest_token",
+            json=guest_token_data,
+            headers=headers,
+            timeout=10
         )
-        
+
         if token_res.status_code != 200:
-            raise HTTPException(status_code=500, detail="Gagal generate guest token dari Superset")
-            
-        return {"token": token_res.json()["token"]}
-        
+            raise HTTPException(
+                status_code=500,
+                detail=f"Gagal generate guest token: {token_res.status_code} - {token_res.text}"
+            )
+
+        return {"token": token_res.json().get("token")}
+
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
