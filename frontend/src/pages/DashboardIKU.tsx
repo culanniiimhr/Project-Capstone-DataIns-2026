@@ -9,6 +9,8 @@ import { FaRegCircleUser, FaRegUser } from "react-icons/fa6";
 import { TfiTarget } from "react-icons/tfi";
 import { RiMedalLine } from "react-icons/ri";
 import { VscHubot } from "react-icons/vsc";
+import SupersetEmbedDefault from "../components/SupersetEmbedDefault";
+import { supersetDashboards } from "../config/SupersetDb";
 
 type DashboardIKUProps = {
   kpiCapaianUrl?: string;
@@ -53,6 +55,45 @@ const EmbedBox: FunctionComponent<EmbedProps> = ({
     </div>
   );
 };
+
+/* ─── GLOBAL STYLES ─────────────────────────────────── */
+const globalStyles = `
+  @keyframes fadeInUp {
+    from { opacity:0; transform:translateY(18px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  .card-hover {
+    transition: transform 0.22s cubic-bezier(.34,1.56,.64,1), box-shadow 0.22s ease, border-color 0.22s ease;
+    will-change: transform; cursor:pointer;
+  }
+  .card-hover:hover {
+    transform: translateY(-6px) scale(1.015);
+    box-shadow: 0 12px 28px rgba(30,58,138,0.13), 0 2px 8px rgba(30,58,138,0.07);
+    border-color: #BFDBFE !important;
+  }
+  .kpi-card { animation: fadeInUp 0.4s ease both; }
+  .kpi-card:nth-child(1){animation-delay:0.05s}
+  .kpi-card:nth-child(2){animation-delay:0.10s}
+  .kpi-card:nth-child(3){animation-delay:0.15s}
+  .kpi-card:nth-child(4){animation-delay:0.20s}
+  .nav-btn { transition: background 0.15s ease, transform 0.15s ease, color 0.15s ease; }
+  .nav-btn:hover:not(.active) {
+    background: #EFF6FF !important; color: #1D4ED8 !important; transform: translateX(3px);
+  }
+  .tr-hover { transition: background 0.15s ease; }
+  .tr-hover:hover { background: #EFF6FF !important; }
+  .bar-item { transition: opacity 0.15s ease; }
+  .bar-item:hover { opacity: 0.82; }
+`;
+
+/* ─── HOVER CARD ─────────────────────────────────────── */
+function HoverCard({ style = {}, children }: { style?: React.CSSProperties; children: React.ReactNode }) {
+  return (
+    <div className="card-hover" style={{ background: "#fff", borderRadius: 12, border: "1px solid #E8EDF5", boxShadow: "0 1px 4px rgba(30,58,138,0.05)", ...style }}>
+      {children}
+    </div>
+  );
+}
 
 const KpiIKUPlaceholder = ({
   icon,
@@ -268,41 +309,49 @@ const DashboardIKU: FunctionComponent<DashboardIKUProps> = ({
       </section>
 
       <section className="mt-[10px] grid grid-cols-[1fr_1fr_200px] gap-[10px]">
-        <EmbedBox
-          src={trendIkuUrl}
-          title="Tren Capaian IKU Institusi"
-          className="h-[300px]"
-        >
-          <ChartFallback title="Tren Capaian IKU Institusi" />
-        </EmbedBox>
+        <HoverCard style={{ padding: "18px 18px 10px" }}>
+          <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: "0 0 14px" }}>Tren Capaian IKU Institusi</p>
+          <div className="h-[260px] w-full overflow-hidden">
+            <SupersetEmbedDefault
+              dashboardId={supersetDashboards.trenIku}
+              contentClassName="w-[175%] h-[170%] -translate-x-[90px] -translate-y-[60px] scale-[0.8] origin-top-left"
+            />
+          </div>
+        </HoverCard>
 
-        <EmbedBox
-          src={perspektifIkuUrl}
-          title="Capaian IKU per Perspektif"
-          className="h-[300px]"
-        >
-          <ChartFallback title="Capaian IKU per Perspektif" />
-        </EmbedBox>
+        <HoverCard style={{ padding: "18px 18px 10px" }}>
+          <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: "0 0 14px" }}>Capaian IKU per Perspektif</p>
+          <div className="h-[260px] w-full overflow-hidden">
+            <SupersetEmbedDefault
+              dashboardId={supersetDashboards.perspektifIku}
+              contentClassName="w-[175%] h-[170%] -translate-x-[90px] -translate-y-[60px] scale-[0.8] origin-top-left"
+            />
+          </div>
+        </HoverCard>
 
         <InsightOtomatis />
       </section>
 
       <section className="mt-[10px] grid grid-cols-[1.48fr_1fr] gap-[10px]">
-        <EmbedBox
-          src={indikatorTableUrl}
-          title="Capaian per Indikator Kinerja Utama"
-          className="h-[308px]"
-        >
-          <ChartFallback title="Capaian per Indikator Kinerja Utama" />
-        </EmbedBox>
+        <HoverCard style={{ padding: "18px 18px 10px" }}>
+          <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: "0 0 14px" }}>Capaian per Indikator Kinerja Utama</p>
+          <div className="h-[260px] w-full overflow-hidden">
+            <SupersetEmbedDefault
+              dashboardId={supersetDashboards.indikatorIku}
+              contentClassName="w-[150%] h-[170%] -translate-x-[55px] -translate-y-[60px] scale-[0.8] origin-top-left"
+            />
+          </div>
+        </HoverCard>
 
-        <EmbedBox
-          src={perbandinganUrl}
-          title="Perbandingan Capaian"
-          className="h-[308px]"
-        >
-          <ChartFallback title="Perbandingan Capaian" />
-        </EmbedBox>
+        <HoverCard style={{ padding: "18px 18px 10px" }}>
+          <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: "0 0 14px" }}>Perbandingan Capaian</p>
+          <div className="h-[260px] w-full overflow-hidden">
+            <SupersetEmbedDefault
+              dashboardId={supersetDashboards.perbandinganIku}
+              contentClassName="w-[160%] h-[170%] -translate-x-[55px] -translate-y-[60px] scale-[0.8] origin-top-left"
+            />
+          </div>
+        </HoverCard>
       </section>
 
       <button className="fixed bottom-[30px] right-[31px] flex h-[36px] w-[36px] items-center justify-center rounded-[9px] bg-[#155EEF] text-[25px] text-white shadow-lg">

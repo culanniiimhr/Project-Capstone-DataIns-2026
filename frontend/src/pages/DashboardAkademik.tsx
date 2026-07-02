@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
+import SupersetEmbedDefault from "../components/SupersetEmbedDefault";
+import { supersetDashboards } from "../config/SupersetDb";
 import {
   LineChart, Line, BarChart, Bar, AreaChart, Area,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend,
@@ -219,35 +221,24 @@ export default function DashboardAkademik() {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 14 }}>
           <HoverCard style={{ padding: "18px 18px 10px" }}>
             <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: "0 0 14px" }}>Tren IPK Rata-rata</p>
-            <ResponsiveContainer width="100%" height={210}>
-              <LineChart data={ipkTrendData} margin={{ top: 14, right: 20, left: -14, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="4 4" stroke="#F1F5F9" />
-                <XAxis dataKey="year" tick={{ fontSize: 11, fill: "#94A3B8" }} axisLine={{ stroke: "#E2E8F0" }} tickLine={false} />
-                <YAxis domain={[2.8, 4.05]} ticks={[2.80, 3.10, 3.30, 3.50, 3.70, 4.00]} tick={{ fontSize: 11, fill: "#94A3B8" }} axisLine={false} tickLine={false} tickFormatter={v => v.toFixed(2)} />
-                <Tooltip content={<CustomTooltip />} />
-                <Legend iconType="circle" iconSize={7} wrapperStyle={{ fontSize: 12, color: "#64748B", paddingTop: 6 }} />
-                <Line type="linear" dataKey="ganjil" name="ganjil" stroke="#EF4444" strokeWidth={2} dot={{ r: 4.5, fill: "#fff", stroke: "#EF4444", strokeWidth: 2 }} activeDot={{ r: 6 }} label={{ position: "top", fontSize: 10, fill: "#555", dy: -5 }} />
-                <Line type="linear" dataKey="genap" name="genap" stroke="#3B82F6" strokeWidth={2} dot={{ r: 4.5, fill: "#fff", stroke: "#3B82F6", strokeWidth: 2 }} activeDot={{ r: 6 }} label={{ position: "top", fontSize: 10, fill: "#555", dy: -5 }} />
-              </LineChart>
-            </ResponsiveContainer>
+            <div className="h-[260px] w-full overflow-hidden">
+              <SupersetEmbedDefault
+                dashboardId={supersetDashboards.trenIpk}
+                contentClassName="w-[125%] h-[118%] -translate-x-[70px] -translate-y-[75px] scale-[1.03] origin-top-left"
+              />
+            </div>
           </HoverCard>
 
           <HoverCard style={{ padding: "18px 18px 10px" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-              <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: 0 }}>Distribusi Nilai (Semua Prodi)</p>
+              <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: 0 }}>Distribusi Nilai Mahasiswa</p>
             </div>
-            <ResponsiveContainer width="100%" height={210}>
-              <BarChart data={distribusiNilai} margin={{ top: 14, right: 10, left: -14, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="4 4" stroke="#F1F5F9" vertical={false} />
-                <XAxis dataKey="grade" tick={{ fontSize: 11, fill: "#94A3B8" }} axisLine={{ stroke: "#E2E8F0" }} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: "#94A3B8" }} axisLine={false} tickLine={false} />
-                <Tooltip content={<CustomTooltip />} />
-                <Legend iconType="square" iconSize={10} wrapperStyle={{ fontSize: 12 }} />
-                <Bar dataKey="jumlah" name="Distribusi Nilai" fill="#2563EB" radius={[4, 4, 0, 0]}>
-                  {distribusiNilai.map((_, i) => <Cell key={i} fill="#2563EB" className="bar-item" />)}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+             <div className="h-[260px] w-full overflow-hidden">
+              <SupersetEmbedDefault
+                dashboardId={supersetDashboards.distribusiNilai}
+                contentClassName="w-[125%] h-[118%] -translate-x-[65px] -translate-y-[80px] scale-[1.0] origin-top-left"
+              />
+            </div>
           </HoverCard>
         </div>
 
@@ -257,20 +248,11 @@ export default function DashboardAkademik() {
           {/* Beban Studi */}
           <HoverCard style={{ padding: "16px 16px 10px" }}>
             <p style={{ fontSize: 13, fontWeight: 600, color: "#334155", margin: "0 0 12px" }}>Rata-rata Beban Studi (SKS)</p>
-            <ResponsiveContainer width="100%" height={185}>
-              <BarChart data={bebanStudiData} margin={{ top: 10, right: 8, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
-                <XAxis dataKey="semester" tick={false} axisLine={{ stroke: "#E2E8F0" }} tickLine={false} />
-                <YAxis domain={[0, 25]} ticks={[0, 20, 40, 60, 80, 100]} tick={{ fontSize: 10, fill: "#94A3B8" }} axisLine={false} tickLine={false} />
-                <Tooltip content={<CustomTooltip />} />
-                <Bar dataKey="sks" name="Rata-rata Beban Studi (SKS)" fill="#818CF8" radius={[3, 3, 0, 0]}>
-                  {bebanStudiData.map((_, i) => <Cell key={i} fill="#818CF8" className="bar-item" />)}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-            <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 4 }}>
-              <div style={{ width: 10, height: 10, background: "#818CF8", borderRadius: 2, marginTop: 2 }} />
-              <span style={{ fontSize: 10, color: "#64748B" }}>Rata-rata Beban Studi (SKS)</span>
+            <div className="h-[260px] w-full overflow-hidden">
+              <SupersetEmbedDefault
+                dashboardId={supersetDashboards.bebanStudi}
+                contentClassName="w-[160%] h-[170%] -translate-x-[70px] -translate-y-[85px] scale-[0.9] origin-top-left"
+              />
             </div>
           </HoverCard>
 
@@ -280,42 +262,22 @@ export default function DashboardAkademik() {
               <p style={{ fontSize: 13, fontWeight: 600, color: "#334155", margin: 0 }}>Perbandingan IPK Fakultas</p>
               <IconInfo />
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {perbandinganFakultas.map(({ name, ipk }) => (
-                <div key={name}>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                    <span style={{ fontSize: 11, color: "#475569" }}>{name}</span>
-                    <span style={{ fontSize: 11, fontWeight: 600, color: "#1E3A8A" }}>{ipk.toFixed(2)}</span>
-                  </div>
-                  <div style={{ height: 6, background: "#EFF6FF", borderRadius: 99 }}>
-                    <div style={{ height: "100%", borderRadius: 99, background: "#2563EB", width: `${(ipk / 4) * 100}%`, transition: "width 0.6s ease" }} />
-                  </div>
-                </div>
-              ))}
+            <div className="h-[300px] w-full overflow-hidden">
+              <SupersetEmbedDefault
+                  dashboardId={supersetDashboards.performaProdi}
+                  contentClassName="w-[135%] h-[118%] -translate-x-[70px] -translate-y-[95px] scale-[1.07] origin-top-left"
+              />
             </div>
           </HoverCard>
 
           {/* Tren Kehadiran */}
           <HoverCard style={{ padding: "16px 16px 10px" }}>
             <p style={{ fontSize: 13, fontWeight: 600, color: "#334155", margin: "0 0 12px" }}>Tren Kehadiran (%)</p>
-            <ResponsiveContainer width="100%" height={185}>
-              <AreaChart data={trendKehadiran} margin={{ top: 10, right: 8, left: -20, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="gradKehadiran" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#22C55E" stopOpacity={0.25} />
-                    <stop offset="95%" stopColor="#22C55E" stopOpacity={0.02} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
-                <XAxis dataKey="period" tick={false} axisLine={{ stroke: "#E2E8F0" }} tickLine={false} />
-                <YAxis domain={[0, 100]} ticks={[0, 20, 40, 60, 80, 100]} tick={{ fontSize: 10, fill: "#94A3B8" }} axisLine={false} tickLine={false} tickFormatter={v => `${v}%`} />
-                <Tooltip content={<CustomTooltip />} />
-                <Area type="monotone" dataKey="pct" name="Tren Kehadiran" stroke="#22C55E" strokeWidth={2} fill="url(#gradKehadiran)" dot={{ r: 3.5, fill: "#22C55E", stroke: "#fff", strokeWidth: 1.5 }} activeDot={{ r: 5 }} />
-              </AreaChart>
-            </ResponsiveContainer>
-            <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 4 }}>
-              <div style={{ width: 10, height: 10, background: "#22C55E", borderRadius: 2, marginTop: 2 }} />
-              <span style={{ fontSize: 10, color: "#64748B" }}>Tren Kehadiran</span>
+            <div className="h-[300px] w-full overflow-hidden">
+                <SupersetEmbedDefault
+                    dashboardId={supersetDashboards.trenKehadiran}
+                    contentClassName="w-[155%] h-[135%] -translate-x-[65px] -translate-y-[70px] scale-[0.9] origin-top-left"
+                />
             </div>
           </HoverCard>
         </div>
@@ -349,25 +311,12 @@ export default function DashboardAkademik() {
               <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: 0 }}>Top 5 Mahasiswa (IPK Tertinggi)</p>
               <button style={{ background: "none", border: "none", color: "#2563EB", fontWeight: 600, fontSize: 12, cursor: "pointer" }}>Lihat selengkapnya</button>
             </div>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
-              <thead>
-                <tr style={{ background: "#EFF6FF" }}>
-                  {["No.", "Nama Mahasiswa", "Prodi", "IPK"].map(h => (
-                    <th key={h} style={{ padding: "9px 12px", textAlign: "left", fontSize: 12, fontWeight: 600, color: "#1E3A8A", borderBottom: "1px solid #E2E8F0" }}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {topMahasiswa.map(({ no, nama, prodi, ipk }, i) => (
-                  <tr key={no} className="tr-hover" style={{ background: i % 2 === 0 ? "#fff" : "#FAFBFF", borderBottom: "1px solid #F1F5F9" }}>
-                    <td style={{ padding: "10px 12px", fontSize: 13, color: "#64748B" }}>{no}.</td>
-                    <td style={{ padding: "10px 12px", fontSize: 13, fontWeight: 500, color: "#1E293B" }}>{nama}</td>
-                    <td style={{ padding: "10px 12px", fontSize: 13, color: "#64748B" }}>{prodi}</td>
-                    <td style={{ padding: "10px 12px", fontSize: 13, fontWeight: 700, color: "#1E3A8A" }}>{ipk}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div className="h-[320px] w-full overflow-hidden">
+                <SupersetEmbedDefault
+                    dashboardId={supersetDashboards.topMahasiswa}
+                    contentClassName="w-[125%] h-[118%] -translate-x-[70px] -translate-y-[75px] scale-[1.03] origin-top-left"
+                />
+            </div>
           </HoverCard>
 
           {/* Mahasiswa Berisiko */}
@@ -376,30 +325,12 @@ export default function DashboardAkademik() {
               <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: 0 }}>Mahasiswa Berisiko (Perlu Perhatian)</p>
               <button style={{ background: "none", border: "none", color: "#2563EB", fontWeight: 600, fontSize: 12, cursor: "pointer" }}>Lihat selengkapnya</button>
             </div>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
-              <thead>
-                <tr style={{ background: "#EFF6FF" }}>
-                  {["No.", "Nama Mahasiswa", "Prodi", "IPK", "Indikator Risiko"].map(h => (
-                    <th key={h} style={{ padding: "9px 12px", textAlign: "left", fontSize: 12, fontWeight: 600, color: "#1E3A8A", borderBottom: "1px solid #E2E8F0" }}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {mahasiswaBerisiko.map(({ no, nama, prodi, ipk, risiko, color }, i) => (
-                  <tr key={no} className="tr-hover" style={{ background: i % 2 === 0 ? "#fff" : "#FAFBFF", borderBottom: "1px solid #F1F5F9" }}>
-                    <td style={{ padding: "10px 12px", fontSize: 13, color: "#64748B" }}>{no}.</td>
-                    <td style={{ padding: "10px 12px", fontSize: 13, fontWeight: 500, color: "#1E293B" }}>{nama}</td>
-                    <td style={{ padding: "10px 12px", fontSize: 13, color: "#64748B" }}>{prodi}</td>
-                    <td style={{ padding: "10px 12px", fontSize: 13, fontWeight: 700, color: "#DC2626" }}>{ipk}</td>
-                    <td style={{ padding: "10px 12px" }}>
-                      <span style={{ background: color === "#EF4444" ? "#FEE2E2" : "#FFEDD5", color, fontSize: 11, fontWeight: 600, borderRadius: 20, padding: "3px 10px", whiteSpace: "nowrap" }}>
-                        {risiko}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div className="h-[320px] w-full overflow-hidden">
+                <SupersetEmbedDefault
+                    dashboardId={supersetDashboards.mhsBeresiko}
+                    contentClassName="w-[125%] h-[118%] -translate-x-[70px] -translate-y-[75px] scale-[1.03] origin-top-left"
+                />
+            </div>
           </HoverCard>
 
         </div>

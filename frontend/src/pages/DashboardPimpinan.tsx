@@ -228,7 +228,7 @@ export default function DashboardPimpinan() {
                     {/* Perbandingan Performa Prodi */}
                     <HoverCard style={{ padding: "18px" }}>
                         <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: "0 0 14px" }}>
-                            Perbandingan Performa Prodi (IPK Rata-rata)
+                            Perbandingan Performa Fakultas (IPK Rata-rata)
                         </p>
                         <div className="h-[320px] w-full overflow-hidden">
                             <SupersetEmbedDefault
@@ -263,7 +263,7 @@ export default function DashboardPimpinan() {
                                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
                                     <IconSorotanPos />
                                     <span style={{ fontSize: 12, fontWeight: 700, color: "#1D4ED8" }}>Positif</span>
-                                </div>
+                     git rm frontend/node_modules/.cache/default-development/index.pack           </div>
                                 <p style={{ fontSize: 12, color: "#374151", margin: 0, lineHeight: 1.55 }}>Tingkat kelulusan keseluruhan mencapai 32,4%, sinkron dengan data analitik.</p>
                             </div>
                             <div className="sorotan-card" style={{ border: "1.5px solid #FECACA", borderRadius: 10, padding: "14px", background: "#FFF5F5", cursor: "pointer" }}>
