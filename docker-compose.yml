@@ -1,6 +1,49 @@
-version: "3.9"
-
 services:
+  # ─────────────────────────────────────────
+  # DATABASES (Hanya OLTP & SDM di Lokal)
+  # ─────────────────────────────────────────
+  db_oltp:
+    image: postgres:15
+    container_name: datains_oltp
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: db_akademik
+    ports:
+      - "127.0.0.1:5433:5432" # 🔒 DIKUNCI LOKAL UNTUK PGADMIN LU
+    volumes:
+      - oltp_data:/var/lib/postgresql/data
+      - ./backend/app/db/oltp/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - datains_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d db_akademik"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  db_sdm:
+    image: postgres:15
+    container_name: datains_sdm
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: db_sdm
+    ports:
+      - "127.0.0.1:5434:5432" # 🔒 DIKUNCI LOKAL UNTUK PGADMIN LU
+    volumes:
+      - sdm_data:/var/lib/postgresql/data
+      - ./backend/app/db/oltp/init_sdm.sql:/docker-entrypoint-initdb.d/init_sdm.sql
+    networks:
+      - datains_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d db_sdm"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   # ─────────────────────────────────────────
   # BACKEND (FastAPI)
   # ─────────────────────────────────────────
@@ -10,9 +53,14 @@ services:
       dockerfile: Dockerfile
     container_name: datains_backend
     restart: unless-stopped
-    env_file: .env # 🔑 Pastikan URL Supabase sudah ada di file .env lu nanti
+    env_file: .env
     ports:
-      - "127.0.0.1:8000:8000" # 🔒 DIKUNCI LOKAL
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      db_oltp:
+        condition: service_healthy
+      db_sdm:
+        condition: service_healthy
     volumes:
       - ./backend:/app
     networks:
@@ -30,7 +78,7 @@ services:
     restart: unless-stopped
     env_file: .env
     ports:
-      - "127.0.0.1:3000:3000" # 🔒 DIKUNCI LOKAL
+      - "127.0.0.1:3000:3000"
     depends_on:
       - backend
     volumes:
@@ -40,7 +88,7 @@ services:
       - datains_net
 
   # ─────────────────────────────────────────
-  # ETL (Python)
+  # ETL (Python) - Membaca OLTP Lokal, Menulis ke Supabase Cloud
   # ─────────────────────────────────────────
   etl:
     build:
@@ -49,6 +97,9 @@ services:
     container_name: datains_etl
     restart: unless-stopped
     env_file: .env
+    depends_on:
+      db_oltp:
+        condition: service_healthy
     volumes:
       - ./etl:/app
     networks:
@@ -56,7 +107,7 @@ services:
     command: tail -f /dev/null
 
   # ─────────────────────────────────────────
-  # APACHE SUPERSET (BI Dashboard)
+  # APACHE SUPERSET (BI Dashboard nembak Supabase Cloud via .env)
   # ─────────────────────────────────────────
   superset:
     image: apache/superset:3.1.0
@@ -66,7 +117,7 @@ services:
     environment:
       SUPERSET_SECRET_KEY: ${SUPERSET_SECRET_KEY}
     ports:
-      - "127.0.0.1:8088:8088" # 🔒 DIKUNCI LOKAL
+      - "127.0.0.1:8088:8088"
     volumes:
       - ./superset/config/superset_config.py:/app/pythonpath/superset_config.py
       - superset_data:/app/superset_home
@@ -81,12 +132,12 @@ services:
     container_name: datains_n8n
     restart: unless-stopped
     ports:
-      - "127.0.0.1:5678:5678" # 🔒 DIKUNCI LOKAL
+      - "127.0.0.1:5678:5678"
     environment:
       N8N_BASIC_AUTH_ACTIVE: "true"
       N8N_BASIC_AUTH_USER: ${N8N_USER}
       N8N_BASIC_AUTH_PASSWORD: ${N8N_PASSWORD}
-      N8N_HOST: 0.0.0.0
+      N8N_HOST: 0.0.0.0 # 🛠️ Tetap gunakan ini agar n8n lancar
       N8N_PORT: 5678
     volumes:
       - n8n_data:/home/node/.n8n
@@ -101,7 +152,7 @@ services:
     container_name: datains_nginx
     restart: unless-stopped
     ports:
-      - "80:80" # 🌍 Gerbang publik satu-satunya
+      - "80:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
@@ -112,6 +163,8 @@ services:
       - datains_net
 
 volumes:
+  oltp_data: # 💾 Data Akademik lokal lu AMAN di sini
+  sdm_data:  # 💾 Data SDM lokal lu AMAN di sini
   superset_data:
   n8n_data:
 
