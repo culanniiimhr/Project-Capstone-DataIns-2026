@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { embedDashboard } from "@superset-ui/embedded-sdk";
+import { useFilter } from "../context/FilterContext";
 
 interface SupersetEmbedDefaultProps {
   dashboardId: string;
@@ -7,6 +8,7 @@ interface SupersetEmbedDefaultProps {
 }
 
 const SupersetEmbedDefault = ({dashboardId, contentClassName = "w-full h-full",}: SupersetEmbedDefaultProps) => {
+  const { tahunAkademik, semester } = useFilter();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -46,6 +48,7 @@ const SupersetEmbedDefault = ({dashboardId, contentClassName = "w-full h-full",}
             hideChartControls: true,
             filters: {
               expanded: false,
+              visible: false,
             },
           },
         });
@@ -63,7 +66,7 @@ const SupersetEmbedDefault = ({dashboardId, contentClassName = "w-full h-full",}
     };
 
     embed();
-  }, [dashboardId]);
+  }, [dashboardId, tahunAkademik, semester]);
 
   return (
     <div className="w-full h-full overflow-hidden rounded-[16px] bg-white">

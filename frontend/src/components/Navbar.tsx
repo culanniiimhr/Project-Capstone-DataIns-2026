@@ -2,12 +2,19 @@ import { useState, useEffect } from "react";
 import { FaRegBell } from "react-icons/fa";
 import { FaRegCircleUser, FaChevronDown, FaCheck } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import { useFilter } from "../context/FilterContext";
 
 type NavbarProps = {
   title: string;
   roleName?: string;
   rolePosition?: string;
   showFilters?: boolean;
+  filters?: {
+    tahunAkademik: string;
+    semester: string;
+    setTahunAkademik: (value: string) => void;
+    setSemester: (value: string) => void;
+  };
 };
 
 const Navbar = ({
@@ -15,19 +22,24 @@ const Navbar = ({
   roleName: propRoleName = "Pimpinan",
   rolePosition: propRolePosition = "Rektor",
   showFilters = true,
+  filters,
 }: NavbarProps) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [profileName, setProfileName] = useState(propRoleName);
   const [profilePosition, setProfilePosition] = useState(propRolePosition);
   const [profileEmail, setProfileEmail] = useState("");
   const [profileImage, setProfileImage] = useState<string | null>(null);
-  const [selectedTahun, setSelectedTahun] = useState("");
-  const [selectedSemester, setSelectedSemester] = useState("");
   const [isTahunOpen, setIsTahunOpen] = useState(false);
   const [isSemesterOpen, setIsSemesterOpen] = useState(false);
   
-  const tahunOptions = ["2023/2024", "2024/2025", "2025/2026"];
+  const tahunOptions = ["2024/2025", "2025/2026"];
   const semesterOptions = ["Ganjil", "Genap"];
+  const {
+    tahunAkademik,
+    semester,
+    setTahunAkademik,
+    setSemester,
+  } = useFilter();
 
   const navigate = useNavigate();
 
@@ -70,9 +82,9 @@ const Navbar = ({
               </div>
               <div 
                 onClick={() => { setIsTahunOpen(!isTahunOpen); setIsSemesterOpen(false); setIsProfileOpen(false); }}
-                className={`flex h-[43px] items-center justify-between rounded-[8px] bg-white px-[14px] text-[14px] font-medium cursor-pointer border transition-all duration-200 ${isTahunOpen ? 'border-blue-500 ring-4 ring-blue-50 shadow-sm' : 'border-gray-200 hover:border-gray-300'} ${selectedTahun ? 'text-[#111827]' : 'text-[#C5CBD5]'}`}
+                className={`flex h-[43px] items-center justify-between rounded-[8px] bg-white px-[14px] text-[14px] font-medium cursor-pointer border transition-all duration-200 ${isTahunOpen ? 'border-blue-500 ring-4 ring-blue-50 shadow-sm' : 'border-gray-200 hover:border-gray-300'} ${tahunAkademik ? 'text-[#111827]' : 'text-[#C5CBD5]'}`}
               >
-                <span>{selectedTahun || "Pilih tahun akademik"}</span>
+                <span>{tahunAkademik || "Pilih tahun akademik"}</span>
                 <FaChevronDown className={`text-[12px] text-gray-400 transition-transform duration-200 ${isTahunOpen ? 'rotate-180 text-blue-500' : ''}`} />
               </div>
               
@@ -82,11 +94,11 @@ const Navbar = ({
                     {tahunOptions.map((tahun) => (
                       <li 
                         key={tahun}
-                        onClick={() => { setSelectedTahun(tahun); setIsTahunOpen(false); }}
-                        className={`px-4 py-2.5 text-[14px] cursor-pointer flex items-center justify-between transition-colors ${selectedTahun === tahun ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'}`}
+                        onClick={() => {filters?.setTahunAkademik(tahun); setIsTahunOpen(false);}}
+                        className={`px-4 py-2.5 text-[14px] cursor-pointer flex items-center justify-between transition-colors ${tahunAkademik === tahun ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'}`}
                       >
                         {tahun}
-                        {selectedTahun === tahun && <FaCheck className="text-blue-600 text-[14px]" />}
+                        {tahunAkademik === tahun && <FaCheck className="text-blue-600 text-[14px]" />}
                       </li>
                     ))}
                   </ul>
@@ -100,9 +112,9 @@ const Navbar = ({
               </div>
               <div 
                 onClick={() => { setIsSemesterOpen(!isSemesterOpen); setIsTahunOpen(false); setIsProfileOpen(false); }}
-                className={`flex h-[43px] items-center justify-between rounded-[8px] bg-white px-[14px] text-[14px] font-medium cursor-pointer border transition-all duration-200 ${isSemesterOpen ? 'border-blue-500 ring-4 ring-blue-50 shadow-sm' : 'border-gray-200 hover:border-gray-300'} ${selectedSemester ? 'text-[#111827]' : 'text-[#C5CBD5]'}`}
+                className={`flex h-[43px] items-center justify-between rounded-[8px] bg-white px-[14px] text-[14px] font-medium cursor-pointer border transition-all duration-200 ${isSemesterOpen ? 'border-blue-500 ring-4 ring-blue-50 shadow-sm' : 'border-gray-200 hover:border-gray-300'} ${tahunAkademik ? 'text-[#111827]' : 'text-[#C5CBD5]'}`}
               >
-                <span>{selectedSemester || "Pilih semester"}</span>
+                <span>{semester || "Pilih semester"}</span>
                 <FaChevronDown className={`text-[12px] text-gray-400 transition-transform duration-200 ${isSemesterOpen ? 'rotate-180 text-blue-500' : ''}`} />
               </div>
 
@@ -112,11 +124,11 @@ const Navbar = ({
                     {semesterOptions.map((semester) => (
                       <li 
                         key={semester}
-                        onClick={() => { setSelectedSemester(semester); setIsSemesterOpen(false); }}
-                        className={`px-4 py-2.5 text-[14px] cursor-pointer flex items-center justify-between transition-colors ${selectedSemester === semester ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'}`}
+                        onClick={() => { filters?.setSemester(semester); setIsSemesterOpen(false);}}
+                        className={`px-4 py-2.5 text-[14px] cursor-pointer flex items-center justify-between transition-colors ${semester === semester ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'}`}
                       >
                         {semester}
-                        {selectedSemester === semester && <FaCheck className="text-blue-600 text-[14px]" />}
+                        {semester === semester && <FaCheck className="text-blue-600 text-[14px]" />}
                       </li>
                     ))}
                   </ul>
