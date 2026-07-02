@@ -2,6 +2,13 @@ import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
 import Chatbot from "./Chatbot";
 
+interface LayoutFilters {
+  tahunAkademik: string;
+  semester: string;
+  setTahunAkademik: React.Dispatch<React.SetStateAction<string>>;
+  setSemester: React.Dispatch<React.SetStateAction<string>>;
+}
+
 type LayoutProps = {
   children: React.ReactNode;
   title: string;
@@ -9,6 +16,7 @@ type LayoutProps = {
   roleName?: string;
   rolePosition?: string;
   showFilters?: boolean;
+  filters?: LayoutFilters;
 };
 
 const Layout = ({
@@ -18,6 +26,7 @@ const Layout = ({
   roleName = "Pimpinan",
   rolePosition = "Rektor",
   showFilters = true,
+  filters,
 }: LayoutProps) => {
   return (
     <div className="min-h-screen bg-[#E7EFFE] font-['SF_Pro',Inter,Arial,sans-serif]">

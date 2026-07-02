@@ -1,77 +1,8 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import SupersetEmbedDefault from "../components/SupersetEmbedDefault";
 import { supersetDashboards } from "../config/SupersetDb";
-import {
-  LineChart, Line, BarChart, Bar, AreaChart, Area,
-  XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-  ResponsiveContainer, Cell,
-} from "recharts";
-
-
-/* ─── DATA ───────────────────────────────────────────── */
-const ipkTrendData = [
-  { year: "2023/2024", ganjil: 3.12, genap: 3.52 },
-  { year: "2024/2025", ganjil: 3.21, genap: 3.64 },
-  { year: "2025/2026", ganjil: 3.25, genap: 3.87 },
-  { year: "2026/2027", ganjil: 3.29, genap: 3.75 },
-];
-
-const distribusiNilai = [
-  { grade: "A", jumlah: 45 },
-  { grade: "AB", jumlah: 287 },
-  { grade: "B", jumlah: 362 },
-  { grade: "BC", jumlah: 201 },
-  { grade: "C", jumlah: 86 },
-  { grade: "D", jumlah: 19 },
-  { grade: "E", jumlah: 1 },
-];
-
-const bebanStudiData = [
-  { semester: "2023/2024 Genap", sks: 18 },
-  { semester: "2023/2024 Ganjil", sks: 20 },
-  { semester: "2024/2025 Genap", sks: 22 },
-  { semester: "2024/2025 Ganjil", sks: 21 },
-  { semester: "2025/2026 Genap", sks: 19 },
-  { semester: "2025/2026 Ganjil", sks: 20 },
-  { semester: "2026/2027 Genap", sks: 8 },
-];
-
-const perbandinganFakultas = [
-  { name: "Fakultas Teknik", ipk: 3.52 },
-  { name: "Fakultas Ekonomi", ipk: 3.41 },
-  { name: "Fakultas Ilmu Komputer", ipk: 3.38 },
-  { name: "Fakultas Psikologi", ipk: 3.38 },
-  { name: "Fakultas Hukum", ipk: 3.29 },
-  { name: "Fakultas Keguruan", ipk: 3.21 },
-];
-
-const trendKehadiran = [
-  { period: "2023/2024 Genap", pct: 82 },
-  { period: "2023/2024 Ganjil", pct: 85 },
-  { period: "2024/2025 Genap", pct: 87 },
-  { period: "2024/2025 Ganjil", pct: 88 },
-  { period: "2025/2026 Genap", pct: 90 },
-  { period: "2025/2026 Ganjil", pct: 91 },
-  { period: "2026/2027 Genap", pct: 92 },
-];
-
-const topMahasiswa = [
-  { no: 1, nama: "Ananda Putri", prodi: "Informatika", ipk: "3,96" },
-  { no: 2, nama: "Mohammad Rafli", prodi: "Sistem Informasi", ipk: "3,92" },
-  { no: 3, nama: "Jessica Nathania", prodi: "Manajemen", ipk: "3,91" },
-  { no: 4, nama: "Fauzan Akbar", prodi: "Teknik Industri", ipk: "3,88" },
-  { no: 5, nama: "Siti Rahma", prodi: "Akuntansi", ipk: "3,85" },
-];
-
-const mahasiswaBerisiko = [
-  { no: 1, nama: "Rizky Pratama", prodi: "Teknik Industri", ipk: "2,10", risiko: "Kehadiran Rendah", color: "#EF4444" },
-  { no: 2, nama: "Dewi Ayu Lestari", prodi: "Akuntansi", ipk: "2,25", risiko: "IPK Rendah", color: "#F97316" },
-  { no: 3, nama: "Bimo Setiawan", prodi: "Manajemen", ipk: "2,32", risiko: "IPK & Kehadiran", color: "#EF4444" },
-  { no: 4, nama: "Nadia Safitri", prodi: "Psikologi", ipk: "2,40", risiko: "IPK Rendah", color: "#F97316" },
-  { no: 5, nama: "Andi Firmansyah", prodi: "Hukum", ipk: "2,45", risiko: "Kehadiran Rendah", color: "#EF4444" },
-];
+import { FilterProvider } from "../context/FilterContext";
 
 /* ─── GLOBAL STYLES ─────────────────────────────────── */
 const globalStyles = `
@@ -174,17 +105,8 @@ function HoverCard({ style = {}, children }: { style?: React.CSSProperties; chil
 
 /* ─── MAIN ───────────────────────────────────────────── */
 export default function DashboardAkademik() {
-  const [tahun, setTahun] = useState("");
+  const [tahunAkademik, setTahunAkademik] = useState("");
   const [semester, setSemester] = useState("");
-  const navigate = useNavigate();
-
-  const navItems = [
-    { icon: <IconHome />, label: "Dashboard Utama", active: false, path: "/" },
-    { icon: <IconPerson />, label: "Pimpinan", active: false, path: "/pimpinan" },
-    { icon: <IconAkademik />, label: "Akademik", active: true, path: "/akademik" },
-    { icon: <IconMonitor />, label: "Monitoring IKU", active: false, path: "/" },
-    { icon: <IconSettings />, label: "Manajemen Sistem", active: false, path: "/" },
-  ];
 
   return (
     <>
@@ -192,6 +114,12 @@ export default function DashboardAkademik() {
       <Layout
         title="Dashboard Akademik"
         active="Akademik"
+        filters={{
+          tahunAkademik,
+          semester,
+          setTahunAkademik,
+          setSemester,
+        }}
       >
         {/* ── KPI CARDS ── */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginBottom: 16 }}>
