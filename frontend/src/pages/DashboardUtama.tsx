@@ -10,7 +10,7 @@ import SupersetEmbed from "../components/SupersetEmbed";
 import SupersetEmbedDefault from "../components/SupersetEmbedDefault";
 import { supersetDashboards } from "../config/SupersetDb";
 
-/* ─── DATA ─────────────────────────────────────────── */
+/* DATA */
 const ipkData = [
   { year: "2023/2024", ganjil: 3.12, genap: 3.52 },
   { year: "2024/2025", ganjil: 3.21, genap: 3.64 },
@@ -18,7 +18,7 @@ const ipkData = [
   { year: "2026/2027", ganjil: 3.29, genap: 3.75 },
 ];
 
-/* ─── GLOBAL ANIMATION STYLES ───────────────────────── */
+
 const globalStyles = `
   @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(18px); }
@@ -86,7 +86,7 @@ const globalStyles = `
   }
 `;
 
-/* ─── ICONS ─────────────────────────────────────────── */
+/*ICON bar*/
 const IconBarChart = () => (
   <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
     <rect x="3" y="12" width="4" height="9" rx="1" fill="#DBEAFE" stroke="#2563EB" strokeWidth="1.4" />
@@ -192,7 +192,7 @@ const QIcon = ({ children }: { children: React.ReactNode }) => (
   <span style={{ color: "#2563EB", flexShrink: 0 }}>{children}</span>
 );
 
-/* ─── INDONESIA MAP ───────────────────────────────── */
+/*INDONESIA MAP*/
 function IndonesiaMap() {
   return (
     <svg viewBox="95 55 440 195" style={{ width: "100%", height: "100%" }} xmlns="http://www.w3.org/2000/svg">
