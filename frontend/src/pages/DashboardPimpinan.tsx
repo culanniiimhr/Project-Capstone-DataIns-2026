@@ -191,6 +191,7 @@ export default function DashboardPimpinan() {
     const [showIpkInfo, setShowIpkInfo] = useState(false);
     const [showIkuInfo, setShowIkuInfo] = useState(false);
     const [showKelulusanInfo, setShowKelulusanInfo] = useState(false);
+    const [showKepuasanInfo, setShowKepuasanInfo] = useState(false);
     const navigate = useNavigate();
 
     const navItems = [
@@ -238,6 +239,15 @@ export default function DashboardPimpinan() {
                                 ) : label === "Capaian IKU" ? (
                                     <div
                                         onClick={() => setShowIkuInfo(true)}
+                                        style={{ cursor: "pointer", transition: "transform 0.2s" }}
+                                        onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
+                                        onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
+                                    >
+                                        <IconInfo />
+                                    </div>
+                                ) : label === "Kepuasan Mahasiswa" ? (
+                                    <div
+                                        onClick={() => setShowKepuasanInfo(true)}
                                         style={{ cursor: "pointer", transition: "transform 0.2s" }}
                                         onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
                                         onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
@@ -536,6 +546,49 @@ export default function DashboardPimpinan() {
                             <h3 style={{ margin: "0 0 16px", color: "#0F172A", fontSize: 22, fontWeight: 600 }}>Capaian IKU</h3>
                             <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6, padding: "0 12px" }}>
                                 Persentase pencapaian target Indikator Kinerja Utama (IKU) yang telah ditetapkan.
+                            </p>
+                        </div>
+                    </div>
+                )}
+
+                {/* Kepuasan Info Modal */}
+                {showKepuasanInfo && (
+                    <div 
+                        onClick={() => setShowKepuasanInfo(false)}
+                        style={{
+                            position: "fixed", top: 0, left: 0, right: 0, bottom: 0, 
+                            backgroundColor: "rgba(0,0,0,0.4)", 
+                            display: "flex", alignItems: "center", justifyContent: "center", 
+                            zIndex: 9999,
+                            animation: "fadeIn 0.2s ease",
+                            backdropFilter: "blur(2px)"
+                        } as any}
+                    >
+                        <div 
+                            onClick={(e) => e.stopPropagation()}
+                            style={{
+                                background: "#fff", 
+                                borderRadius: 16, 
+                                padding: "44px 32px", 
+                                width: "420px",
+                                maxWidth: "90%",
+                                textAlign: "center",
+                                boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                                animation: "scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                                border: "1px solid #E2E8F0"
+                            }}
+                        >
+                            <div style={{ margin: "0 auto 24px", display: "flex", justifyContent: "center" }}>
+                                <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#0F3294" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                                    <line x1="9" y1="9" x2="9.01" y2="9" />
+                                    <line x1="15" y1="9" x2="15.01" y2="9" />
+                                </svg>
+                            </div>
+                            <h3 style={{ margin: "0 0 16px", color: "#0F172A", fontSize: 22, fontWeight: 600 }}>Kepuasan Mahasiswa</h3>
+                            <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6, padding: "0 12px" }}>
+                                Nilai rata-rata tingkat kepuasan mahasiswa berdasarkan hasil survei.
                             </p>
                         </div>
                     </div>
