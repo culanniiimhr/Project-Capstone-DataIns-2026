@@ -21,14 +21,15 @@ function App() {
         <Route path="/dashboard/akademik" element={<DashboardAkademik />} />
         <Route path="/dashboard/pimpinan" element={<DashboardPimpinan />} />
         <Route path="/dashboard/iku" element={<DashboardIKU />} />
-        <Route path="/dashboard/sistem" element={<DashboardSistem />} />
+        <Route path="/dashboard/system" element={<DashboardSistem />} />
         
         {/* Fitur Pendukung */}
         <Route path="/login" element={<Login />} /> 
         <Route path="/profil" element={<Profil />} />
         <Route path="/reset-password" element={<ResetPassword />} />
 
-        {/* Auto-Redirect / Fallback: kalau ngetik rute lama tanpa /dashboard, langsung dioper ke rute yang bener */}
+        {/* Auto-Redirect / Fallback: Menghindari Blank Putih pada rute parsial */}
+        <Route path="/dashboard" element={<Navigate to="/dashboard/utama" replace />} />
         <Route path="/akademik" element={<Navigate to="/dashboard/akademik" replace />} />
         <Route path="/pimpinan" element={<Navigate to="/dashboard/pimpinan" replace />} />
       </Routes>
