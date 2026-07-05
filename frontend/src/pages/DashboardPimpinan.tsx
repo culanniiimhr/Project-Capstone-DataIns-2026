@@ -379,7 +379,6 @@ export default function DashboardPimpinan() {
                     <HoverCard style={{ padding: "10px 17px" }}>
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
                             <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: 0 }}>Top 5 Fakultas (berdasarkan IPK)</p>
-                            <button style={{ background: "none", border: "none", color: "#2563EB", fontWeight: 600, fontSize: 12, cursor: "pointer" }}>Lihat selengkapnya</button>
                         </div>
                         <div className="h-[320px] w-full overflow-hidden">
                             <SupersetEmbedDefault
@@ -393,7 +392,6 @@ export default function DashboardPimpinan() {
                     <HoverCard style={{ padding: "18px 20px" }}>
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
                             <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: 0 }}>Fakultas Perlu Perhatian</p>
-                            <button style={{ background: "none", border: "none", color: "#2563EB", fontWeight: 600, fontSize: 12, cursor: "pointer" }}>Lihat selengkapnya</button>
                         </div>
                         <div className="h-[320px] w-full overflow-hidden">
                             <SupersetEmbedDefault
@@ -466,23 +464,23 @@ export default function DashboardPimpinan() {
 
                 {/* Kelulusan Info Modal */}
                 {showKelulusanInfo && (
-                    <div 
+                    <div
                         onClick={() => setShowKelulusanInfo(false)}
                         style={{
-                            position: "fixed", top: 0, left: 0, right: 0, bottom: 0, 
-                            backgroundColor: "rgba(0,0,0,0.4)", 
-                            display: "flex", alignItems: "center", justifyContent: "center", 
+                            position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+                            backgroundColor: "rgba(0,0,0,0.4)",
+                            display: "flex", alignItems: "center", justifyContent: "center",
                             zIndex: 9999,
                             animation: "fadeIn 0.2s ease",
                             backdropFilter: "blur(2px)"
                         } as any}
                     >
-                        <div 
+                        <div
                             onClick={(e) => e.stopPropagation()}
                             style={{
-                                background: "#fff", 
-                                borderRadius: 16, 
-                                padding: "44px 32px", 
+                                background: "#fff",
+                                borderRadius: 16,
+                                padding: "44px 32px",
                                 width: "420px",
                                 maxWidth: "90%",
                                 textAlign: "center",
@@ -507,23 +505,23 @@ export default function DashboardPimpinan() {
 
                 {/* IKU Info Modal */}
                 {showIkuInfo && (
-                    <div 
+                    <div
                         onClick={() => setShowIkuInfo(false)}
                         style={{
-                            position: "fixed", top: 0, left: 0, right: 0, bottom: 0, 
-                            backgroundColor: "rgba(0,0,0,0.4)", 
-                            display: "flex", alignItems: "center", justifyContent: "center", 
+                            position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+                            backgroundColor: "rgba(0,0,0,0.4)",
+                            display: "flex", alignItems: "center", justifyContent: "center",
                             zIndex: 9999,
                             animation: "fadeIn 0.2s ease",
                             backdropFilter: "blur(2px)"
                         } as any}
                     >
-                        <div 
+                        <div
                             onClick={(e) => e.stopPropagation()}
                             style={{
-                                background: "#fff", 
-                                borderRadius: 16, 
-                                padding: "44px 32px", 
+                                background: "#fff",
+                                borderRadius: 16,
+                                padding: "44px 32px",
                                 width: "420px",
                                 maxWidth: "90%",
                                 textAlign: "center",
@@ -553,23 +551,23 @@ export default function DashboardPimpinan() {
 
                 {/* Kepuasan Info Modal */}
                 {showKepuasanInfo && (
-                    <div 
+                    <div
                         onClick={() => setShowKepuasanInfo(false)}
                         style={{
-                            position: "fixed", top: 0, left: 0, right: 0, bottom: 0, 
-                            backgroundColor: "rgba(0,0,0,0.4)", 
-                            display: "flex", alignItems: "center", justifyContent: "center", 
+                            position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+                            backgroundColor: "rgba(0,0,0,0.4)",
+                            display: "flex", alignItems: "center", justifyContent: "center",
                             zIndex: 9999,
                             animation: "fadeIn 0.2s ease",
                             backdropFilter: "blur(2px)"
                         } as any}
                     >
-                        <div 
+                        <div
                             onClick={(e) => e.stopPropagation()}
                             style={{
-                                background: "#fff", 
-                                borderRadius: 16, 
-                                padding: "44px 32px", 
+                                background: "#fff",
+                                borderRadius: 16,
+                                padding: "44px 32px",
                                 width: "420px",
                                 maxWidth: "90%",
                                 textAlign: "center",

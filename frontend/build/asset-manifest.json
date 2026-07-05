@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/static/css/main.87e89e51.css",
-    "main.js": "/static/js/main.3ffbef37.js",
-    "static/js/453.52e06e7d.chunk.js": "/static/js/453.52e06e7d.chunk.js",
+    "main.css": "/static/css/main.6086ab98.css",
+    "main.js": "/static/js/main.f670eafd.js",
+    "static/js/453.bb172029.chunk.js": "/static/js/453.bb172029.chunk.js",
     "static/media/ForgotPassword.png": "/static/media/ForgotPassword.1df6794d118a51197de9.png",
     "static/media/ResetPassword.png": "/static/media/ResetPassword.ed7c59ef03855751e6b5.png",
     "index.html": "/index.html",
-    "main.87e89e51.css.map": "/static/css/main.87e89e51.css.map",
-    "main.3ffbef37.js.map": "/static/js/main.3ffbef37.js.map",
-    "453.52e06e7d.chunk.js.map": "/static/js/453.52e06e7d.chunk.js.map"
+    "main.6086ab98.css.map": "/static/css/main.6086ab98.css.map",
+    "main.f670eafd.js.map": "/static/js/main.f670eafd.js.map",
+    "453.bb172029.chunk.js.map": "/static/js/453.bb172029.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.87e89e51.css",
-    "static/js/main.3ffbef37.js"
+    "static/css/main.6086ab98.css",
+    "static/js/main.f670eafd.js"
   ]
 }
