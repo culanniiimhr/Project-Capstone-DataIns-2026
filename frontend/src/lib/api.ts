@@ -36,4 +36,10 @@ export const getDashboardInsights = async () => {
   return response.data;
 };
 
+// REVISI BAR: Fetcher Ringkasan KPI Utama (Murni dari FastAPI Python lu)
+export const getKpiSummary = async () => {
+  const response = await api.get("/dashboard-utama/kpi-summary");
+  return response.data;
+};
+
 export default api;
