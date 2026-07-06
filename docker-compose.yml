@@ -16,7 +16,8 @@ services:
       - "127.0.0.1:5433:5432"
     volumes:
       - oltp_data:/var/lib/postgresql/data
-      - ./backend/app/db/oltp/init.sql:/docker-entrypoint-initdb.d/init.sql
+      # 🔒 Dikomen dulu karena di server berupa folder kosong (bikin crash)
+      # - ./backend/app/db/oltp/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - datains_net
     healthcheck:
@@ -37,7 +38,8 @@ services:
       - "127.0.0.1:5434:5432"
     volumes:
       - sdm_data:/var/lib/postgresql/data
-      - ./backend/app/db/oltp/init_sdm.sql:/docker-entrypoint-initdb.d/init_sdm.sql
+      # 🔒 Dikomen dulu karena di server berupa folder kosong (bikin crash)
+      # - ./backend/app/db/oltp/init_sdm.sql:/docker-entrypoint-initdb.d/init_sdm.sql
     networks:
       - datains_net
     healthcheck:
@@ -58,7 +60,8 @@ services:
       - "127.0.0.1:5435:5432" # 🔒 Dipindah ke 5435 agar tidak bentrok dengan postgres n8n lama server
     volumes:
       - warehouse_data:/var/lib/postgresql/data
-      - ./backend/app/db/olap/init_warehouse.sql:/docker-entrypoint-initdb.d/init_warehouse.sql
+      # 🔒 Dikomen dulu karena di server berupa folder kosong (bikin crash)
+      # - ./backend/app/db/olap/init_warehouse.sql:/docker-entrypoint-initdb.d/init_warehouse.sql
     networks:
       - datains_net
     healthcheck:
@@ -78,7 +81,7 @@ services:
     restart: unless-stopped
     env_file: .env
     ports:
-      - "127.0.0.1:8000:8000"
+      - "127.0.0.1:8005:8000" # 🔒 Kiri (8005) diubah biar gak nabrak
     depends_on:
       db_oltp:
         condition: service_healthy
@@ -164,17 +167,15 @@ services:
     ports:
       - "127.0.0.1:5679:5678" # 🔒 Digeser ke port lokal 5679 (tidak bentrok n8n server)
     environment:
-      N8N_BASIC_AUTH_ACTIVE: "true"
-      N8N_BASIC_AUTH_USER: ${N8N_USER}
-      N8N_BASIC_AUTH_PASSWORD: ${N8N_PASSWORD}
-      N8N_HOST: localhost
+    #  N8N_BASIC_AUTH_ACTIVE: "true"
+    #  N8N_BASIC_AUTH_USER: ${N8N_USER}
+    #  N8N_BASIC_AUTH_PASSWORD: ${N8N_PASSWORD}
+    # N8N_HOST: localhost
       N8N_PORT: 5678
     volumes:
       - n8n_data:/home/node/.n8n
     networks:
       - datains_net
-
-# (⚠️ SERVICE NGINX DIHAPUS KARENA AKAN DI-HANDLE NGINX UTAMA MAS SUGENG)
 
 # ─────────────────────────────────────────
 # VOLUMES
@@ -193,7 +194,7 @@ volumes:
     name: datains-capstone_superset_data
     external: true
   n8n_data:
-    name: datains-capstone_n8n_data
+    name: n8n_n8n_data  # 🔒 DIUBAH KE SINI agar memanggil data workflow lamamu yang aman!
     external: true
 
 networks:
