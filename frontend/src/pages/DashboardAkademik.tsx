@@ -119,6 +119,7 @@ export default function DashboardAkademik() {
   const [showKehadiranInfo, setShowKehadiranInfo] = useState(false);
   const [showMahasiswaAktifInfo, setShowMahasiswaAktifInfo] = useState(false);
   const [showRataSksInfo, setShowRataSksInfo] = useState(false);
+  const [showPerbandinganIpkInfo, setShowPerbandinganIpkInfo] = useState(false);
 
   return (
     <>
@@ -238,7 +239,14 @@ export default function DashboardAkademik() {
           <HoverCard style={{ padding: "16px 16px 12px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 14 }}>
               <p style={{ fontSize: 13, fontWeight: 600, color: "#334155", margin: 0 }}>Perbandingan IPK Fakultas</p>
-              <IconInfo />
+              <div 
+                  onClick={() => setShowPerbandinganIpkInfo(true)}
+                  style={{ cursor: "pointer", transition: "transform 0.2s" }}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
+              >
+                  <IconInfo />
+              </div>
             </div>
             <div className="h-[300px] w-full overflow-hidden">
               <SupersetEmbedDefault
@@ -274,10 +282,7 @@ export default function DashboardAkademik() {
               </div>
             </div>
           </div>
-          <button style={{ flexShrink: 0, background: "#EFF6FF", border: "1px solid #BFDBFE", borderRadius: 8, padding: "8px 16px", color: "#1D4ED8", fontWeight: 600, fontSize: 12, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, whiteSpace: "nowrap" }}>
-            Lihat Insight Lainnya
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
-          </button>
+
         </div>
 
         {/* ── ROW 4: Top 5 Mahasiswa + Mahasiswa Berisiko ── */}
@@ -483,6 +488,41 @@ export default function DashboardAkademik() {
                     <h3 style={{ margin: "0 0 16px", color: "#0F172A", fontSize: 22, fontWeight: 600 }}>Rata-rata SKS</h3>
                     <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6, padding: "0 12px" }}>
                         Beban studi rata-rata yang diambil oleh mahasiswa dalam satu semester untuk memenuhi syarat kelulusan.
+                    </p>
+                </div>
+            </div>
+        )}
+
+        {/* Perbandingan IPK Fakultas Info Pop up */}
+        {showPerbandinganIpkInfo && (
+            <div
+                onClick={() => setShowPerbandinganIpkInfo(false)}
+                style={{
+                    position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+                    backgroundColor: "rgba(0,0,0,0.4)",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    zIndex: 9999,
+                    animation: "fadeIn 0.2s ease",
+                    backdropFilter: "blur(2px)"
+                } as any}
+            >
+                <div
+                    onClick={(e) => e.stopPropagation()}
+                    style={{
+                        background: "#fff",
+                        borderRadius: 16,
+                        padding: "40px 32px",
+                        width: "420px",
+                        maxWidth: "90%",
+                        textAlign: "center",
+                        boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                        animation: "scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                        border: "1px solid #E2E8F0"
+                    }}
+                >
+                    <h3 style={{ margin: "0 0 16px", color: "#0F172A", fontSize: 22, fontWeight: 600 }}>Perbandingan IPK Fakultas</h3>
+                    <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6, padding: "0 12px" }}>
+                        Memvisualisasikan perbedaan rata-rata IPK setiap fakultas untuk membantu melakukan evaluasi dan membandingkan capaian akademik antar fakultas.
                     </p>
                 </div>
             </div>
