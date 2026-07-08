@@ -3,33 +3,74 @@ from pydantic import BaseModel
 
 router = APIRouter()
 
-# 1. Skema Data untuk Request Login dari Frontend
+
 class LoginRequest(BaseModel):
     email: str
     password: str
 
-# 2. Skema Data untuk Response (Apa yang dikirim balik ke Frontend)
+
 class LoginResponse(BaseModel):
     access_token: str
     token_type: str
     user: dict
 
+
+# Dummy User
+USERS = [
+    {
+        "email": "Yusuf@uad.ac.id",
+        "password": "AdminSys#26",
+        "role": "ROLE_ADMIN",
+        "nama": "Yusuf Maulana"
+    },
+    {
+        "email": "Gunawan@uad.ac.id",
+        "password": "Rektor#2026",
+        "role": "ROLE_PIMPINAN",
+        "nama": "Prof. Gunawan Sutrisno"
+    },
+    {
+        "email": "Rahmat@uad.ac.id",
+        "password": "Akademik#26",
+        "role": "ROLE_AKADEMIK",
+        "nama": "Rahmat Hidayat"
+    },
+    {
+        "email": "Ika@uad.ac.id",
+        "password": "SdmDosen#26",
+        "role": "ROLE_SDM",
+        "nama": "Ika Kartika"
+    },
+    {
+        "email": "Eva@uad.ac.id",
+        "password": "UjmUAD#26",
+        "role": "ROLE_IKU",
+        "nama": "Dr. Eva Aminah"
+    }
+]
+
+
 @router.post("/login", response_model=LoginResponse)
 def login(payload: LoginRequest):
-    # Hardcode akun sementara buat ngetes / buat anak FE besok pagi
-    # Nanti ini bisa lu hubungin ke database pas udah seger
-    if payload.email == "nama@uad.ac.id" and payload.password == "passwordnyo":
-        return {
-            "access_token": "mocked_jwt_token_akbar_12345",
-            "token_type": "bearer",
-            "user": {
-                "email": payload.email,
-                "role": "pimpinan" # Biar FE bisa ngetes routing dashboard pimpinan
+
+    for user in USERS:
+
+        if (
+            user["email"].lower() == payload.email.lower()
+            and user["password"] == payload.password
+        ):
+
+            return {
+                "access_token": "dummy-token-123456",
+                "token_type": "bearer",
+                "user": {
+                    "email": user["email"],
+                    "nama": user["nama"],
+                    "role": user["role"]
+                }
             }
-        }
-    
-    # Kalau email/password salah, lempar error 401 Unauthorized
+
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Email atau password salah. Silakan coba lagi."
+        detail="Email atau password salah"
     )
