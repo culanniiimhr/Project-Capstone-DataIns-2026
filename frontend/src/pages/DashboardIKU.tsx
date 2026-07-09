@@ -308,13 +308,13 @@ const DashboardIKU: FunctionComponent<DashboardIKUProps> = ({
         </EmbedBox>
       </section>
 
-      <section className="mt-[10px] grid grid-cols-[1fr_1fr_200px] gap-[10px]">
+      <section className="mt-[10px] grid grid-cols-[1fr_1fr] gap-[10px]">
         <HoverCard style={{ padding: "18px 18px 10px" }}>
           <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: "0 0 14px" }}>Tren Capaian IKU Institusi</p>
           <div className="h-[260px] w-full overflow-hidden">
             <SupersetEmbedDefault
               dashboardId={supersetDashboards.trenIku}
-              contentClassName="w-[175%] h-[170%] -translate-x-[90px] -translate-y-[60px] scale-[0.8] origin-top-left"
+              contentClassName="w-[165%] h-[170%] -translate-x-[90px] -translate-y-[60px] scale-[0.8] origin-top-left"
             />
           </div>
         </HoverCard>
@@ -324,12 +324,10 @@ const DashboardIKU: FunctionComponent<DashboardIKUProps> = ({
           <div className="h-[260px] w-full overflow-hidden">
             <SupersetEmbedDefault
               dashboardId={supersetDashboards.perspektifIku}
-              contentClassName="w-[175%] h-[170%] -translate-x-[90px] -translate-y-[60px] scale-[0.8] origin-top-left"
+              contentClassName="w-[165%] h-[170%] -translate-x-[90px] -translate-y-[60px] scale-[0.8] origin-top-left"
             />
           </div>
         </HoverCard>
-
-        <InsightOtomatis />
       </section>
 
       <section className="mt-[10px] grid grid-cols-[1.48fr_1fr] gap-[10px]">

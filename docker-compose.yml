@@ -138,7 +138,9 @@ services:
   # APACHE SUPERSET (BI Dashboard)
   # ─────────────────────────────────────────
   superset:
-    image: apache/superset:3.1.0
+    build:
+      context: .
+      dockerfile: Dockerfile.superset
     container_name: datains_superset
     restart: unless-stopped
     env_file: .env

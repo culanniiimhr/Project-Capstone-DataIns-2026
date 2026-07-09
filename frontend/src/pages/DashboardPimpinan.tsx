@@ -232,7 +232,7 @@ export default function DashboardPimpinan() {
                         <div className="h-[320px] w-full overflow-hidden">
                             <SupersetEmbedDefault
                                 dashboardId={supersetDashboards.statusMahasiswa}
-                                contentClassName="w-[125%] h-[160%] -translate-x-[70px] -translate-y-[65px] scale-[1.07] origin-top-left"
+                                contentClassName="w-[120%] h-[160%] -translate-x-[80px] -translate-y-[70px] scale-[1.07] origin-top-left"
                             />
                         </div>
                     </HoverCard>

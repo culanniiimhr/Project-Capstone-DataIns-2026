@@ -19,6 +19,8 @@ WTF_CSRF_ENABLED = False
 FEATURE_FLAGS = {
     "EMBEDDABLE_CHARTS": True,
     "EMBEDDED_SUPERSET": True,
+    "DASHBOARD_NATIVE_FILTERS": True,
+    "ENABLE_TEMPLATE_PROCESSING": True,
 }
 
 # Guest token / embedded dashboard
