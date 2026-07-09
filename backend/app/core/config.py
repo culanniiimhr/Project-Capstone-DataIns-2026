@@ -1,6 +1,7 @@
 # backend/app/core/config.py
 from pydantic_settings import BaseSettings 
-from typing import List
+from typing import List, Union
+from pydantic import field_validator
 
 class Settings(BaseSettings):
     # JWT
@@ -8,8 +9,20 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 480
 
-    # CORS
-    BACKEND_CORS_ORIGINS: List[str] = ["http://localhost:3000"]
+    # 🔹 FIX CORS: Dibikin default list kosong, nanti di-handle sama validator di bawah
+    BACKEND_CORS_ORIGINS: List[str] = []
+
+    @field_validator("BACKEND_CORS_ORIGINS", mode="before")
+    @classmethod
+    def assemble_cors_origins(cls, v: Union[str, List[str]]) -> Union[List[str], str]:
+        if isinstance(v, str) and not v.startswith("["):
+            return [i.strip() for i in v.split(",")]
+        elif isinstance(v, (list, str)):
+            import json
+            if isinstance(v, str):
+                return json.loads(v)
+            return v
+        raise ValueError(v)
 
     # Ambil User & Password dari .env untuk OLTP bawaan
     POSTGRES_USER: str = "warehouse_user"
@@ -34,7 +47,11 @@ class Settings(BaseSettings):
 
     # AI & Service Lainnya
     OPENAI_API_KEY: str = ""
-    SUPERSET_URL: str = "http://datains_superset:8088" # Sesuai file superset.py kamu kemarin
+    
+    # 🔹 FIX SUPERSET MITRA: Menampung kredensial Superset Mitra dari .env secara dinamis
+    SUPERSET_URL: str = ""
+    SUPERSET_ADMIN_USER: str = ""
+    SUPERSET_ADMIN_PASSWORD: str = ""
 
     # --- Properti URL (Otomatis ngerakit alamat DB) ---
 

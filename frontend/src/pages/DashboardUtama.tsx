@@ -6,7 +6,6 @@ import { VscHubot } from "react-icons/vsc";
 import SupersetEmbed from "../components/SupersetEmbed";
 import SupersetEmbedDefault from "../components/SupersetEmbedDefault";
 import { supersetDashboards } from "../config/SupersetDb";
-<<<<<<< HEAD
 
 /* DATA */
 const ipkData = [
@@ -15,9 +14,8 @@ const ipkData = [
   { year: "2025/2026", ganjil: 3.25, genap: 3.87 },
   { year: "2026/2027", ganjil: 3.29, genap: 3.75 },
 ];
-=======
+
 import { getDashboardInsights, getKpiSummary } from "../lib/api"; // Murni lewat API Backend Python
->>>>>>> 2d3ebbd075766e3688be30287a94488496e4cbaf
 
 
 const globalStyles = `
@@ -67,11 +65,7 @@ const globalStyles = `
   .kpi-card:nth-child(5) { animation-delay: 0.25s; }
 `;
 
-<<<<<<< HEAD
-/*ICON bar*/
-=======
 /* ─── SVG ICONS ─────────────────────────────────────── */
->>>>>>> 2d3ebbd075766e3688be30287a94488496e4cbaf
 const IconBarChart = () => (
   <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
     <rect x="3" y="12" width="4" height="9" rx="1" fill="#DBEAFE" stroke="#2563EB" strokeWidth="1.4" />
@@ -124,12 +118,12 @@ const IconSettings = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2" /></svg>
 );
 const IconInsightUp = () => (
-  <div style={{ width: 34, height: 34, borderRadius: "50%", background: "#DCFCE7", display: "flex", alignItems: "center", justifyYContent: "center", justifyContent: "center", flexShrink: 0 }}>
+  <div style={{ width: 34, height: 34, borderRadius: "50%", background: "#DCFCE7", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="2.5" strokeLinecap="round"><polyline points="18 15 12 9 6 15" /></svg>
   </div>
 );
 const IconInsightDown = () => (
-  <div style={{ width: 34, height: 34, borderRadius: "50%", background: "#FFE4E6", display: "flex", alignItems: "center", justifyYContent: "center", justifyContent: "center", flexShrink: 0 }}>
+  <div style={{ width: 34, height: 34, borderRadius: "50%", background: "#FFE4E6", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E11D48" strokeWidth="2.5" strokeLinecap="round"><polyline points="6 9 12 15 18 9" /></svg>
   </div>
 );
@@ -137,12 +131,10 @@ const QIcon = ({ children }: { children: React.ReactNode }) => (
   <span style={{ color: "#2563EB", flexShrink: 0 }}>{children}</span>
 );
 
-<<<<<<< HEAD
 /*INDONESIA MAP*/
-function IndonesiaMap() {
-=======
+function IndonesiaMap() { }
+
 function HoverCard({ style = {}, children }: { style?: React.CSSProperties; children: React.ReactNode }) {
->>>>>>> 2d3ebbd075766e3688be30287a94488496e4cbaf
   return (
     <div className="card-hover" style={{ background: "#fff", borderRadius: 12, border: "1px solid #E8EDF5", boxShadow: "0 1px 4px rgba(30,58,138,0.05)", ...style }}>
       {children}
@@ -166,7 +158,7 @@ interface BackendInsights {
 export default function DashboardUtama() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  
+
   // REVISI MURNI: Nilai awal dinolkan, tidak ada lagi angka dummy
   const [kpiData, setKpiData] = useState({
     rataRataIpk: 0,
@@ -199,8 +191,8 @@ export default function DashboardUtama() {
           setKpiData({
             rataRataIpk: Number(backendData.avg_ipk || 0),
             totalMahasiswa: Number(backendData.total_mahasiswa || 0),
-            tingkatKelulusan: backendData.tingkat_kelulusan ? `${backendData.tingkat_kelulusan}%` : "0%",     
-            totalDosen: Number(backendData.total_dosen || 0),               
+            tingkatKelulusan: backendData.tingkat_kelulusan ? `${backendData.tingkat_kelulusan}%` : "0%",
+            totalDosen: Number(backendData.total_dosen || 0),
             capaianIku: backendData.capaian_iku ? `${backendData.capaian_iku}%` : "0%",
           });
         } else {
@@ -280,7 +272,7 @@ export default function DashboardUtama() {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
           <HoverCard style={{ padding: "18px 20px 16px" }}>
             <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: "0 0 16px" }}>Insight Otomatis</p>
-            
+
             {loading ? (
               <div style={{ fontSize: 13, color: "#64748B", padding: "20px 0" }}>Memuat kalkulasi insight...</div>
             ) : (

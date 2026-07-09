@@ -9,12 +9,6 @@ type NavbarProps = {
   roleName?: string;
   rolePosition?: string;
   showFilters?: boolean;
-  filters?: {
-    tahunAkademik: string;
-    semester: string;
-    setTahunAkademik: (value: string) => void;
-    setSemester: (value: string) => void;
-  };
 };
 
 const Navbar = ({
@@ -22,7 +16,6 @@ const Navbar = ({
   roleName: propRoleName = "Pimpinan",
   rolePosition: propRolePosition = "Rektor",
   showFilters = true,
-  filters,
 }: NavbarProps) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [profileName, setProfileName] = useState(propRoleName);
@@ -40,6 +33,16 @@ const Navbar = ({
     setTahunAkademik,
     setSemester,
   } = useFilter();
+
+  useEffect(() => {
+    if (!tahunAkademik) {
+      setTahunAkademik("2025/2026");
+    }
+
+    if (!semester) {
+      setSemester("Genap");
+    }
+  }, []);
 
   const navigate = useNavigate();
 
@@ -94,7 +97,7 @@ const Navbar = ({
                     {tahunOptions.map((tahun) => (
                       <li 
                         key={tahun}
-                        onClick={() => {filters?.setTahunAkademik(tahun); setIsTahunOpen(false);}}
+                        onClick={() => {setTahunAkademik(tahun); setIsTahunOpen(false);}}
                         className={`px-4 py-2.5 text-[14px] cursor-pointer flex items-center justify-between transition-colors ${tahunAkademik === tahun ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'}`}
                       >
                         {tahun}
@@ -121,14 +124,14 @@ const Navbar = ({
               {isSemesterOpen && (
                 <div className="absolute top-[75px] left-0 w-full bg-white border border-gray-100 rounded-lg shadow-xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
                   <ul className="py-1 m-0 list-none px-0">
-                    {semesterOptions.map((semester) => (
+                    {semesterOptions.map((item) => (
                       <li 
-                        key={semester}
-                        onClick={() => { filters?.setSemester(semester); setIsSemesterOpen(false);}}
-                        className={`px-4 py-2.5 text-[14px] cursor-pointer flex items-center justify-between transition-colors ${semester === semester ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'}`}
+                        key={item}
+                        onClick={() => {setSemester(item); setIsSemesterOpen(false);}}
+                        className={`px-4 py-2.5 text-[14px] cursor-pointer flex items-center justify-between transition-colors ${semester === item ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'}`}
                       >
-                        {semester}
-                        {semester === semester && <FaCheck className="text-blue-600 text-[14px]" />}
+                        {item}
+                        {semester === item && <FaCheck className="text-blue-600 text-[14px]" />}
                       </li>
                     ))}
                   </ul>

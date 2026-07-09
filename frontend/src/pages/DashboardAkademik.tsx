@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Layout from "../components/Layout";
 import SupersetEmbedDefault from "../components/SupersetEmbedDefault";
 import { supersetDashboards } from "../config/SupersetDb";
 import { FilterProvider } from "../context/FilterContext";
+import api from "../lib/api";
 
 /* GLOBAL STYLES */
 const globalStyles = `
@@ -32,23 +33,10 @@ const globalStyles = `
   .kpi-card:nth-child(2){animation-delay:0.10s}
   .kpi-card:nth-child(3){animation-delay:0.15s}
   .kpi-card:nth-child(4){animation-delay:0.20s}
-  .nav-btn { transition: background 0.15s ease, transform 0.15s ease, color 0.15s ease; }
-  .nav-btn:hover:not(.active) {
-    background: #EFF6FF !important; color: #1D4ED8 !important; transform: translateX(3px);
-  }
-  .tr-hover { transition: background 0.15s ease; }
-  .tr-hover:hover { background: #EFF6FF !important; }
-  .bar-item { transition: opacity 0.15s ease; }
-  .bar-item:hover { opacity: 0.82; }
 `;
 
 /* GLOBAL STYLES */
 /* ─── ICONS ─────────────────────────────────────────── */
-const IconHome = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>;
-const IconPerson = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4" /><path d="M6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" /></svg>;
-const IconAkademik = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z" /><path d="M6 12v5c3 3 9 3 12 0v-5" /></svg>;
-const IconMonitor = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" /><line x1="8" y1="21" x2="16" y2="21" /><line x1="12" y1="17" x2="12" y2="21" /></svg>;
-const IconSettings = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>;
 const IconInfo = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" /></svg>;
 const IconStar = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="#F59E0B" stroke="#F59E0B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>;
 
@@ -122,11 +110,30 @@ export default function DashboardAkademik() {
   const [showRataSksInfo, setShowRataSksInfo] = useState(false);
   const [showPerbandinganIpkInfo, setShowPerbandinganIpkInfo] = useState(false);
 
+  // 🌟 Inisialisasi awal ke angka 0 biar kelihatan transisi loading datanya
+  const [academicData, setAcademicData] = useState({
+    rata_rata_ipk: 0,
+    kehadiran_mahasiswa: 0,
+    mahasiswa_aktif: 0,
+    rata_rata_sks: 0
+  });
+
+  useEffect(() => {
+    // 🌟 PATH DIPERBAIKI: Langsung menembak ke endpoint router backend tanpa sub-path penyasar
+    api.get("/dashboard-utama/academic-summary")
+      .then((res) => {
+        if (res.data.status === "success" && res.data.data) {
+          setAcademicData(res.data.data);
+        }
+      })
+      .catch((err) => console.error("Gagal sinkronisasi data akademik dari Supabase:", err));
+  }, []);
+
   return (
     <>
       <style>{globalStyles}</style>
       <Layout
-        title="Dashboard Akademik"
+        title="Dashboard Academic"
         active="Akademik"
         filters={{
           tahunAkademik,
@@ -148,39 +155,39 @@ export default function DashboardAkademik() {
                 {icon}
                 {label === "Rata-rata IPK" ? (
                   <div
-                      onClick={() => setShowIpkInfo(true)}
-                      style={{ cursor: "pointer", transition: "transform 0.2s" }}
-                      onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
-                      onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
+                    onClick={() => setShowIpkInfo(true)}
+                    style={{ cursor: "pointer", transition: "transform 0.2s" }}
+                    onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
+                    onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
                   >
-                      <IconInfo />
+                    <IconInfo />
                   </div>
                 ) : label === "Kehadiran Mahasiswa" ? (
                   <div
-                      onClick={() => setShowKehadiranInfo(true)}
-                      style={{ cursor: "pointer", transition: "transform 0.2s" }}
-                      onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
-                      onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
+                    onClick={() => setShowKehadiranInfo(true)}
+                    style={{ cursor: "pointer", transition: "transform 0.2s" }}
+                    onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
+                    onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
                   >
-                      <IconInfo />
+                    <IconInfo />
                   </div>
                 ) : label === "Mahasiswa Aktif" ? (
                   <div
-                      onClick={() => setShowMahasiswaAktifInfo(true)}
-                      style={{ cursor: "pointer", transition: "transform 0.2s" }}
-                      onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
-                      onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
+                    onClick={() => setShowMahasiswaAktifInfo(true)}
+                    style={{ cursor: "pointer", transition: "transform 0.2s" }}
+                    onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
+                    onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
                   >
-                      <IconInfo />
+                    <IconInfo />
                   </div>
                 ) : label === "Rata-rata SKS" ? (
                   <div
-                      onClick={() => setShowRataSksInfo(true)}
-                      style={{ cursor: "pointer", transition: "transform 0.2s" }}
-                      onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
-                      onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
+                    onClick={() => setShowRataSksInfo(true)}
+                    style={{ cursor: "pointer", transition: "transform 0.2s" }}
+                    onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
+                    onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
                   >
-                      <IconInfo />
+                    <IconInfo />
                   </div>
                 ) : (
                   <IconInfo />
@@ -224,8 +231,6 @@ export default function DashboardAkademik() {
 
         {/*ROW 3: Beban Studi + Perbandingan Fakultas + Tren Kehadiran*/}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 14, marginBottom: 14 }}>
-
-          {/* Beban Studi */}
           <HoverCard style={{ padding: "16px 16px 10px" }}>
             <p style={{ fontSize: 13, fontWeight: 600, color: "#334155", margin: "0 0 12px" }}>Rata-rata Beban Studi (SKS)</p>
             <div className="h-[260px] w-full overflow-hidden">
@@ -236,17 +241,16 @@ export default function DashboardAkademik() {
             </div>
           </HoverCard>
 
-          {/* Perbandingan IPK Fakultas */}
           <HoverCard style={{ padding: "16px 16px 12px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 14 }}>
               <p style={{ fontSize: 13, fontWeight: 600, color: "#334155", margin: 0 }}>Perbandingan IPK Fakultas</p>
-              <div 
-                  onClick={() => setShowPerbandinganIpkInfo(true)}
-                  style={{ cursor: "pointer", transition: "transform 0.2s" }}
-                  onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
-                  onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
+              <div
+                onClick={() => setShowPerbandinganIpkInfo(true)}
+                style={{ cursor: "pointer", transition: "transform 0.2s" }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
+                onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
               >
-                  <IconInfo />
+                <IconInfo />
               </div>
             </div>
             <div className="h-[300px] w-full overflow-hidden">
@@ -257,7 +261,6 @@ export default function DashboardAkademik() {
             </div>
           </HoverCard>
 
-          {/* Tren Kehadiran */}
           <HoverCard style={{ padding: "16px 16px 10px" }}>
             <p style={{ fontSize: 13, fontWeight: 600, color: "#334155", margin: "0 0 12px" }}>Tren Kehadiran (%)</p>
             <div className="h-[300px] w-full overflow-hidden">
@@ -288,8 +291,6 @@ export default function DashboardAkademik() {
 
         {/* ROW 4: Top 5 Mahasiswa + Mahasiswa Berisiko */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-
-          {/* Top 5 */}
           <HoverCard style={{ padding: "18px 20px" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
               <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: 0 }}>Top 5 Mahasiswa (IPK Tertinggi)</p>
@@ -302,7 +303,6 @@ export default function DashboardAkademik() {
             </div>
           </HoverCard>
 
-          {/* Mahasiswa Berisiko */}
           <HoverCard style={{ padding: "18px 20px" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
               <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: 0 }}>Mahasiswa Berisiko (Perlu Perhatian)</p>
@@ -314,219 +314,216 @@ export default function DashboardAkademik() {
               />
             </div>
           </HoverCard>
-
         </div>
-
-
 
         {/* IPK Info Pop up*/}
         {showIpkInfo && (
+          <div
+            onClick={() => setShowIpkInfo(false)}
+            style={{
+              position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+              backgroundColor: "rgba(0,0,0,0.4)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              zIndex: 9999,
+              animation: "fadeIn 0.2s ease",
+              backdropFilter: "blur(2px)"
+            } as any}
+          >
             <div
-                onClick={() => setShowIpkInfo(false)}
-                style={{
-                    position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
-                    backgroundColor: "rgba(0,0,0,0.4)",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    zIndex: 9999,
-                    animation: "fadeIn 0.2s ease",
-                    backdropFilter: "blur(2px)"
-                } as any}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                background: "#fff",
+                borderRadius: 16,
+                padding: "40px 32px",
+                width: "420px",
+                maxWidth: "90%",
+                textAlign: "center",
+                boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                animation: "scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                border: "1px solid #E2E8F0"
+              }}
             >
-                <div
-                    onClick={(e) => e.stopPropagation()}
-                    style={{
-                        background: "#fff",
-                        borderRadius: 16,
-                        padding: "40px 32px",
-                        width: "420px",
-                        maxWidth: "90%",
-                        textAlign: "center",
-                        boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-                        animation: "scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-                        border: "1px solid #E2E8F0"
-                    }}
-                >
-                    <div style={{
-                        background: "#F8FAFC",
-                        width: 72, height: 72,
-                        borderRadius: 18,
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                        margin: "0 auto 24px",
-                        border: "1px solid #F1F5F9"
-                    }}>
-                        <div style={{
-                            background: "#0F3294",
-                            width: 36, height: 36,
-                            borderRadius: "50%",
-                            display: "flex", alignItems: "center", justifyContent: "center",
-                            color: "white", fontWeight: "700", fontSize: 20, fontStyle: "italic",
-                            fontFamily: "serif"
-                        }}>
-                            i
-                        </div>
-                    </div>
-                    <h3 style={{ margin: "0 0 16px", color: "#0F172A", fontSize: 22, fontWeight: 600 }}>Rata-rata IPK</h3>
-                    <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6, padding: "0 12px" }}>
-                        Nilai rata-rata Indeks Prestasi Kumulatif seluruh mahasiswa aktif pada semester berjalan.
-                    </p>
+              <div style={{
+                background: "#F8FAFC",
+                width: 72, height: 72,
+                borderRadius: 18,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                margin: "0 auto 24px",
+                border: "1px solid #F1F5F9"
+              }}>
+                <div style={{
+                  background: "#0F3294",
+                  width: 36, height: 36,
+                  borderRadius: "50%",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  color: "white", fontWeight: "700", fontSize: 20, fontStyle: "italic",
+                  fontFamily: "serif"
+                }}>
+                  i
                 </div>
+              </div>
+              <h3 style={{ margin: "0 0 16px", color: "#0F172A", fontSize: 22, fontWeight: 600 }}>Rata-rata IPK</h3>
+              <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6, padding: "0 12px" }}>
+                Nilai rata-rata Indeks Prestasi Kumulatif seluruh mahasiswa aktif pada semester berjalan.
+              </p>
             </div>
+          </div>
         )}
 
         {/* Kehadiran Info Pop up */}
         {showKehadiranInfo && (
+          <div
+            onClick={() => setShowKehadiranInfo(false)}
+            style={{
+              position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+              backgroundColor: "rgba(0,0,0,0.4)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              zIndex: 9999,
+              animation: "fadeIn 0.2s ease",
+              backdropFilter: "blur(2px)"
+            } as any}
+          >
             <div
-                onClick={() => setShowKehadiranInfo(false)}
-                style={{
-                    position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
-                    backgroundColor: "rgba(0,0,0,0.4)",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    zIndex: 9999,
-                    animation: "fadeIn 0.2s ease",
-                    backdropFilter: "blur(2px)"
-                } as any}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                background: "#fff",
+                borderRadius: 16,
+                padding: "44px 32px",
+                width: "420px",
+                maxWidth: "90%",
+                textAlign: "center",
+                boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                animation: "scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                border: "1px solid #E2E8F0"
+              }}
             >
-                <div
-                    onClick={(e) => e.stopPropagation()}
-                    style={{
-                        background: "#fff",
-                        borderRadius: 16,
-                        padding: "44px 32px",
-                        width: "420px",
-                        maxWidth: "90%",
-                        textAlign: "center",
-                        boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-                        animation: "scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-                        border: "1px solid #E2E8F0"
-                    }}
-                >
-                    <div style={{ margin: "0 auto 24px", display: "flex", justifyContent: "center" }}>
-                        <svg width="42" height="42" viewBox="0 0 24 24" fill="#0F3294">
-                          <path d="M12 12.75c1.63 0 3.07.39 4.24.9 1.08.48 1.76 1.56 1.76 2.73V18H6v-1.61c0-1.18.68-2.26 1.76-2.73 1.17-.52 2.61-.91 4.24-.91zM12 11c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm-6.5 0c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm13 0c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm-12.7 1.5c-.32.32-.61.68-.86 1.08C4.34 14.15 4 14.82 4 15.54V17H1.5v-1.5c0-1.11.58-2.14 1.53-2.65 1.13-.6 2.37-1 3.77-1.35zm12.4 0c1.4.35 2.64.75 3.77 1.35.95.51 1.53 1.54 1.53 2.65V17H20v-1.46c0-.72-.34-1.39-.94-1.96-.25-.4-.54-.76-.86-1.08z"/>
-                        </svg>
-                    </div>
-                    <h3 style={{ margin: "0 0 16px", color: "#0F172A", fontSize: 22, fontWeight: 600 }}>Kehadiran Mahasiswa</h3>
-                    <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6, padding: "0 12px" }}>
-                        Persentase rata-rata kehadiran mahasiswa dalam kegiatan perkuliahan tatap muka.
-                    </p>
-                </div>
+              <div style={{ margin: "0 auto 24px", display: "flex", justifyContent: "center" }}>
+                <svg width="42" height="42" viewBox="0 0 24 24" fill="#0F3294">
+                  <path d="M12 12.75c1.63 0 3.07.39 4.24.9 1.08.48 1.76 1.56 1.76 2.73V18H6v-1.61c0-1.18.68-2.26 1.76-2.73 1.17-.52 2.61-.91 4.24-.91zM12 11c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm-6.5 0c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm13 0c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm-12.7 1.5c-.32.32-.61.68-.86 1.08C4.34 14.15 4 14.82 4 15.54V17H1.5v-1.5c0-1.11.58-2.14 1.53-2.65 1.13-.6 2.37-1 3.77-1.35zm12.4 0c1.4.35 2.64.75 3.77 1.35.95.51 1.53 1.54 1.53 2.65V17H20v-1.46c0-.72-.34-1.39-.94-1.96-.25-.4-.54-.76-.86-1.08z" />
+                </svg>
+              </div>
+              <h3 style={{ margin: "0 0 16px", color: "#0F172A", fontSize: 22, fontWeight: 600 }}>Kehadiran Mahasiswa</h3>
+              <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6, padding: "0 12px" }}>
+                Persentase rata-rata kehadiran mahasiswa dalam kegiatan perkuliahan tatap muka.
+              </p>
             </div>
+          </div>
         )}
 
         {/* Mahasiswa Aktif Info Pop up */}
         {showMahasiswaAktifInfo && (
+          <div
+            onClick={() => setShowMahasiswaAktifInfo(false)}
+            style={{
+              position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+              backgroundColor: "rgba(0,0,0,0.4)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              zIndex: 9999,
+              animation: "fadeIn 0.2s ease",
+              backdropFilter: "blur(2px)"
+            } as any}
+          >
             <div
-                onClick={() => setShowMahasiswaAktifInfo(false)}
-                style={{
-                    position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
-                    backgroundColor: "rgba(0,0,0,0.4)",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    zIndex: 9999,
-                    animation: "fadeIn 0.2s ease",
-                    backdropFilter: "blur(2px)"
-                } as any}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                background: "#fff",
+                borderRadius: 16,
+                padding: "44px 32px",
+                width: "420px",
+                maxWidth: "90%",
+                textAlign: "center",
+                boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                animation: "scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                border: "1px solid #E2E8F0"
+              }}
             >
-                <div
-                    onClick={(e) => e.stopPropagation()}
-                    style={{
-                        background: "#fff",
-                        borderRadius: 16,
-                        padding: "44px 32px",
-                        width: "420px",
-                        maxWidth: "90%",
-                        textAlign: "center",
-                        boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-                        animation: "scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-                        border: "1px solid #E2E8F0"
-                    }}
-                >
-                    <div style={{ margin: "0 auto 24px", display: "flex", justifyContent: "center" }}>
-                        <svg width="42" height="42" viewBox="0 0 24 24" fill="#0F3294">
-                          <path d="M12 12.75c1.63 0 3.07.39 4.24.9 1.08.48 1.76 1.56 1.76 2.73V18H6v-1.61c0-1.18.68-2.26 1.76-2.73 1.17-.52 2.61-.91 4.24-.91zM12 11c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm-6.5 0c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm13 0c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm-12.7 1.5c-.32.32-.61.68-.86 1.08C4.34 14.15 4 14.82 4 15.54V17H1.5v-1.5c0-1.11.58-2.14 1.53-2.65 1.13-.6 2.37-1 3.77-1.35zm12.4 0c1.4.35 2.64.75 3.77 1.35.95.51 1.53 1.54 1.53 2.65V17H20v-1.46c0-.72-.34-1.39-.94-1.96-.25-.4-.54-.76-.86-1.08z"/>
-                        </svg>
-                    </div>
-                    <h3 style={{ margin: "0 0 16px", color: "#0F172A", fontSize: 22, fontWeight: 600 }}>Mahasiswa Aktif</h3>
-                    <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6, padding: "0 12px" }}>
-                        Jumlah total mahasiswa yang terdaftar dan melakukan registrasi akademik pada semester berjalan.
-                    </p>
-                </div>
+              <div style={{ margin: "0 auto 24px", display: "flex", justifyContent: "center" }}>
+                <svg width="42" height="42" viewBox="0 0 24 24" fill="#0F3294">
+                  <path d="M12 12.75c1.63 0 3.07.39 4.24.9 1.08.48 1.76 1.56 1.76 2.73V18H6v-1.61c0-1.18.68-2.26 1.76-2.73 1.17-.52 2.61-.91 4.24-.91zM12 11c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm-6.5 0c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm13 0c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm-12.7 1.5c-.32.32-.61.68-.86 1.08C4.34 14.15 4 14.82 4 15.54V17H1.5v-1.5c0-1.11.58-2.14 1.53-2.65 1.13-.6 2.37-1 3.77-1.35zm12.4 0c1.4.35 2.64.75 3.77 1.35.95.51 1.53 1.54 1.53 2.65V17H20v-1.46c0-.72-.34-1.39-.94-1.96-.25-.4-.54-.76-.86-1.08z" />
+                </svg>
+              </div>
+              <h3 style={{ margin: "0 0 16px", color: "#0F172A", fontSize: 22, fontWeight: 600 }}>Mahasiswa Aktif</h3>
+              <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6, padding: "0 12px" }}>
+                Jumlah total mahasiswa yang terdaftar dan melakukan registrasi akademik pada semester berjalan.
+              </p>
             </div>
+          </div>
         )}
 
         {/* Rata-rata SKS Info Pop up */}
         {showRataSksInfo && (
+          <div
+            onClick={() => setShowRataSksInfo(false)}
+            style={{
+              position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+              backgroundColor: "rgba(0,0,0,0.4)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              zIndex: 9999,
+              animation: "fadeIn 0.2s ease",
+              backdropFilter: "blur(2px)"
+            } as any}
+          >
             <div
-                onClick={() => setShowRataSksInfo(false)}
-                style={{
-                    position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
-                    backgroundColor: "rgba(0,0,0,0.4)",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    zIndex: 9999,
-                    animation: "fadeIn 0.2s ease",
-                    backdropFilter: "blur(2px)"
-                } as any}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                background: "#fff",
+                borderRadius: 16,
+                padding: "44px 32px",
+                width: "420px",
+                maxWidth: "90%",
+                textAlign: "center",
+                boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                animation: "scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                border: "1px solid #E2E8F0"
+              }}
             >
-                <div
-                    onClick={(e) => e.stopPropagation()}
-                    style={{
-                        background: "#fff",
-                        borderRadius: 16,
-                        padding: "44px 32px",
-                        width: "420px",
-                        maxWidth: "90%",
-                        textAlign: "center",
-                        boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-                        animation: "scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-                        border: "1px solid #E2E8F0"
-                    }}
-                >
-                    <div style={{ margin: "0 auto 24px", display: "flex", justifyContent: "center" }}>
-                        <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#0F3294" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
-                          <path d="M9 2v8l3-2 3 2V2" />
-                        </svg>
-                    </div>
-                    <h3 style={{ margin: "0 0 16px", color: "#0F172A", fontSize: 22, fontWeight: 600 }}>Rata-rata SKS</h3>
-                    <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6, padding: "0 12px" }}>
-                        Beban studi rata-rata yang diambil oleh mahasiswa dalam satu semester untuk memenuhi syarat kelulusan.
-                    </p>
-                </div>
+              <div style={{ margin: "0 auto 24px", display: "flex", justifyContent: "center" }}>
+                <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#0F3294" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+                  <path d="M9 2v8l3-2 3 2V2" />
+                </svg>
+              </div>
+              <h3 style={{ margin: "0 0 16px", color: "#0F172A", fontSize: 22, fontWeight: 600 }}>Rata-rata SKS</h3>
+              <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6, padding: "0 12px" }}>
+                Beban studi rata-rata yang diambil oleh mahasiswa dalam satu semester untuk memenuhi syarat kelulusan.
+              </p>
             </div>
+          </div>
         )}
 
         {/* Perbandingan IPK Fakultas Info Pop up */}
         {showPerbandinganIpkInfo && (
+          <div
+            onClick={() => setShowPerbandinganIpkInfo(false)}
+            style={{
+              position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+              backgroundColor: "rgba(0,0,0,0.4)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              zIndex: 9999,
+              animation: "fadeIn 0.2s ease",
+              backdropFilter: "blur(2px)"
+            } as any}
+          >
             <div
-                onClick={() => setShowPerbandinganIpkInfo(false)}
-                style={{
-                    position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
-                    backgroundColor: "rgba(0,0,0,0.4)",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    zIndex: 9999,
-                    animation: "fadeIn 0.2s ease",
-                    backdropFilter: "blur(2px)"
-                } as any}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                background: "#fff",
+                borderRadius: 16,
+                padding: "40px 32px",
+                width: "420px",
+                maxWidth: "90%",
+                textAlign: "center",
+                boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                animation: "scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                border: "1px solid #E2E8F0"
+              }}
             >
-                <div
-                    onClick={(e) => e.stopPropagation()}
-                    style={{
-                        background: "#fff",
-                        borderRadius: 16,
-                        padding: "40px 32px",
-                        width: "420px",
-                        maxWidth: "90%",
-                        textAlign: "center",
-                        boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-                        animation: "scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-                        border: "1px solid #E2E8F0"
-                    }}
-                >
-                    <h3 style={{ margin: "0 0 16px", color: "#0F172A", fontSize: 22, fontWeight: 600 }}>Perbandingan IPK Fakultas</h3>
-                    <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6, padding: "0 12px" }}>
-                        Memvisualisasikan perbedaan rata-rata IPK setiap fakultas untuk membantu melakukan evaluasi dan membandingkan capaian akademik antar fakultas.
-                    </p>
-                </div>
+              <h3 style={{ margin: "0 0 16px", color: "#0F172A", fontSize: 22, fontWeight: 600 }}>Perbandingan IPK Fakultas</h3>
+              <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6, padding: "0 12px" }}>
+                Memvisualisasikan perbedaan rata-rata IPK setiap fakultas untuk membantu melakukan evaluasi dan membandingkan capaian akademik antar fakultas.
+              </p>
             </div>
+          </div>
         )}
       </Layout>
     </>
