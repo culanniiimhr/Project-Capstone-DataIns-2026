@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || "https://api-eduinsight.windsight.id/api/v1",
+  // 🔬 SAKLEK: Tembak langsung ke port docker backend lu (8005) agar tidak salah baca dari .env lawas
+  baseURL: "http://localhost:8005/api/v1",
   timeout: 15000,
 });
 
@@ -31,14 +32,20 @@ api.interceptors.response.use(
   }
 );
 
+// 🔹 Path ini benar menggunakan prefix bawaan backend utama
 export const getDashboardInsights = async () => {
-  const response = await api.get("/dashboard-utama/insights");
+  const response = await api.get("/dashboard-utama/insights"); 
   return response.data;
 };
 
-// REVISI BAR: Fetcher Ringkasan KPI Utama (Murni dari FastAPI Python lu)
 export const getKpiSummary = async () => {
-  const response = await api.get("/dashboard-utama/kpi-summary");
+  const response = await api.get("/dashboard-utama/kpi-summary"); 
+  return response.data;
+};
+
+// ✅ FIX PATH ACADEMIC: Lepaskan dari /dashboard-utama karena router ini berdiri sendiri di root
+export const getAcademicSummary = async () => {
+  const response = await api.get("/academic-summary");
   return response.data;
 };
 

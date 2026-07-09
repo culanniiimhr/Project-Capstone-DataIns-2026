@@ -1,8 +1,8 @@
 export const supersetDashboards = {
   sebaranMahasiswa: "cca32589-8a6b-4692-a6f3-eb981412d5f2",
   trenIpk: "ab434faa-e5e2-4002-b2ea-b4dbdf6e6424",
-  performaProdi: "8b0427bf-7869-45fc-8a29-e18e461958a4",
-  statusMahasiswa: "777bf595-ddf0-456a-82af-35df7d29abe0",
+  performaProdi: "2256c54e-7e50-45cc-99e0-926b6951d894",
+  statusMahasiswa: "734b4201-2add-4e35-965e-fedd44cfb164",
   topFakultas: "8b0427bf-7869-45fc-8a29-e18e461958a4",
   distribusiNilai: "4b5a255e-275c-4879-8175-d007d8b80d6a",
   trenKehadiran: "73d0432d-7caa-4df1-980a-30f33a1e8fe6",
