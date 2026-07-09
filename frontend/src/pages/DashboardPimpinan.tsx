@@ -118,15 +118,15 @@ export default function DashboardPimpinan() {
 
     // 3. Ambil data saat halaman di-load
     useEffect(() => {
-        fetch("http://localhost:8000/api/v1/dashboard-utama/kpi-summary")
+        fetch("https://api-eduinsight.windsight.id/api/v1/dashboard-utama/pimpinan-summary")
             .then((res) => res.json())
             .then((resData) => {
                 if (resData.status === "success" && resData.data) {
                     setKpiData({
-                        avg_ipk: resData.data.avg_ipk,
-                        tingkat_kelulusan: resData.data.tingkat_kelulusan,
-                        capaian_iku: resData.data.capaian_iku,
-                        kepuasan_mahasiswa: resData.data.kepuasan_mahasiswa || 4.32
+                        avg_ipk: resData.data.rata_rata_ipk || 0,
+                        tingkat_kelulusan: resData.data.tingkat_kelulusan || 0,
+                        capaian_iku: resData.data.capaian_iku || 0,
+                        kepuasan_mahasiswa: resData.data.kepuasan_mahasiswa || 0
                     });
                 }
             })
