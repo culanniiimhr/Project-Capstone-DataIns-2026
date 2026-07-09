@@ -1,17 +1,5 @@
-# Kredensial & Framework Backend/Frontend
 .env
 node_modules/
-.cache/
-
-# Cache Python Python
 __pycache__/
 *.pyc
-
-# Khusus Modul ETL & Data Generator 
-etl-generator/env_fix/
-etl-generator/raw_data/
-*.csv
-**/raw_data/__pycache__/
-
-# 🔥 FIX AMAN: Abaikan semua file docker-compose.yml di folder mana pun, termasuk root!
-docker-compose.yml
+.cache/

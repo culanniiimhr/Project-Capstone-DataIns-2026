@@ -11,14 +11,12 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
-# CORS - Mengizinkan localhost dan domain live
+# CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
+     allow_origins=[
         "http://localhost:3000",
         "http://localhost:3001",
-        "http://localhost:3005",
-        "https://eduinsight.windsight.id"
     ],
     allow_credentials=True,
     allow_methods=["*"],
