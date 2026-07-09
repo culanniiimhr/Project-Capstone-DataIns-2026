@@ -4,7 +4,7 @@ import SupersetEmbedDefault from "../components/SupersetEmbedDefault";
 import { supersetDashboards } from "../config/SupersetDb";
 import { FilterProvider } from "../context/FilterContext";
 
-/* ─── GLOBAL STYLES ─────────────────────────────────── */
+/* GLOBAL STYLES */
 const globalStyles = `
   @keyframes fadeInUp {
     from { opacity:0; transform:translateY(18px); }
@@ -42,6 +42,7 @@ const globalStyles = `
   .bar-item:hover { opacity: 0.82; }
 `;
 
+/* GLOBAL STYLES */
 /* ─── ICONS ─────────────────────────────────────────── */
 const IconHome = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>;
 const IconPerson = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4" /><path d="M6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" /></svg>;
@@ -87,7 +88,7 @@ const IconTarget = () => (
   </svg>
 );
 
-/* ─── CUSTOM TOOLTIP ─────────────────────────────────── */
+/*CUSTOM TOOLTIP*/
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload?.length) return null;
   return (
@@ -102,7 +103,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   );
 };
 
-/* ─── HOVER CARD ─────────────────────────────────────── */
+/*HOVER CARD*/
 function HoverCard({ style = {}, children }: { style?: React.CSSProperties; children: React.ReactNode }) {
   return (
     <div className="card-hover" style={{ background: "#fff", borderRadius: 12, border: "1px solid #E8EDF5", boxShadow: "0 1px 4px rgba(30,58,138,0.05)", ...style }}>
@@ -111,7 +112,7 @@ function HoverCard({ style = {}, children }: { style?: React.CSSProperties; chil
   );
 }
 
-/* ─── MAIN ───────────────────────────────────────────── */
+/*MAIN*/
 export default function DashboardAkademik() {
   const [tahunAkademik, setTahunAkademik] = useState("");
   const [semester, setSemester] = useState("");
@@ -134,7 +135,7 @@ export default function DashboardAkademik() {
           setSemester,
         }}
       >
-        {/* ── KPI CARDS ── */}
+        {/*KPI CARDS*/}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginBottom: 16 }}>
           {[
             { icon: <IconBarChartKPI />, label: "Rata-rata IPK", value: "3,45", change: "0,15 (4,55%)" },
@@ -196,7 +197,7 @@ export default function DashboardAkademik() {
           ))}
         </div>
 
-        {/* ── ROW 2: Tren IPK + Distribusi Nilai ── */}
+        {/*ROW 2: Tren IPK + Distribusi Nilai*/}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 14 }}>
           <HoverCard style={{ padding: "18px 18px 10px" }}>
             <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: "0 0 14px" }}>Tren IPK Rata-rata</p>
@@ -221,7 +222,7 @@ export default function DashboardAkademik() {
           </HoverCard>
         </div>
 
-        {/* ── ROW 3: Beban Studi + Perbandingan Fakultas + Tren Kehadiran ── */}
+        {/*ROW 3: Beban Studi + Perbandingan Fakultas + Tren Kehadiran*/}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 14, marginBottom: 14 }}>
 
           {/* Beban Studi */}
@@ -268,7 +269,7 @@ export default function DashboardAkademik() {
           </HoverCard>
         </div>
 
-        {/* ── INSIGHT BANNER ── */}
+        {/* INSIGHT BANNER */}
         <div className="card-hover" style={{ background: "#fff", borderRadius: 12, border: "1px solid #E8EDF5", padding: "14px 20px", marginBottom: 14, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
           <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
             <div style={{ width: 36, height: 36, background: "#FEF9C3", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
@@ -285,7 +286,7 @@ export default function DashboardAkademik() {
 
         </div>
 
-        {/* ── ROW 4: Top 5 Mahasiswa + Mahasiswa Berisiko ── */}
+        {/* ROW 4: Top 5 Mahasiswa + Mahasiswa Berisiko */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
 
           {/* Top 5 */}
