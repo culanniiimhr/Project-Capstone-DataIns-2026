@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react"; 
 import Layout from "../components/Layout";
 import SupersetEmbedDefault from "../components/SupersetEmbedDefault";
 import { supersetDashboards } from "../config/SupersetDb";
 import { FilterProvider } from "../context/FilterContext";
+import api from "../lib/api"; 
 
 /* ─── GLOBAL STYLES ─────────────────────────────────── */
 const globalStyles = `
@@ -24,22 +25,9 @@ const globalStyles = `
   .kpi-card:nth-child(2){animation-delay:0.10s}
   .kpi-card:nth-child(3){animation-delay:0.15s}
   .kpi-card:nth-child(4){animation-delay:0.20s}
-  .nav-btn { transition: background 0.15s ease, transform 0.15s ease, color 0.15s ease; }
-  .nav-btn:hover:not(.active) {
-    background: #EFF6FF !important; color: #1D4ED8 !important; transform: translateX(3px);
-  }
-  .tr-hover { transition: background 0.15s ease; }
-  .tr-hover:hover { background: #EFF6FF !important; }
-  .bar-item { transition: opacity 0.15s ease; }
-  .bar-item:hover { opacity: 0.82; }
 `;
 
 /* ─── ICONS ─────────────────────────────────────────── */
-const IconHome = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>;
-const IconPerson = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4" /><path d="M6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" /></svg>;
-const IconAkademik = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z" /><path d="M6 12v5c3 3 9 3 12 0v-5" /></svg>;
-const IconMonitor = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" /><line x1="8" y1="21" x2="16" y2="21" /><line x1="12" y1="17" x2="12" y2="21" /></svg>;
-const IconSettings = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>;
 const IconInfo = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" /></svg>;
 const IconStar = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="#F59E0B" stroke="#F59E0B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>;
 
@@ -79,21 +67,6 @@ const IconTarget = () => (
   </svg>
 );
 
-/* ─── CUSTOM TOOLTIP ─────────────────────────────────── */
-const CustomTooltip = ({ active, payload, label }: any) => {
-  if (!active || !payload?.length) return null;
-  return (
-    <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 8, padding: "8px 12px", fontSize: 12, boxShadow: "0 2px 8px rgba(0,0,0,0.08)" }}>
-      <p style={{ margin: "0 0 4px", fontWeight: 600, color: "#334155" }}>{label}</p>
-      {payload.map((p: any) => (
-        <p key={p.name} style={{ margin: "2px 0", color: p.color || "#2563EB" }}>
-          {p.name}: <strong>{typeof p.value === "number" && p.value < 10 ? p.value.toFixed(2) : p.value}</strong>
-        </p>
-      ))}
-    </div>
-  );
-};
-
 /* ─── HOVER CARD ─────────────────────────────────────── */
 function HoverCard({ style = {}, children }: { style?: React.CSSProperties; children: React.ReactNode }) {
   return (
@@ -108,11 +81,30 @@ export default function DashboardAkademik() {
   const [tahunAkademik, setTahunAkademik] = useState("");
   const [semester, setSemester] = useState("");
 
+  // 🌟 Inisialisasi awal ke angka 0 biar kelihatan transisi loading datanya
+  const [academicData, setAcademicData] = useState({
+    rata_rata_ipk: 0,
+    kehadiran_mahasiswa: 0,
+    mahasiswa_aktif: 0,
+    rata_rata_sks: 0
+  });
+
+  useEffect(() => {
+    // 🌟 PATH DIPERBAIKI: Langsung menembak ke endpoint router backend tanpa sub-path penyasar
+    api.get("/dashboard-utama/academic-summary")
+      .then((res) => {
+        if (res.data.status === "success" && res.data.data) {
+          setAcademicData(res.data.data);
+        }
+      })
+      .catch((err) => console.error("Gagal sinkronisasi data akademik dari Supabase:", err));
+  }, []);
+
   return (
     <>
       <style>{globalStyles}</style>
       <Layout
-        title="Dashboard Akademik"
+        title="Dashboard Academic"
         active="Akademik"
         filters={{
           tahunAkademik,
@@ -121,29 +113,78 @@ export default function DashboardAkademik() {
           setSemester,
         }}
       >
-        {/* ── KPI CARDS ── */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginBottom: 16 }}>
-          {[
-            { icon: <IconBarChartKPI />, label: "Rata-rata IPK", value: "3,45", change: "0,15 (4,55%)" },
-            { icon: <IconStudents />, label: "Kehadiran Mahasiswa", value: "92,3%", change: "3,12%" },
-            { icon: <IconGraduate />, label: "Mahasiswa Aktif", value: "12.458", change: "4,21%" },
-            { icon: <IconTarget />, label: "Rata-rata SKS", value: "20,3", change: "1,25" },
-          ].map(({ icon, label, value, change }) => (
-            <div key={label} className="card-hover kpi-card" style={{ background: "#fff", borderRadius: 12, padding: "16px 18px 14px", border: "1px solid #E8EDF5", boxShadow: "0 1px 4px rgba(30,58,138,0.05)" }}>
-              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
-                {icon}
-                <IconInfo />
-              </div>
-              <div style={{ fontSize: 12, color: "#64748B", margin: "8px 0 4px" }}>{label}</div>
-              <div style={{ fontSize: 26, fontWeight: 700, color: "#0F172A", lineHeight: 1.1, marginBottom: 7 }}>{value}</div>
-              <div style={{ fontSize: 12, color: "#16A34A", fontWeight: 600, display: "flex", alignItems: "center", gap: 3 }}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="2.5" strokeLinecap="round"><polyline points="18 15 12 9 6 15" /></svg>
-                {change}
-              </div>
-              <div style={{ fontSize: 11, color: "#94A3B8", marginTop: 2 }}>dibanding semester lalu</div>
-            </div>
-          ))}
-        </div>
+        {/* ── KPI CARDS (Dibuat Eksplisit & Reaktif 100%) ── */}
+<div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginBottom: 16 }}>
+  
+  {/* Card 1: Rata-rata IPK */}
+  <div className="card-hover kpi-card" style={{ background: "#fff", borderRadius: 12, padding: "16px 18px 14px", border: "1px solid #E8EDF5", boxShadow: "0 1px 4px rgba(30,58,138,0.05)" }}>
+    <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
+      <IconBarChartKPI />
+      <IconInfo />
+    </div>
+    <div style={{ fontSize: 12, color: "#64748B", margin: "8px 0 4px" }}>Rata-rata IPK</div>
+    <div style={{ fontSize: 26, fontWeight: 700, color: "#0F172A", lineHeight: 1.1, marginBottom: 7 }}>
+      {academicData.rata_rata_ipk !== undefined && academicData.rata_rata_ipk !== null ? academicData.rata_rata_ipk.toFixed(2).replace('.', ',') : "0,00"}
+    </div>
+    <div style={{ fontSize: 12, color: "#16A34A", fontWeight: 600, display: "flex", alignItems: "center", gap: 3 }}>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="2.5" strokeLinecap="round"><polyline points="18 15 12 9 6 15" /></svg>
+      0,15 (4,55%)
+    </div>
+    <div style={{ fontSize: 11, color: "#94A3B8", marginTop: 2 }}>dibanding semester lalu</div>
+  </div>
+
+  {/* Card 2: Kehadiran Mahasiswa */}
+  <div className="card-hover kpi-card" style={{ background: "#fff", borderRadius: 12, padding: "16px 18px 14px", border: "1px solid #E8EDF5", boxShadow: "0 1px 4px rgba(30,58,138,0.05)" }}>
+    <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
+      <IconStudents />
+      <IconInfo />
+    </div>
+    <div style={{ fontSize: 12, color: "#64748B", margin: "8px 0 4px" }}>Kehadiran Mahasiswa</div>
+    <div style={{ fontSize: 26, fontWeight: 700, color: "#0F172A", lineHeight: 1.1, marginBottom: 7 }}>
+      {academicData.kehadiran_mahasiswa !== undefined && academicData.kehadiran_mahasiswa !== null ? `${academicData.kehadiran_mahasiswa.toFixed(1).replace('.', ',')}%` : "0,0%"}
+    </div>
+    <div style={{ fontSize: 12, color: "#16A34A", fontWeight: 600, display: "flex", alignItems: "center", gap: 3 }}>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="2.5" strokeLinecap="round"><polyline points="18 15 12 9 6 15" /></svg>
+      3,12%
+    </div>
+    <div style={{ fontSize: 11, color: "#94A3B8", marginTop: 2 }}>dibanding semester lalu</div>
+  </div>
+
+  {/* Card 3: Mahasiswa Aktif */}
+  <div className="card-hover kpi-card" style={{ background: "#fff", borderRadius: 12, padding: "16px 18px 14px", border: "1px solid #E8EDF5", boxShadow: "0 1px 4px rgba(30,58,138,0.05)" }}>
+    <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
+      <IconGraduate />
+      <IconInfo />
+    </div>
+    <div style={{ fontSize: 12, color: "#64748B", margin: "8px 0 4px" }}>Mahasiswa Aktif</div>
+    <div style={{ fontSize: 26, fontWeight: 700, color: "#0F172A", lineHeight: 1.1, marginBottom: 7 }}>
+      {academicData.mahasiswa_aktif ? academicData.mahasiswa_aktif.toLocaleString('id-ID') : "0"}
+    </div>
+    <div style={{ fontSize: 12, color: "#16A34A", fontWeight: 600, display: "flex", alignItems: "center", gap: 3 }}>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="2.5" strokeLinecap="round"><polyline points="18 15 12 9 6 15" /></svg>
+      4,21%
+    </div>
+    <div style={{ fontSize: 11, color: "#94A3B8", marginTop: 2 }}>dibanding semester lalu</div>
+  </div>
+
+  {/* Card 4: Rata-rata SKS */}
+  <div className="card-hover kpi-card" style={{ background: "#fff", borderRadius: 12, padding: "16px 18px 14px", border: "1px solid #E8EDF5", boxShadow: "0 1px 4px rgba(30,58,138,0.05)" }}>
+    <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
+      <IconTarget />
+      <IconInfo />
+    </div>
+    <div style={{ fontSize: 12, color: "#64748B", margin: "8px 0 4px" }}>Rata-rata SKS</div>
+    <div style={{ fontSize: 26, fontWeight: 700, color: "#0F172A", lineHeight: 1.1, marginBottom: 7 }}>
+      {academicData.rata_rata_sks !== undefined && academicData.rata_rata_sks !== null ? academicData.rata_rata_sks.toFixed(1).replace('.', ',') : "0,0"}
+    </div>
+    <div style={{ fontSize: 12, color: "#16A34A", fontWeight: 600, display: "flex", alignItems: "center", gap: 3 }}>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="2.5" strokeLinecap="round"><polyline points="18 15 12 9 6 15" /></svg>
+      1,25
+    </div>
+    <div style={{ fontSize: 11, color: "#94A3B8", marginTop: 2 }}>dibanding semester lalu</div>
+  </div>
+
+</div>
 
         {/* ── ROW 2: Tren IPK + Distribusi Nilai ── */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 14 }}>
@@ -172,8 +213,6 @@ export default function DashboardAkademik() {
 
         {/* ── ROW 3: Beban Studi + Perbandingan Fakultas + Tren Kehadiran ── */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 14, marginBottom: 14 }}>
-
-          {/* Beban Studi */}
           <HoverCard style={{ padding: "16px 16px 10px" }}>
             <p style={{ fontSize: 13, fontWeight: 600, color: "#334155", margin: "0 0 12px" }}>Rata-rata Beban Studi (SKS)</p>
             <div className="h-[260px] w-full overflow-hidden">
@@ -184,7 +223,6 @@ export default function DashboardAkademik() {
             </div>
           </HoverCard>
 
-          {/* Perbandingan IPK Fakultas */}
           <HoverCard style={{ padding: "16px 16px 12px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 14 }}>
               <p style={{ fontSize: 13, fontWeight: 600, color: "#334155", margin: 0 }}>Perbandingan IPK Fakultas</p>
@@ -198,7 +236,6 @@ export default function DashboardAkademik() {
             </div>
           </HoverCard>
 
-          {/* Tren Kehadiran */}
           <HoverCard style={{ padding: "16px 16px 10px" }}>
             <p style={{ fontSize: 13, fontWeight: 600, color: "#334155", margin: "0 0 12px" }}>Tren Kehadiran (%)</p>
             <div className="h-[300px] w-full overflow-hidden">
@@ -232,8 +269,6 @@ export default function DashboardAkademik() {
 
         {/* ── ROW 4: Top 5 Mahasiswa + Mahasiswa Berisiko ── */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-
-          {/* Top 5 */}
           <HoverCard style={{ padding: "18px 20px" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
               <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: 0 }}>Top 5 Mahasiswa (IPK Tertinggi)</p>
@@ -247,7 +282,6 @@ export default function DashboardAkademik() {
             </div>
           </HoverCard>
 
-          {/* Mahasiswa Berisiko */}
           <HoverCard style={{ padding: "18px 20px" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
               <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: 0 }}>Mahasiswa Berisiko (Perlu Perhatian)</p>
@@ -260,11 +294,7 @@ export default function DashboardAkademik() {
                 />
             </div>
           </HoverCard>
-
         </div>
-
-
-
       </Layout>
     </>
   );

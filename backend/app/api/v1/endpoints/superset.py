@@ -1,21 +1,16 @@
 from fastapi import APIRouter, HTTPException, Query
 import requests
+from app.core.config import settings  # 👈 Import konfigurasi global
 
 router = APIRouter()
-
-SUPERSET_URL = "http://datains_superset:8088"
-SUPERSET_USERNAME = "admin"
-SUPERSET_PASSWORD = "admin123"
-
 
 @router.get("/guest-token")
 def get_superset_guest_token(dashboard_id: str = Query(...)):
     try:
-        print("Dashboard:", dashboard_id)
-
+        # 1. Login ke Superset menggunakan API Security resmi (Ambil dari .env via settings)
         login_data = {
-            "username": SUPERSET_USERNAME,
-            "password": SUPERSET_PASSWORD,
+            "username": settings.SUPERSET_ADMIN_USER,
+            "password": settings.SUPERSET_ADMIN_PASSWORD,
             "provider": "db",
             "refresh": True
         }
@@ -23,12 +18,16 @@ def get_superset_guest_token(dashboard_id: str = Query(...)):
         print("Login ke Superset...")
 
         login_res = requests.post(
-            f"{SUPERSET_URL}/api/v1/security/login",
+            f"{settings.SUPERSET_URL}/api/v1/security/login",
             json=login_data,
             timeout=10
         )
 
-        print("Login status:", login_res.status_code)
+        if login_res.status_code != 200:
+            raise HTTPException(
+                status_code=500,
+                detail=f"Gagal login ke Superset Mitra: {login_res.status_code} - {login_res.text}"
+            )
 
         access_token = login_res.json()["access_token"]
 
@@ -37,29 +36,34 @@ def get_superset_guest_token(dashboard_id: str = Query(...)):
             "Content-Type": "application/json"
         }
 
-        print("Generate guest token...")
+        # 2. Minta Guest Token sesuai dengan dashboard_id yang dikirim oleh Front-End
+        guest_token_data = {
+            "user": {
+                "username": "guest_user",
+                "first_name": "Guest",
+                "last_name": "User"
+            },
+            "resources": [
+                {
+                    "type": "dashboard",
+                    "id": dashboard_id
+                }
+            ],
+            "rls": [] 
+        }
 
         token_res = requests.post(
-            f"{SUPERSET_URL}/api/v1/security/guest_token",
-            json={
-                "user": {
-                    "username": "guest_user",
-                    "first_name": "Guest",
-                    "last_name": "User"
-                },
-                "resources": [
-                    {
-                        "type": "dashboard",
-                        "id": dashboard_id
-                    }
-                ],
-                "rls": []
-            },
+            f"{settings.SUPERSET_URL}/api/v1/security/guest_token/",  # Menggunakan trailing slash '/'
+            json=guest_token_data,
             headers=headers,
             timeout=10
         )
 
-        print("Guest token status:", token_res.status_code)
+        if token_res.status_code != 200:
+            raise HTTPException(
+                status_code=500,
+                detail=f"Gagal generate guest token dari Mitra: {token_res.status_code} - {token_res.text}"
+            )
 
         return {"token": token_res.json()["token"]}
 

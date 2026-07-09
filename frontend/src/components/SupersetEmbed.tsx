@@ -15,14 +15,17 @@ const SupersetEmbed = ({ dashboardId }: SupersetEmbedProps) => {
       containerRef.current.innerHTML = "";
 
       try {
+        const backendUrl = process.env.REACT_APP_API_URL || "https://api-eduinsight.windsight.id/api/v1";
+        const supersetDomain = process.env.REACT_APP_SUPERSET_URL || "https://dash.varguard.id";
+
         await embedDashboard({
           id: dashboardId,
-          supersetDomain: "http://localhost:8088",
+          supersetDomain: supersetDomain,
           mountPoint: containerRef.current,
 
           fetchGuestToken: async () => {
             const response = await fetch(
-              `http://localhost:8000/api/v1/superset/guest-token?dashboard_id=${dashboardId}`
+              `${backendUrl}/superset/guest-token?dashboard_id=${dashboardId}`
             );
 
             if (!response.ok) {
@@ -49,7 +52,6 @@ const SupersetEmbed = ({ dashboardId }: SupersetEmbedProps) => {
           },
         });
 
-        // Supaya iframe dashboard kelihatan penuh
         const iframe = containerRef.current.querySelector("iframe");
         if (iframe) {
           iframe.style.width = "100%";
@@ -63,7 +65,6 @@ const SupersetEmbed = ({ dashboardId }: SupersetEmbedProps) => {
 
     setTimeout(() => {
       const iframe = containerRef.current?.querySelector("iframe");
-
       if (iframe) {
         iframe.style.width = "100%";
         iframe.style.height = "100%";

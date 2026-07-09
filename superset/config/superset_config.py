@@ -6,8 +6,12 @@ SECRET_KEY = os.environ.get(
     "bikin-random-aja-yang-penting-rahasia"
 )
 
-# Koneksi ke PostgreSQL Data Warehouse
-SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://warehouse_user:warehouse_secret@datains_warehouse:5432/db_warehouse"
+# 🔥 FIX: Menggunakan SQLAlchemy URI dinamis dari .env (Supabase Cloud)
+# Jika .env tidak terbaca, otomatis menggunakan URL Supabase lu sebagai fallback
+SQLALCHEMY_DATABASE_URI = os.environ.get(
+    "SUPERSET_DATABASE_URI",
+    "postgresql+psycopg2://postgres.zuooajizxhtsxswdwcha:datains_secret3421@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres"
+)
 
 # Security & Proxy
 SESSION_COOKIE_SAMESITE = "Lax"
