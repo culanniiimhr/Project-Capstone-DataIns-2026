@@ -41,7 +41,7 @@ export default function Chatbot() {
     }
   }, [messages, isOpen]);
 
-  // 🚀 INTEGRASI FETCH N8N - FIX URL NGROK & BYPASS WARNING
+  // 🚀 INTEGRASI FETCH N8N - PARSING FIX & FORMAT PRE-WRAP
   const handleSend = async (text: string) => {
     if (!text.trim() || isTyping) return;
 
@@ -50,12 +50,10 @@ export default function Chatbot() {
     setIsTyping(true);
 
     try {
-      // ✅ JALUR UTAMA WAJIB TEMBAK NGROK LU, BUKAN LOCALHOST!
-      const response = await fetch("https://michale-noninfluential-aracelis.ngrok-free.dev/webhook-test/fab7a9d3-d3b5-4cd0-8736-4a5f119fb806", {
+      const response = await fetch("https://n8n.varguard.id/webhook/fab7a9d3-d3b5-4cd0-8736-4a5f119fb806", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "true", // 🔥 Supaya ngrok free gak nampilin halaman warning ke temen lu
         },
         body: JSON.stringify({
           message: text,
@@ -225,6 +223,7 @@ export default function Chatbot() {
                       key={idx}
                       className={`flex ${msg.role === "user" ? "justify-end pr-2" : "justify-start pl-2"}`}
                     >
+                      {/* ✨ FIXED: whitespace-pre-wrap di imessage-assistant & imessage-user */}
                       <div
                         className={`max-w-[75%] px-3.5 py-2 text-[13.5px] leading-[1.4] shadow-sm whitespace-pre-wrap ${
                           msg.role === "user"

@@ -7,10 +7,10 @@ SUPERSET_URL = "http://datains_superset:8088"
 SUPERSET_USERNAME = "admin"
 SUPERSET_PASSWORD = "admin123"
 
-
 @router.get("/guest-token")
 def get_superset_guest_token(dashboard_id: str = Query(...)):
     try:
+        # 1. Login ke Superset menggunakan API Security resmi
         login_data = {
             "username": SUPERSET_USERNAME,
             "password": SUPERSET_PASSWORD,
@@ -37,6 +37,7 @@ def get_superset_guest_token(dashboard_id: str = Query(...)):
             "Content-Type": "application/json"
         }
 
+        # 2. Minta Guest Token sesuai dengan dashboard_id yang dikirim oleh Front-End
         guest_token_data = {
             "user": {
                 "username": "guest_user",
@@ -49,7 +50,7 @@ def get_superset_guest_token(dashboard_id: str = Query(...)):
                     "id": dashboard_id
                 }
             ],
-            "rls": []
+            "rls": [] 
         }
 
         token_res = requests.post(

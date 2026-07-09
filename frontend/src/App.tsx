@@ -1,68 +1,40 @@
-import { useEffect } from "react";
-import {
-  Routes,
-  Route,
-  Navigate,
-  useNavigationType,
-  useLocation,
-} from "react-router-dom";
-import Login from "./pages/Login";
-import ResetPassword from "./pages/ResetPassword";
-import DashboardIKU from "./pages/DashboardIKU";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
 import DashboardUtama from "./pages/DashboardUtama";
 import DashboardAkademik from "./pages/DashboardAkademik";
 import DashboardPimpinan from "./pages/DashboardPimpinan";
+import DashboardIKU from "./pages/DashboardIKU";
 import DashboardSistem from "./pages/DashboardSistem";
+import Login from "./pages/Login"; 
 import Profil from "./pages/Profil";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
-  const action = useNavigationType();
-  const location = useLocation();
-  const pathname = location.pathname;
-
-  useEffect(() => {
-    if (action !== "POP") {
-      window.scrollTo(0, 0);
-    }
-  }, [action, pathname]);
-
-  useEffect(() => {
-    let title = "";
-    let metaDescription = "";
-
-    switch (pathname) {
-      case "/":
-        title = "";
-        metaDescription = "";
-        break;
-    }
-
-    if (title) {
-      document.title = title;
-    }
-
-    if (metaDescription) {
-      const metaDescriptionTag: HTMLMetaElement | null = document.querySelector(
-        'head > meta[name="description"]'
-      );
-      if (metaDescriptionTag) {
-        metaDescriptionTag.content = metaDescription;
-      }
-    }
-  }, [pathname]);
-
   return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="/" element={<Navigate to="/login" replace />} />
-      <Route path="/dashboard" element={<DashboardUtama />} />
-      <Route path="/dashboard/akademik" element={<DashboardAkademik />} />
-      <Route path="/dashboard/pimpinan" element={<DashboardPimpinan />} />
-      <Route path="/dashboard/iku" element={<DashboardIKU />} />
-      <Route path="/dashboard/system" element={<DashboardSistem />} />
-      <Route path="/profil" element={<Profil />} />
-    </Routes>
+    <BrowserRouter>
+      <Routes>
+        {/* Halaman Utama / Landing */}
+        <Route path="/" element={<DashboardUtama />} />
+        
+        {/* Rute Dashboard Utama (Prefix /dashboard) */}
+        <Route path="/dashboard/utama" element={<DashboardUtama />} />
+        <Route path="/dashboard/akademik" element={<DashboardAkademik />} />
+        <Route path="/dashboard/pimpinan" element={<DashboardPimpinan />} />
+        <Route path="/dashboard/iku" element={<DashboardIKU />} />
+        <Route path="/dashboard/system" element={<DashboardSistem />} />
+        
+        {/* Fitur Pendukung */}
+        <Route path="/login" element={<Login />} /> 
+        <Route path="/profil" element={<Profil />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+
+        {/* Auto-Redirect / Fallback: Menghindari Blank Putih pada rute parsial */}
+        <Route path="/dashboard" element={<Navigate to="/dashboard/utama" replace />} />
+        <Route path="/akademik" element={<Navigate to="/dashboard/akademik" replace />} />
+        <Route path="/pimpinan" element={<Navigate to="/dashboard/pimpinan" replace />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
+
 export default App;
