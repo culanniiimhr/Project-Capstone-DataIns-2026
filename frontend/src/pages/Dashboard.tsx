@@ -41,7 +41,7 @@ export default function DashboardPage() {
     api.get("/dashboard/summary").then((r) => setSummary(r.data));
     api.get("/dashboard/tren-ipk").then((r) => setTrenIPK(r.data));
     api.get("/dashboard/top-prodi").then((r) => setTopProdi(r.data));
-  }, []);
+  }, []);  
 
   return (
     <div className="p-6 space-y-6">

@@ -20,6 +20,14 @@ const globalStyles = `
     box-shadow: 0 12px 28px rgba(30,58,138,0.13), 0 2px 8px rgba(30,58,138,0.07);
     border-color: #BFDBFE !important;
   }
+  @keyframes scaleUp {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
   .kpi-card { animation: fadeInUp 0.4s ease both; }
   .kpi-card:nth-child(1){animation-delay:0.05s}
   .kpi-card:nth-child(2){animation-delay:0.10s}
@@ -106,6 +114,10 @@ function HoverCard({ style = {}, children }: { style?: React.CSSProperties; chil
 export default function DashboardPimpinan() {
     const [tahun, setTahun] = useState("");
     const [semester, setSemester] = useState("");
+    const [showIpkInfo, setShowIpkInfo] = useState(false);
+    const [showIkuInfo, setShowIkuInfo] = useState(false);
+    const [showKelulusanInfo, setShowKelulusanInfo] = useState(false);
+    const [showKepuasanInfo, setShowKepuasanInfo] = useState(false);
     const navigate = useNavigate();
 
     // 2. Buat state untuk menampung data KPI riil dari backend
@@ -149,7 +161,45 @@ export default function DashboardPimpinan() {
                         <div key={label} className="card-hover kpi-card" style={{ background: "#fff", borderRadius: 12, padding: "16px 18px 14px", border: "1px solid #E8EDF5", boxShadow: "0 1px 4px rgba(30,58,138,0.05)" }}>
                             <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
                                 {icon}
-                                <IconInfo />
+                                {label === "Rata-rata IPK" ? (
+                                    <div
+                                        onClick={() => setShowIpkInfo(true)}
+                                        style={{ cursor: "pointer", transition: "transform 0.2s" }}
+                                        onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
+                                        onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
+                                    >
+                                        <IconInfo />
+                                    </div>
+                                ) : label === "Tingkat Kelulusan" ? (
+                                    <div
+                                        onClick={() => setShowKelulusanInfo(true)}
+                                        style={{ cursor: "pointer", transition: "transform 0.2s" }}
+                                        onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
+                                        onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
+                                    >
+                                        <IconInfo />
+                                    </div>
+                                ) : label === "Capaian IKU" ? (
+                                    <div
+                                        onClick={() => setShowIkuInfo(true)}
+                                        style={{ cursor: "pointer", transition: "transform 0.2s" }}
+                                        onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
+                                        onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
+                                    >
+                                        <IconInfo />
+                                    </div>
+                                ) : label === "Kepuasan Mahasiswa" ? (
+                                    <div
+                                        onClick={() => setShowKepuasanInfo(true)}
+                                        style={{ cursor: "pointer", transition: "transform 0.2s" }}
+                                        onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
+                                        onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
+                                    >
+                                        <IconInfo />
+                                    </div>
+                                ) : (
+                                    <IconInfo />
+                                )}
                             </div>
                             <div style={{ fontSize: 12, color: "#64748B", margin: "8px 0 4px" }}>{label}</div>
                             <div style={{ fontSize: 26, fontWeight: 700, color: "#0F172A", lineHeight: 1.1, marginBottom: 7 }}>{value}</div>
@@ -259,7 +309,6 @@ export default function DashboardPimpinan() {
                     <HoverCard style={{ padding: "10px 17px" }}>
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
                             <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: 0 }}>Top 5 Fakultas (berdasarkan IPK)</p>
-                            <button style={{ background: "none", border: "none", color: "#2563EB", fontWeight: 600, fontSize: 12, cursor: "pointer" }}>Lihat selengkapnya</button>
                         </div>
                         <div className="h-[320px] w-full overflow-hidden">
                             <SupersetEmbedDefault
@@ -272,7 +321,6 @@ export default function DashboardPimpinan() {
                     <HoverCard style={{ padding: "18px 20px" }}>
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
                             <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: 0 }}>Fakultas Perlu Perhatian</p>
-                            <button style={{ background: "none", border: "none", color: "#2563EB", fontWeight: 600, fontSize: 12, cursor: "pointer" }}>Lihat selengkapnya</button>
                         </div>
                         <div className="h-[320px] w-full overflow-hidden">
                             <SupersetEmbedDefault
@@ -287,6 +335,190 @@ export default function DashboardPimpinan() {
                 <button className="fixed bottom-[30px] right-[31px] flex h-[36px] w-[36px] items-center justify-center rounded-[9px] bg-[#155EEF] text-[25px] text-white shadow-lg">
                     <VscHubot className="h-10 w-10 text-white" />
                 </button>
+
+                {/* IPK Info Pop up*/}
+                {showIpkInfo && (
+                    <div
+                        onClick={() => setShowIpkInfo(false)}
+                        style={{
+                            position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+                            backgroundColor: "rgba(0,0,0,0.4)",
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                            zIndex: 9999,
+                            animation: "fadeIn 0.2s ease",
+                            backdropFilter: "blur(2px)"
+                        } as any}
+                    >
+                        <div
+                            onClick={(e) => e.stopPropagation()}
+                            style={{
+                                background: "#fff",
+                                borderRadius: 16,
+                                padding: "40px 32px",
+                                width: "420px",
+                                maxWidth: "90%",
+                                textAlign: "center",
+                                boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                                animation: "scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                                border: "1px solid #E2E8F0"
+                            }}
+                        >
+                            <div style={{
+                                background: "#F8FAFC",
+                                width: 72, height: 72,
+                                borderRadius: 18,
+                                display: "flex", alignItems: "center", justifyContent: "center",
+                                margin: "0 auto 24px",
+                                border: "1px solid #F1F5F9"
+                            }}>
+                                <div style={{
+                                    background: "#0F3294",
+                                    width: 36, height: 36,
+                                    borderRadius: "50%",
+                                    display: "flex", alignItems: "center", justifyContent: "center",
+                                    color: "white", fontWeight: "700", fontSize: 20, fontStyle: "italic",
+                                    fontFamily: "serif"
+                                }}>
+                                    i
+                                </div>
+                            </div>
+                            <h3 style={{ margin: "0 0 16px", color: "#0F172A", fontSize: 22, fontWeight: 600 }}>Rata-rata IPK</h3>
+                            <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6, padding: "0 12px" }}>
+                                Nilai rata-rata Indeks Prestasi Kumulatif seluruh mahasiswa aktif pada semester berjalan.
+                            </p>
+                        </div>
+                    </div>
+                )}
+
+                {/* Kelulusan Info Modal */}
+                {showKelulusanInfo && (
+                    <div
+                        onClick={() => setShowKelulusanInfo(false)}
+                        style={{
+                            position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+                            backgroundColor: "rgba(0,0,0,0.4)",
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                            zIndex: 9999,
+                            animation: "fadeIn 0.2s ease",
+                            backdropFilter: "blur(2px)"
+                        } as any}
+                    >
+                        <div
+                            onClick={(e) => e.stopPropagation()}
+                            style={{
+                                background: "#fff",
+                                borderRadius: 16,
+                                padding: "44px 32px",
+                                width: "420px",
+                                maxWidth: "90%",
+                                textAlign: "center",
+                                boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                                animation: "scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                                border: "1px solid #E2E8F0"
+                            }}
+                        >
+                            <div style={{ margin: "0 auto 24px", display: "flex", justifyContent: "center" }}>
+                                <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#0F3294" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                                    <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                                </svg>
+                            </div>
+                            <h3 style={{ margin: "0 0 16px", color: "#0F172A", fontSize: 22, fontWeight: 600 }}>Tingkat Kelulusan</h3>
+                            <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6, padding: "0 12px" }}>
+                                Persentase mahasiswa yang berhasil menyelesaikan studi sesuai kriteria kelulusan yang ditetapkan.
+                            </p>
+                        </div>
+                    </div>
+                )}
+
+                {/* IKU Info Modal */}
+                {showIkuInfo && (
+                    <div
+                        onClick={() => setShowIkuInfo(false)}
+                        style={{
+                            position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+                            backgroundColor: "rgba(0,0,0,0.4)",
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                            zIndex: 9999,
+                            animation: "fadeIn 0.2s ease",
+                            backdropFilter: "blur(2px)"
+                        } as any}
+                    >
+                        <div
+                            onClick={(e) => e.stopPropagation()}
+                            style={{
+                                background: "#fff",
+                                borderRadius: 16,
+                                padding: "44px 32px",
+                                width: "420px",
+                                maxWidth: "90%",
+                                textAlign: "center",
+                                boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                                animation: "scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                                border: "1px solid #E2E8F0"
+                            }}
+                        >
+                            <div style={{ margin: "0 auto 24px", display: "flex", justifyContent: "center" }}>
+                                <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#0F3294" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                                    <circle cx="12" cy="12" r="9" />
+                                    <circle cx="12" cy="12" r="5.5" />
+                                    <circle cx="12" cy="12" r="2" />
+                                    <line x1="12" y1="2" x2="12" y2="5.5" />
+                                    <line x1="12" y1="18.5" x2="12" y2="22" />
+                                    <line x1="2" y1="12" x2="5.5" y2="12" />
+                                    <line x1="18.5" y1="12" x2="22" y2="12" />
+                                </svg>
+                            </div>
+                            <h3 style={{ margin: "0 0 16px", color: "#0F172A", fontSize: 22, fontWeight: 600 }}>Capaian IKU</h3>
+                            <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6, padding: "0 12px" }}>
+                                Persentase pencapaian target Indikator Kinerja Utama (IKU) yang telah ditetapkan.
+                            </p>
+                        </div>
+                    </div>
+                )}
+
+                {/* Kepuasan Info Modal */}
+                {showKepuasanInfo && (
+                    <div
+                        onClick={() => setShowKepuasanInfo(false)}
+                        style={{
+                            position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+                            backgroundColor: "rgba(0,0,0,0.4)",
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                            zIndex: 9999,
+                            animation: "fadeIn 0.2s ease",
+                            backdropFilter: "blur(2px)"
+                        } as any}
+                    >
+                        <div
+                            onClick={(e) => e.stopPropagation()}
+                            style={{
+                                background: "#fff",
+                                borderRadius: 16,
+                                padding: "44px 32px",
+                                width: "420px",
+                                maxWidth: "90%",
+                                textAlign: "center",
+                                boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                                animation: "scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                                border: "1px solid #E2E8F0"
+                            }}
+                        >
+                            <div style={{ margin: "0 auto 24px", display: "flex", justifyContent: "center" }}>
+                                <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#0F3294" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                                    <line x1="9" y1="9" x2="9.01" y2="9" />
+                                    <line x1="15" y1="9" x2="15.01" y2="9" />
+                                </svg>
+                            </div>
+                            <h3 style={{ margin: "0 0 16px", color: "#0F172A", fontSize: 22, fontWeight: 600 }}>Kepuasan Mahasiswa</h3>
+                            <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6, padding: "0 12px" }}>
+                                Nilai rata-rata tingkat kepuasan mahasiswa berdasarkan hasil survei.
+                            </p>
+                        </div>
+                    </div>
+                )}
             </Layout>
         </>
     );
