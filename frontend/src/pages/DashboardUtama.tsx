@@ -6,8 +6,7 @@ import { VscHubot } from "react-icons/vsc";
 import SupersetEmbed from "../components/SupersetEmbed";
 import SupersetEmbedDefault from "../components/SupersetEmbedDefault";
 import { supersetDashboards } from "../config/SupersetDb";
-import { supabase } from "../lib/supabase/supabase";
-import { getDashboardInsights } from "../lib/api"; // 1. IMPORT API BACKEND BARU
+import { getDashboardInsights, getKpiSummary } from "../lib/api"; // Murni lewat API Backend Python
 
 /* ─── GLOBAL ANIMATION STYLES ───────────────────────── */
 const globalStyles = `
@@ -131,7 +130,6 @@ function HoverCard({ style = {}, children }: { style?: React.CSSProperties; chil
   );
 }
 
-// Interface Penampung Data dari Backend Python
 interface InsightItem {
   status: "up" | "down";
   value: string;
@@ -149,16 +147,15 @@ export default function DashboardUtama() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   
-  // State untuk data atas (KPI Ringkasan)
+  // REVISI MURNI: Nilai awal dinolkan, tidak ada lagi angka dummy
   const [kpiData, setKpiData] = useState({
-    rataRataIpk: 2.55,
-    tingkatKelulusan: "32,4%",
-    totalMahasiswa: 4750,
-    totalDosen: 38,
-    capaianIku: "78,4%",
+    rataRataIpk: 0,
+    tingkatKelulusan: "0%",
+    totalMahasiswa: 0,
+    totalDosen: 0,
+    capaianIku: "0%",
   });
 
-  // 2. STATE BARU KHUSUS MENAMPUNG HASIL DARI PYTHON BACKEND
   const [backendInsights, setBackendInsights] = useState<BackendInsights | null>(null);
 
   useEffect(() => {
@@ -166,46 +163,36 @@ export default function DashboardUtama() {
       try {
         setLoading(true);
 
-        // Ambil data insight dari Python Backend secara parallel dengan hitungan Supabase ringkasan atas
-        const [insightsRes, mhsRows, sdmRows, viewRows] = await Promise.all([
+        // REVISI MURNI: Mengandalkan endpoint python database lu aja Bar
+        const [insightsRes, kpiSummaryRes] = await Promise.all([
           getDashboardInsights().catch(e => { console.error(e); return null; }),
-          supabase.from("view_analisis_akademik_mahasiswa").select("*", { count: "exact", head: true }),
-          supabase.from("view_sdm_profil_dosen").select("*", { count: "exact", head: true }),
-          supabase.from("view_dashboard_utama").select("rata_rata_ipk, total_lulus, total_mahasiswa")
+          getKpiSummary().catch(e => { console.error(e); return null; })
         ]);
 
-        // Simpan data insight dari Python ke state
         if (insightsRes) {
           setBackendInsights(insightsRes);
         }
 
-        // Kalkulasi data atas (Ringkasan KPI) tetap dipertahankan
-        let sumIpk = 0;
-        let totalLulusAkumulasi = 0;
-        let totalMhsAkumulasi = 0;
-        let totalRows = viewRows.data?.length || 0;
-
-        if (viewRows.data && totalRows > 0) {
-          viewRows.data.forEach(row => {
-            sumIpk += Number(row.rata_rata_ipk || 0);
-            totalLulusAkumulasi += Number(row.total_lulus || 0);
-            totalMhsAkumulasi += Number(row.total_mahasiswa || 0);
+        // REVISI MURNI: Bind data 100% dari response FastAPI lu, buang hitungan Supabase client lokal
+        if (kpiSummaryRes && kpiSummaryRes.status === "success") {
+          const backendData = kpiSummaryRes.data;
+          setKpiData({
+            rataRataIpk: Number(backendData.avg_ipk || 0),
+            totalMahasiswa: Number(backendData.total_mahasiswa || 0),
+            tingkatKelulusan: backendData.tingkat_kelulusan ? `${backendData.tingkat_kelulusan}%` : "0%",     
+            totalDosen: Number(backendData.total_dosen || 0),               
+            capaianIku: backendData.capaian_iku ? `${backendData.capaian_iku}%` : "0%",
+          });
+        } else {
+          // Jika backend mati / response tidak sukses, set kosong murni
+          setKpiData({
+            rataRataIpk: 0,
+            totalMahasiswa: 0,
+            tingkatKelulusan: "0%",
+            totalDosen: 0,
+            capaianIku: "0%",
           });
         }
-
-        const tingkatKelulusanReal = totalMhsAkumulasi > 0 
-          ? ((totalLulusAkumulasi / totalMhsAkumulasi) * 100).toFixed(1) + "%"
-          : "32,4%";
-
-        const finalAvgIpk = totalRows > 0 ? (sumIpk / totalRows) : 2.55;
-
-        setKpiData({
-          rataRataIpk: finalAvgIpk,
-          totalMahasiswa: mhsRows.count || 4750,
-          tingkatKelulusan: tingkatKelulusanReal,     
-          totalDosen: sdmRows.count || 38,               
-          capaianIku: "78,4%",
-        });
 
       } catch (err) {
         console.error("Gagal sinkronisasi data riil dashboard:", err);
@@ -230,7 +217,7 @@ export default function DashboardUtama() {
             { icon: <IconGraduate />, label: "Tingkat kelulusan", value: loading ? "..." : kpiData.tingkatKelulusan, change: "2,21%" },
             { icon: <IconStudents />, label: "Total Mahasiswa", value: loading ? "..." : kpiData.totalMahasiswa.toLocaleString("id-ID"), change: "4,21%" },
             { icon: <IconLecturer />, label: "Dosen aktif", value: loading ? "..." : kpiData.totalDosen.toLocaleString("id-ID"), change: "1,08%" },
-            { icon: <IconTarget />, label: "Capaian IKU", value: kpiData.capaianIku, change: "3,12%" },
+            { icon: <IconTarget />, label: "Capaian IKU", value: loading ? "..." : kpiData.capaianIku, change: "3,12%" },
           ].map(({ icon, label, value, change }) => (
             <div key={label} className="card-hover kpi-card" style={{ background: "#fff", borderRadius: 12, padding: "16px 16px 14px", border: "1px solid #E8EDF5", boxShadow: "0 1px 4px rgba(30,58,138,0.05)" }}>
               {icon}
@@ -271,8 +258,6 @@ export default function DashboardUtama() {
 
         {/* Row 3 — Insight + Quick Access */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-          
-          {/* 3. SECTION INSIGHT OTOMATIS DI-REVISI MENGGUNAKAN DATA MATANG DARI PYTHON */}
           <HoverCard style={{ padding: "18px 20px 16px" }}>
             <p style={{ fontSize: 13.5, fontWeight: 600, color: "#334155", margin: "0 0 16px" }}>Insight Otomatis</p>
             
@@ -280,7 +265,6 @@ export default function DashboardUtama() {
               <div style={{ fontSize: 13, color: "#64748B", padding: "20px 0" }}>Memuat kalkulasi insight...</div>
             ) : (
               <>
-                {/* Baris 1: IPK */}
                 {backendInsights?.ipk && (
                   <div className="insight-row" style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 10 }}>
                     {backendInsights.ipk.status === "up" ? <IconInsightUp /> : <IconInsightDown />}
@@ -296,7 +280,6 @@ export default function DashboardUtama() {
                   </div>
                 )}
 
-                {/* Baris 2: Kelulusan */}
                 {backendInsights?.kelulusan && (
                   <div className="insight-row" style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 10 }}>
                     {backendInsights.kelulusan.status === "up" ? <IconInsightUp /> : <IconInsightDown />}
@@ -312,7 +295,6 @@ export default function DashboardUtama() {
                   </div>
                 )}
 
-                {/* Baris 3: Kehadiran */}
                 {backendInsights?.kehadiran && (
                   <div className="insight-row" style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 10 }}>
                     {backendInsights.kehadiran.status === "up" ? <IconInsightUp /> : <IconInsightDown />}

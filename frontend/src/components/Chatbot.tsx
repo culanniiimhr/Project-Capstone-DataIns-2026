@@ -50,7 +50,7 @@ export default function Chatbot() {
     setIsTyping(true);
 
     try {
-      const response = await fetch("http://localhost:5678/webhook/fab7a9d3-d3b5-4cd0-8736-4a5f119fb806", {
+      const response = await fetch("https://n8n.varguard.id/webhook/fab7a9d3-d3b5-4cd0-8736-4a5f119fb806", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

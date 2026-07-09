@@ -15,4 +15,4 @@ export const supersetDashboards = {
   bebanStudi: "84d9e5fe-5744-4a86-b323-063e94583036",
   monitoringFakultas : "3605bf72-970c-4b05-b739-d2cbf8e81927",
   topFakultas: "40c31057-aeb8-4e97-9105-8caa22f82baf",
-};
+};  

@@ -11,4 +11,7 @@ __pycache__/
 etl-generator/env_fix/
 etl-generator/raw_data/
 *.csv
-**/raw_data/
+**/raw_data/__pycache__/
+
+# 🔥 FIX AMAN: Abaikan semua file docker-compose.yml di folder mana pun, termasuk root!
+docker-compose.yml
