@@ -14,5 +14,7 @@ export const supersetDashboards = {
   perbandinganIku: "f505c2ed-02d1-42fc-a643-0de328e769e0",
   bebanStudi: "84d9e5fe-5744-4a86-b323-063e94583036",
   monitoringFakultas : "3605bf72-970c-4b05-b739-d2cbf8e81927",
-  topFakultas: "40c31057-aeb8-4e97-9105-8caa22f82baf",
+  topFakulta: "40c31057-aeb8-4e97-9105-8caa22f82baf",
+  ipkKPI: "7cc75a5f-c671-4e28-94fd-2cc1394bd10e", 
+  kelulusanKPI: "cb1fcc44-287a-4c6b-aef2-348f96207c23",
 };  
