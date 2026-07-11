@@ -76,3 +76,44 @@ def get_dashboard_insights():
         return res
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ─── ENDPOINT 3: KHUSUS DASHBOARD AKADEMIK (DINAMIS 100%) ───
+@router.get("/academic-summary")
+def get_academic_summary():
+    try:
+        with engine.connect() as connection:
+            # 1. Ambil Rata-rata IPK, Kehadiran, dan Total Mahasiswa Aktif dari view_dashboard_utama
+            query_utama = text("""
+                SELECT 
+                    COALESCE(ROUND(AVG(rata_rata_ipk)::numeric, 2), 0.0) as avg_ipk,
+                    COALESCE(ROUND(AVG(rata_rata_kehadiran)::numeric, 1), 0.0) as avg_hadir,
+                    COALESCE(SUM(total_mahasiswa), 0) as total_mhs_aktif
+                FROM view_dashboard_utama
+            """)
+            res_utama = connection.execute(query_utama).fetchone()
+
+            # 2. Ambil Rata-rata SKS yang diambil mahasiswa dari view_beban_studi_mahasiswa
+            query_sks = text("""
+                SELECT 
+                    COALESCE(ROUND(AVG(total_sks_diambil)::numeric, 1), 0.0) as avg_sks
+                FROM view_beban_studi_mahasiswa
+            """)
+            res_sks = connection.execute(query_sks).scalar()
+
+        # 3. Lempar datanya dalam bentuk JSON
+        return {
+            "status": "success",
+            "data": {
+                "rata_rata_ipk": float(res_utama[0]) if res_utama else 0.0,
+                "kehadiran_mahasiswa": float(res_utama[1]) if res_utama else 0.0,
+                "mahasiswa_aktif": int(res_utama[2]) if res_utama else 0,
+                "rata_rata_sks": float(res_sks) if res_sks else 0.0
+            }
+        }
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Gagal memuat data akademik dari Data Warehouse: {str(e)}"
+        )
