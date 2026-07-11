@@ -5,7 +5,9 @@ from app.core.config import settings  # 👈 Import konfigurasi global
 router = APIRouter()
 
 @router.get("/guest-token")
-def get_superset_guest_token(dashboard_id: str = Query(...)):
+def get_superset_guest_token(dashboard_id: str = Query(...),
+    tahunAkademik: str | None = Query(None),
+    semester: str | None = Query(None),):
     try:
         # 1. Login ke Superset menggunakan API Security resmi (Ambil dari .env via settings)
         login_data = {
@@ -49,8 +51,22 @@ def get_superset_guest_token(dashboard_id: str = Query(...)):
                     "id": dashboard_id
                 }
             ],
-            "rls": [] 
+            "rls": [
+                {
+                    "clause": clause
+                }
+            ] if clause else [] 
         }
+
+        rls = []
+
+        if tahunAkademik:
+            rls.append(f"tahun_akademik = '{tahunAkademik}'")
+
+        if semester:
+            rls.append(f"status_semester = '{semester}'")
+
+        clause = " AND ".join(rls)
 
         token_res = requests.post(
             f"{settings.SUPERSET_URL}/api/v1/security/guest_token/",  # Menggunakan trailing slash '/'
