@@ -1,16 +1,8 @@
 # backend/app/core/config.py
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings 
 from typing import List
-from pathlib import Path
-
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(
-        env_file=Path(__file__).resolve().parents[2] / ".env",
-        case_sensitive=True,
-        extra="ignore",
-    )
-
     # JWT
     SECRET_KEY: str = "changeme"
     ALGORITHM: str = "HS256"
@@ -42,12 +34,7 @@ class Settings(BaseSettings):
 
     # AI & Service Lainnya
     OPENAI_API_KEY: str = ""
-    SUPERSET_URL: str = "http://datains_superset:8088"  # Sesuai file superset.py kamu kemarin
-
-    # Supabase Auth
-    SUPABASE_URL: str = ""
-    SUPABASE_ANON_KEY: str = ""
-    SUPABASE_SERVICE_ROLE_KEY: str = ""
+    SUPERSET_URL: str = "http://datains_superset:8088" # Sesuai file superset.py kamu kemarin
 
     # --- Properti URL (Otomatis ngerakit alamat DB) ---
 
@@ -73,26 +60,8 @@ class Settings(BaseSettings):
             f"@{self.DB_WAREHOUSE_HOST}:{self.DB_WAREHOUSE_PORT}/{self.DB_WAREHOUSE_DB}"
         )
 
+    class Config:
+        env_file = ".env"
+        case_sensitive = True
 
 settings = Settings()
-
-# STEP 3/11 debug: confirm env loaded (presence/length, not secrets)
-print(
-    "[Config] Supabase loaded: SUPABASE_URL=",
-    bool(settings.SUPABASE_URL),
-    "len(SUPABASE_URL)=",
-    len(settings.SUPABASE_URL or ""),
-)
-print(
-    "[Config] Supabase loaded: SUPABASE_ANON_KEY=",
-    bool(settings.SUPABASE_ANON_KEY),
-    "len(SUPABASE_ANON_KEY)=",
-    len(settings.SUPABASE_ANON_KEY or ""),
-)
-print(
-    "[Config] Supabase loaded: SUPABASE_SERVICE_ROLE_KEY=",
-    bool(settings.SUPABASE_SERVICE_ROLE_KEY),
-    "len(SUPABASE_SERVICE_ROLE_KEY)=",
-    len(settings.SUPABASE_SERVICE_ROLE_KEY or ""),
-)
-

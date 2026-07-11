@@ -1,41 +1,32 @@
-from supabase import Client, create_client
-
+from datetime import datetime, timedelta
+from typing import Optional
+from jose import JWTError, jwt
+from passlib.context import CryptContext
 from app.core.config import settings
 
-
-# Singleton Supabase Client
-_supabase: Client | None = None
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-def get_supabase_client() -> Client:
-    """
-    Return Supabase client instance.
-    Client dibuat sekali (singleton) agar tidak membuat koneksi baru
-    setiap request.
-    """
-    global _supabase
-
-    if _supabase is None:
-        _supabase = create_client(
-            settings.SUPABASE_URL,
-            settings.SUPABASE_ANON_KEY,
-        )
-
-    return _supabase
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return pwd_context.verify(plain_password, hashed_password)
 
 
-def get_service_client() -> Client:
-    """
-    Service Role Client.
+def get_password_hash(password: str) -> str:
+    return pwd_context.hash(password)
 
-    Digunakan hanya untuk operasi backend seperti:
-    - mengambil data user
-    - membaca role
-    - operasi admin
 
-    Jangan pernah dikirim ke frontend.
-    """
-    return create_client(
-        settings.SUPABASE_URL,
-        settings.SUPABASE_SERVICE_ROLE_KEY,
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
+    to_encode = data.copy()
+    expire = datetime.utcnow() + (
+        expires_delta or timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     )
+    to_encode.update({"exp": expire})
+    return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+
+
+def decode_token(token: str) -> Optional[dict]:
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        return payload
+    except JWTError:
+        return None
