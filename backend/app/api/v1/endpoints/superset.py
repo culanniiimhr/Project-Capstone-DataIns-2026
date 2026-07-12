@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, Query
 import requests
+import traceback
 from app.core.config import settings  # 👈 Import konfigurasi global
 
 router = APIRouter()
@@ -37,6 +38,16 @@ def get_superset_guest_token(dashboard_id: str = Query(...),
             "Authorization": f"Bearer {access_token}",
             "Content-Type": "application/json"
         }
+        
+
+
+        rls = []
+        if tahunAkademik:
+            rls.append(f"tahun_akademik = '{tahunAkademik}'")
+
+        if semester:
+            rls.append(f"status_semester = '{semester}'")
+        clause = "AND ".join(rls)
 
         # 2. Minta Guest Token sesuai dengan dashboard_id yang dikirim oleh Front-End
         guest_token_data = {
@@ -58,16 +69,6 @@ def get_superset_guest_token(dashboard_id: str = Query(...),
             ] if clause else [] 
         }
 
-        rls = []
-
-        if tahunAkademik:
-            rls.append(f"tahun_akademik = '{tahunAkademik}'")
-
-        if semester:
-            rls.append(f"status_semester = '{semester}'")
-
-        clause = " AND ".join(rls)
-
         token_res = requests.post(
             f"{settings.SUPERSET_URL}/api/v1/security/guest_token/",  # Menggunakan trailing slash '/'
             json=guest_token_data,
@@ -87,5 +88,6 @@ def get_superset_guest_token(dashboard_id: str = Query(...),
         raise
 
     except Exception as e:
+        traceback.print_exc()
         print("ERROR:", repr(e))
         raise HTTPException(500, str(e))

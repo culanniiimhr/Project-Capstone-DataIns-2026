@@ -78,7 +78,7 @@ services:
     restart: unless-stopped
     env_file: .env
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8005:8000"
     depends_on:
       db_oltp:
         condition: service_healthy
@@ -103,7 +103,7 @@ services:
     restart: unless-stopped
     env_file: .env
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3005:3000"
     depends_on:
       - backend
     volumes:
