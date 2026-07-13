@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 # Kita tambahin import superset di sini
-from app.api.v1.endpoints import akademik, superset
+from app.api.v1.endpoints import akademik, superset, summarydashboardutama
 
 api_router = APIRouter()
 

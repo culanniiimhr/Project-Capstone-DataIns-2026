@@ -135,7 +135,7 @@ export default function DashboardPimpinan() {
             .then((resData) => {
                 if (resData.status === "success" && resData.data) {
                     setKpiData({
-                        avg_ipk: resData.data.rata_rata_ipk || 0,
+                        avg_ipk: resData.data.avg_ipk || 0,
                         tingkat_kelulusan: resData.data.tingkat_kelulusan || 0,
                         capaian_iku: resData.data.capaian_iku || 0,
                         kepuasan_mahasiswa: resData.data.kepuasan_mahasiswa || 0

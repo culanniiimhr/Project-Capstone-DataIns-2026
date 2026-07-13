@@ -2,7 +2,7 @@ import os
 from fastapi import APIRouter, HTTPException
 from sqlalchemy import create_engine, text
 # 👇 Baris ini ditambahkan biar endpoint /insights bawaan server lama gak eror
-from app.services.dashboard_kpi import calculate_dashboard_insights
+# from app.services.dashboard_kpi import calculate_dashboard_insights
 
 router = APIRouter()
 
@@ -66,14 +66,15 @@ def get_kpi_summary():
 @router.get("/insights")
 def get_dashboard_insights():
     try:
+        return {"status": "success", "message": "Endpoint insights server lama dinonaktifkan lokal"}
         # Panggil fungsi hitung-hitungan Pandas dari file service
-        res = calculate_dashboard_insights()
+       # res = calculate_dashboard_insights()
         
         # Jika service mengembalikan error (misal koneksi DB gagal)
-        if "error" in res:
-            raise HTTPException(status_code=500, detail=res["error"])
+       # if "error" in res:
+       #     raise HTTPException(status_code=500, detail=res["error"])
             
-        return res
+       # return res
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

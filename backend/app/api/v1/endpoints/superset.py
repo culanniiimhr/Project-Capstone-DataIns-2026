@@ -1,14 +1,11 @@
 from fastapi import APIRouter, HTTPException, Query
 import requests
-<<<<<<< HEAD
-=======
 import traceback
 from app.core.config import settings  # 👈 Import konfigurasi global
->>>>>>> d46267843b7ad2426ee19dba0c8ef931dc1c9811
 
 router = APIRouter()
 
-SUPERSET_URL = "http://datains_superset:8088"
+SUPERSET_URL = settings.SUPERSET_ADMIN_USER
 SUPERSET_USERNAME = "admin"
 SUPERSET_PASSWORD = "admin123"
 

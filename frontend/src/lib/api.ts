@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  // 🔬 SAKLEK: Tembak langsung ke port docker backend lu (8005) agar tidak salah baca dari .env lawas
+  // 🔬 
   baseURL: "https://api-eduinsight.windsight.id/api/v1",
   timeout: 15000,
 });
@@ -45,7 +45,7 @@ export const getKpiSummary = async () => {
 
 // ✅ FIX PATH ACADEMIC: Lepaskan dari /dashboard-utama karena router ini berdiri sendiri di root
 export const getAcademicSummary = async () => {
-  const response = await api.get("/academic-summary");
+  const response = await api.get("/dashboard-utama/academic-summary");
   return response.data;
 };
 
