@@ -6,6 +6,7 @@ import { VscHubot } from "react-icons/vsc";
 import SupersetEmbed from "../components/SupersetEmbed";
 import SupersetEmbedDefault from "../components/SupersetEmbedDefault";
 import { supersetDashboards } from "../config/SupersetDb";
+import { getDashboardInsights, getKpiSummary } from "../lib/api"; // Murni lewat API Backend Python
 
 /* DATA */
 const ipkData = [
@@ -14,8 +15,6 @@ const ipkData = [
   { year: "2025/2026", ganjil: 3.25, genap: 3.87 },
   { year: "2026/2027", ganjil: 3.29, genap: 3.75 },
 ];
-
-import { getDashboardInsights, getKpiSummary } from "../lib/api"; // Murni lewat API Backend Python
 
 
 const globalStyles = `

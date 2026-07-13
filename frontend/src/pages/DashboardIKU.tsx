@@ -303,11 +303,12 @@ const InsightOtomatis = () => {
               margin: "0 auto 24px",
               border: "1px solid #FEF0C7"
             }}>
+              {/* /// Ini bagian fitur Coming soon /// */}
               <FiLock className="h-[36px] w-[36px] text-[#F59E0B]" />
             </div>
-            <h3 style={{ margin: "0 0 16px", color: "#0F172A", fontSize: 22, fontWeight: 600 }}>Fitur Premium</h3>
+            <h3 style={{ margin: "0 0 16px", color: "#0F172A", fontSize: 22, fontWeight: 600 }}>Coming Soon</h3>
             <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6, padding: "0 12px" }}>
-              Insight Otomatis adalah fitur eksklusif. Anda harus berlangganan paket Premium untuk membuka akses ke informasi ini.
+              Fitur ini sedang dalam tahap pengembangan dan akan segera tersedia. Nantikan pembaruan berikutnya untuk menikmati pengalaman yang lebih baik.
             </p>
             <button
               onClick={() => setShowPremiumPopup(false)}

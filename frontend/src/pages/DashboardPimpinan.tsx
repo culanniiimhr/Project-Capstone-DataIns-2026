@@ -4,6 +4,9 @@ import Layout from "../components/Layout";
 import SupersetEmbedDefault from "../components/SupersetEmbedDefault";
 import { supersetDashboards } from "../config/SupersetDb";
 import { VscHubot } from "react-icons/vsc";
+import { FiLock, FiAlertTriangle } from "react-icons/fi";
+import { FaArrowUp, FaRegSmile, FaArrowRight } from "react-icons/fa";
+import { LuSparkles } from "react-icons/lu";
 
 /* ─── GLOBAL STYLES ─────────────────────────────────── */
 const globalStyles = `
@@ -42,7 +45,7 @@ const globalStyles = `
   }
 `;
 
-/* ─── ICONS ─────────────────────────────────────────── */
+/* ─── CUSTOM ICONS ──────────────────────────────────── */
 const IconInfo = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" /></svg>;
 
 const IconBarChartKPI = () => (
@@ -88,12 +91,12 @@ const IconSorotanUp = () => (
 );
 const IconSorotanWarn = () => (
     <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#FEF9C3", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#CA8A04" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#CA8A04" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
     </div>
 );
 const IconSorotanPos = () => (
     <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#DBEAFE", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" /><line x1="8" y1="21" x2="16" y2="21" /><line x1="12" y1="17" x2="12" y2="21" /></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" /></svg>
     </div>
 );
 const IconSorotanDown = () => (
@@ -110,7 +113,34 @@ function HoverCard({ style = {}, children }: { style?: React.CSSProperties; chil
     );
 }
 
-/* ─── MAIN ───────────────────────────────────────────── */
+const InsightRow = ({
+    tone,
+    icon,
+    text,
+}: {
+    tone: "green" | "yellow" | "blue";
+    icon: React.ReactNode;
+    text: string;
+}) => {
+    const styles = {
+        green: "bg-[#DCFCE7] text-[#22C55E]",
+        yellow: "bg-[#FFF4D8] text-[#F59E0B]",
+        blue: "bg-[#EAF1FF] text-[#155EEF]",
+    };
+
+    return (
+        <div className="flex items-start gap-[8px]">
+            <div
+                className={`flex h-[21px] w-[21px] shrink-0 items-center justify-center rounded-[5px] ${styles[tone]}`}
+            >
+                {icon}
+            </div>
+            <p className="text-[9px] leading-[12px] text-[#4B5563]">{text}</p>
+        </div>
+    );
+};
+
+/*MAIN*/
 export default function DashboardPimpinan() {
     const [tahun, setTahun] = useState("");
     const [semester, setSemester] = useState("");
@@ -118,6 +148,7 @@ export default function DashboardPimpinan() {
     const [showIkuInfo, setShowIkuInfo] = useState(false);
     const [showKelulusanInfo, setShowKelulusanInfo] = useState(false);
     const [showKepuasanInfo, setShowKepuasanInfo] = useState(false);
+    const [showComingsoonPopup, setComingsoonPopup] = useState(false);
     const navigate = useNavigate();
 
     // 2. Buat state untuk menampung data KPI riil dari backend
@@ -285,22 +316,46 @@ export default function DashboardPimpinan() {
                         </div>
                     </div>
 
-                    <div className="card-hover" style={{ background: "#fff", borderRadius: 12, border: "1px solid #E8EDF5", padding: "18px 18px", boxShadow: "0 1px 4px rgba(30,58,138,0.05)", display: "flex", flexDirection: "column" }}>
-                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-                            <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-                                <div style={{ width: 28, height: 28, background: "#FEF9C3", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="#F59E0B" stroke="#F59E0B" strokeWidth="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
+                    <div
+                        className="card-hover"
+                        onClick={() => setComingsoonPopup(true)}
+                        style={{
+                            background: "#fff",
+                            borderRadius: 12,
+                            border: "1px solid #E8EDF5",
+                            padding: "18px 18px",
+                            boxShadow: "0 1px 4px rgba(30,58,138,0.05)",
+                            display: "flex",
+                            flexDirection: "column",
+                            position: "relative",
+                            overflow: "hidden",
+                            cursor: "pointer"
+                        }}
+                    >
+                        <div style={{ filter: "blur(3px)", opacity: 0.5, pointerEvents: "none", userSelect: "none", display: "flex", flexDirection: "column", height: "100%", width: "100%" }}>
+                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                                    <div style={{ width: 28, height: 28, background: "#FEF9C3", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#F59E0B" stroke="#F59E0B" strokeWidth="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
+                                    </div>
+                                    <span style={{ fontSize: 13, fontWeight: 700, color: "#334155" }}>Insight Otomatis</span>
                                 </div>
-                                <span style={{ fontSize: 13, fontWeight: 700, color: "#334155" }}>Insight Otomatis</span>
+                                <IconInfo />
                             </div>
-                            <IconInfo />
+                            <p style={{ fontSize: 12, color: "#475569", lineHeight: 1.65, flex: 1, margin: 0 }}>
+                                Secara keseluruhan, performa akademik institusi meningkat 3% dibanding semester lalu, didorong oleh peningkatan IPK dan tingkat kelulusan.
+                            </p>
+                            <button style={{ marginTop: 14, background: "#EFF6FF", border: "1px solid #BFDBFE", borderRadius: 8, padding: "9px 14px", color: "#1D4ED8", fontWeight: 600, fontSize: 12, cursor: "pointer", width: "100%", textAlign: "center", transition: "background 0.15s" }}>
+                                Lihat Insight Detail
+                            </button>
                         </div>
-                        <p style={{ fontSize: 12, color: "#475569", lineHeight: 1.65, flex: 1, margin: 0 }}>
-                            Secara keseluruhan, performa akademik institusi meningkat 3% dibanding semester lalu, didorong oleh peningkatan IPK dan tingkat kelulusan.
-                        </p>
-                        <button style={{ marginTop: 14, background: "#EFF6FF", border: "1px solid #BFDBFE", borderRadius: 8, padding: "9px 14px", color: "#1D4ED8", fontWeight: 600, fontSize: 12, cursor: "pointer", width: "100%", textAlign: "center", transition: "background 0.15s" }}>
-                            Lihat Insight Detail
-                        </button>
+
+                        <div style={{ position: "absolute", inset: 0, zIndex: 10, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.2)", backdropFilter: "blur(1px)" }}>
+                            <div style={{ display: "flex", width: 38, height: 38, alignItems: "center", justifyContent: "center", borderRadius: "50%", backgroundColor: "#EAF1FF", marginBottom: 8, boxShadow: "0 1px 3px rgba(0,0,0,0.1)" }}>
+                                <FiLock style={{ width: 18, height: 18, color: "#155EEF" }} />
+                            </div>
+                            <span style={{ fontSize: 13, fontWeight: "bold", color: "#0B3478" }}>Tidak Tersedia</span>
+                        </div>
                     </div>
                 </div>
 
@@ -516,6 +571,56 @@ export default function DashboardPimpinan() {
                             <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6, padding: "0 12px" }}>
                                 Nilai rata-rata tingkat kepuasan mahasiswa berdasarkan hasil survei.
                             </p>
+                        </div>
+                    </div>
+                )}
+
+                {showComingsoonPopup && (
+                    <div
+                        onClick={() => setComingsoonPopup(false)}
+                        style={{
+                            position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+                            backgroundColor: "rgba(0,0,0,0.4)",
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                            zIndex: 9999,
+                            animation: "fadeIn 0.2s ease",
+                            backdropFilter: "blur(2px)"
+                        } as any}
+                    >
+                        <div
+                            onClick={(e) => e.stopPropagation()}
+                            style={{
+                                background: "#fff",
+                                borderRadius: 16,
+                                padding: "40px 32px",
+                                width: "420px",
+                                maxWidth: "90%",
+                                textAlign: "center",
+                                boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                                animation: "scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                                border: "1px solid #E2E8F0"
+                            }}
+                        >
+                            <div style={{
+                                background: "#FFF4D8",
+                                width: 72, height: 72,
+                                borderRadius: 18,
+                                display: "flex", alignItems: "center", justifyContent: "center",
+                                margin: "0 auto 24px",
+                                border: "1px solid #FEF0C7"
+                            }}>
+                                <FiLock className="h-[36px] w-[36px] text-[#F59E0B]" />
+                            </div>
+                            <h3 style={{ margin: "0 0 16px", color: "#0F172A", fontSize: 22, fontWeight: 600 }}>Coming Soon</h3>
+                            <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6, padding: "0 12px" }}>
+                                Fitur ini sedang dalam tahap pengembangan dan akan segera tersedia. Nantikan pembaruan berikutnya untuk menikmati pengalaman yang lebih baik.
+                            </p>
+                            <button
+                                onClick={() => setComingsoonPopup(false)}
+                                className="mt-8 w-full rounded-lg bg-[#155EEF] px-4 py-[10px] text-[14px] font-semibold text-white transition-colors hover:bg-[#1D4ED8]"
+                            >
+                                Mengerti
+                            </button>
                         </div>
                     </div>
                 )}
