@@ -10,6 +10,8 @@ api_router.include_router(akademik.router, prefix="/akademik", tags=["Operasiona
 # Register endpoint superset baru buatan lu!
 api_router.include_router(superset.router, prefix="/superset", tags=["superset"])
 
+api_router.include_router(summarydashboardutama.router, prefix="/dashboard-utama", tags=["Dashboard Utama Superset"])
+
 # Baris di bawah ini di-comment (dimatikan) dulu. 
 # Nanti kalau file dari teman kamu sudah ada, tinggal buka comment-nya.
 
