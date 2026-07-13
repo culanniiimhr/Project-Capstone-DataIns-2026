@@ -167,4 +167,80 @@ def get_pimpinan_summary():
             status_code=500, 
             detail=f"Gagal memuat data real-time dashboard pimpinan: {str(e)}"
         )
+    
+
+# ─── ENDPOINT NEW: DASHBOARD MONITORING IKU (FILTER OFF / GLOBAL DATA) ───
+@router.get("/iku-summary")
+def get_iku_summary():
+    try:
+        with engine.connect() as connection:
+            # Filter WHERE dimatikan (dihapus), langsung ambil baris data yang tersedia
+            query_iku = text("""
+                SELECT 
+                    COALESCE(total_indikator, 0) as total,
+                    COALESCE(indikator_tercapai, 0) as tercapai,
+                    COALESCE(indikator_perlu_perhatian, 0) as perhatian,
+                    COALESCE(target_tahunan, 0.0) as target,
+                    COALESCE(capaian_institusi, 0.0) as capaian
+                FROM view_dashboard_iku
+                LIMIT 1
+            """)
+            
+            res_iku = connection.execute(query_iku).fetchone()
+
+        # Jika data kosong di database, berikan nilai default 0
+        if not res_iku:
+            return {
+                "status": "success",
+                "data": {
+                    "capaian_institusi": 0.0,
+                    "sub_text_capaian": "Total Capaian 0 dari 0 Indikator",
+                    "target_tahunan": 0.0,
+                    "sub_text_target": "Sisa 0.0% untuk mencapai target",
+                    "iku_tercapai": 0,
+                    "sub_text_tercapai": "0.0% dari total indikator",
+                    "iku_perlu_perhatian": 0,
+                    "sub_text_perhatian": "0.0% dari total indikator"
+                }
+            }
+
+        # Ekstrak data
+        total = int(res_iku[0])
+        tercapai = int(res_iku[1])
+        perhatian = int(res_iku[2])
+        target = float(res_iku[3])
+        capaian = float(res_iku[4])
+
+        # Hitung kalkulasi matematika otomatis untuk sub-teks
+        sisa_target = round(target - capaian, 1) if target > capaian else 0.0
+        
+        pct_tercapai = round((tercapai / total) * 100, 1) if total > 0 else 0.0
+        pct_perhatian = round((perhatian / total) * 100, 1) if total > 0 else 0.0
+
+        return {
+            "status": "success",
+            "data": {
+                # Card 1: Capaian IKU
+                "capaian_institusi": capaian,
+                "sub_text_capaian": f"Total Capaian {tercapai} dari {total} Indikator",
+                
+                # Card 2: Target Tahunan
+                "target_tahunan": target,
+                "sub_text_target": f"Sisa {sisa_target}% untuk mencapai target",
+                
+                # Card 3: IKU Tercapai
+                "iku_tercapai": tercapai,
+                "sub_text_tercapai": f"{pct_tercapai}% dari total indikator",
+                
+                # Card 4: IKU Perlu Perhatian
+                "iku_perlu_perhatian": perhatian,
+                "sub_text_perhatian": f"{pct_perhatian}% dari total indikator"
+            }
+        }
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Gagal memuat data monitoring IKU: {str(e)}"
+        )
 
