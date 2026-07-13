@@ -130,7 +130,7 @@ export default function DashboardPimpinan() {
 
     // 3. Ambil data saat halaman di-load
     useEffect(() => {
-        fetch("http://localhost:8000/api/v1/dashboard-utama/kpi-summary")
+        fetch("https://api-eduinsight.windsight.id/api/v1/dashboard-utama/kpi-summary")
             .then((res) => res.json())
             .then((resData) => {
                 if (resData.status === "success" && resData.data) {
