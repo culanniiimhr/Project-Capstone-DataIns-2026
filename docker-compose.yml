@@ -103,17 +103,12 @@ services:
     restart: unless-stopped
     env_file: .env
     ports:
-<<<<<<< HEAD
       - "3000:3000"
-=======
-      - "127.0.0.1:3005:3000"
->>>>>>> d46267843b7ad2426ee19dba0c8ef931dc1c9811
     depends_on:
       - backend
     volumes:
       - ./frontend:/app
       - /app/node_modules
-      # REVISI: Hapus baris .next di sini untuk membuang cache Next.js
     networks:
       - datains_net
 
@@ -142,13 +137,9 @@ services:
   # APACHE SUPERSET (BI Dashboard)
   # ─────────────────────────────────────────
   superset:
-<<<<<<< HEAD
-    image: apache/superset:3.1.0
-=======
     build:
       context: .
       dockerfile: Dockerfile.superset
->>>>>>> d46267843b7ad2426ee19dba0c8ef931dc1c9811
     container_name: datains_superset
     restart: unless-stopped
     env_file: .env
@@ -212,8 +203,4 @@ volumes:
 
 networks:
   datains_net:
-<<<<<<< HEAD
     driver: bridge
-=======
-    driver: bridge
->>>>>>> d46267843b7ad2426ee19dba0c8ef931dc1c9811
