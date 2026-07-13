@@ -1,11 +1,14 @@
 from fastapi import APIRouter, HTTPException, Query
 import requests
+import traceback
 from app.core.config import settings  # 👈 Import konfigurasi global
 
 router = APIRouter()
 
 @router.get("/guest-token")
-def get_superset_guest_token(dashboard_id: str = Query(...)):
+def get_superset_guest_token(dashboard_id: str = Query(...),
+    tahunAkademik: str | None = Query(None),
+    semester: str | None = Query(None),):
     try:
         # 1. Login ke Superset menggunakan API Security resmi (Ambil dari .env via settings)
         login_data = {
@@ -35,6 +38,16 @@ def get_superset_guest_token(dashboard_id: str = Query(...)):
             "Authorization": f"Bearer {access_token}",
             "Content-Type": "application/json"
         }
+        
+
+
+        rls = []
+        if tahunAkademik:
+            rls.append(f"tahun_akademik = '{tahunAkademik}'")
+
+        if semester:
+            rls.append(f"status_semester = '{semester}'")
+        clause = "AND ".join(rls)
 
         # 2. Minta Guest Token sesuai dengan dashboard_id yang dikirim oleh Front-End
         guest_token_data = {
@@ -49,7 +62,11 @@ def get_superset_guest_token(dashboard_id: str = Query(...)):
                     "id": dashboard_id
                 }
             ],
-            "rls": [] 
+            "rls": [
+                {
+                    "clause": clause
+                }
+            ] if clause else [] 
         }
 
         token_res = requests.post(
@@ -71,5 +88,6 @@ def get_superset_guest_token(dashboard_id: str = Query(...)):
         raise
 
     except Exception as e:
+        traceback.print_exc()
         print("ERROR:", repr(e))
         raise HTTPException(500, str(e))

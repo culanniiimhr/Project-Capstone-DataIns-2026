@@ -28,7 +28,7 @@ const SupersetEmbedDefault = ({dashboardId, contentClassName = "w-full h-full",}
 
           fetchGuestToken: async () => {
             const response = await fetch(
-              `${backendUrl}/superset/guest-token?dashboard_id=${dashboardId}`
+              `${backendUrl}/superset/guest-token?dashboard_id=${dashboardId}&tahunAkademik=${encodeURIComponent(tahunAkademik)}&semester=${encodeURIComponent(semester)}`
             );
 
             if (!response.ok) {

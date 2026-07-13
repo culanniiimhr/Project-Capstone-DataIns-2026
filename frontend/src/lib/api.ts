@@ -2,7 +2,7 @@ import axios from "axios";
 
 const api = axios.create({
   // 🔬 SAKLEK: Tembak langsung ke port docker backend lu (8005) agar tidak salah baca dari .env lawas
-  baseURL: "http://localhost:8005/api/v1",
+  baseURL: "http://localhost:8000/api/v1",
   timeout: 15000,
 });
 
