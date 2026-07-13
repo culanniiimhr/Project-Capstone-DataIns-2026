@@ -141,13 +141,6 @@ const SummaryCard = ({
           </div>
         </div>
       </div>
-      
-      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/20 backdrop-blur-[1px] hover:bg-white/30 transition-colors">
-        <div className="flex h-[28px] w-[28px] items-center justify-center rounded-full bg-[#EAF1FF] mb-[4px] shadow-sm">
-          <FiLock className="h-[14px] w-[14px] text-[#155EEF]" />
-        </div>
-        <span className="text-[10px] font-bold text-[#0B3478]">Tidak Tersedia</span>
-      </div>
     </div>
   );
 };
@@ -456,7 +449,7 @@ const DashboardSistem = () => {
               <div className="flex h-[40px] w-[40px] items-center justify-center rounded-full bg-[#EAF1FF] mb-[8px] shadow-sm">
                 <FiLock className="h-[20px] w-[20px] text-[#155EEF]" />
               </div>
-              <span className="text-[14px] font-bold text-[#0B3478]">Fitur Premium - Tidak Tersedia</span>
+              <span className="text-[14px] font-bold text-[#0B3478]">Halaman Belum Tersedia</span>
             </div>
           </div>
         )}
