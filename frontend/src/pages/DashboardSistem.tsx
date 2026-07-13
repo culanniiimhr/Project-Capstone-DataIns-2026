@@ -1,7 +1,7 @@
 // frontend/src/pages/DashboardSistem.tsx
 import { useEffect, useMemo, useState } from "react";
 import Layout from "../components/Layout";
-import { FiEdit2, FiFilter, FiSearch, FiTrash2, FiUserCheck, FiUsers } from "react-icons/fi";
+import { FiEdit2, FiFilter, FiSearch, FiTrash2, FiUserCheck, FiUsers, FiLock } from "react-icons/fi";
 import { FaRegUser, FaLink } from "react-icons/fa6";
 import { LuPencil, LuShieldCheck } from "react-icons/lu";
 import { TbDatabase, TbTrash } from "react-icons/tb";
@@ -113,12 +113,14 @@ const SummaryCard = ({
   value,
   desc,
   tone,
+  onClick,
 }: {
   icon: React.ReactNode;
   title: string;
   value: string;
   desc: string;
   tone: string;
+  onClick?: () => void;
 }) => {
   return (
     <div className="flex h-[82px] items-center gap-3 rounded-[10px] bg-white px-4 border border-slate-100 shadow-sm">
@@ -128,13 +130,15 @@ const SummaryCard = ({
         {icon}
       </div>
 
-      <div className="min-w-0">
-        <div className="text-[11px] font-medium text-black">{title}</div>
-        <div className="text-[20px] font-semibold leading-[30px] text-black">
-          {value}
-        </div>
-        <div className="mt-[2px] text-[9px] leading-[11px] text-[#0B3478]">
-          {desc}
+      <div>
+        <div className="min-w-0">
+          <div className="text-[11px] font-medium text-black">{title}</div>
+          <div className="text-[20px] font-semibold leading-[30px] text-black">
+            {value}
+          </div>
+          <div className="mt-[2px] text-[9px] leading-[11px] text-[#0B3478]">
+            {desc}
+          </div>
         </div>
       </div>
     </div>
@@ -224,6 +228,7 @@ const DashboardSistem = () => {
   const [activeTab, setActiveTab] = useState("Manajemen User");
   const [selectedRole, setSelectedRole] = useState("Admin");
   const [openGroups, setOpenGroups] = useState({ Dashboard: true, "Manajemen Sistem": true });
+  const [showPremiumPopup, setShowPremiumPopup] = useState(false);
 
   const currentCards =
     activeTab === "Monitoring Data" || activeTab === "Integrasi Dashboard" ? monitoringCards : systemCards;
@@ -267,6 +272,7 @@ const DashboardSistem = () => {
             value={card.value}
             desc={card.desc}
             tone={card.tone}
+            onClick={() => setShowPremiumPopup(true)}
           />
         ))}
       </section>
@@ -283,13 +289,12 @@ const DashboardSistem = () => {
             <button
               key={tab.label}
               onClick={() => setActiveTab(tab.label)}
-              className={`flex items-center gap-[8px] h-[42px] bg-white border-b-2 text-[13px] font-bold transition-all ${
-                activeTab === tab.label
+              className={`flex items-center gap-[8px] h-[42px] bg-white border-b-2 text-[13px] font-bold transition-all ${activeTab === tab.label
                   ? "border-[#155EEF] text-[#155EEF]"
                   : "border-transparent text-[#64748B] hover:text-[#155EEF]"
-              }`}
+                }`}
             >
-              {tab.icon} 
+              {tab.icon}
               <span>{tab.label}</span>
             </button>
           ))}
@@ -297,7 +302,9 @@ const DashboardSistem = () => {
 
         {/* TAB 1: MANAJEMEN USER */}
         {activeTab === "Manajemen User" && (
-          <>
+          <div className="relative cursor-pointer" onClick={() => setShowPremiumPopup(true)}>
+            <div className="blur-[4px] opacity-60 pointer-events-none select-none rounded-[10px] bg-white p-[1px]">
+              <>
             <div className="mb-[26px] flex items-start justify-between">
               <div>
                 <h2 className="text-[22px] font-semibold leading-none text-[#111827]">
@@ -320,10 +327,10 @@ const DashboardSistem = () => {
                 </div>
 
                 <button
-                    className="flex h-[38px] items-center gap-[8px] rounded-[8px] outline outline-1 outline-[#D0D5DD] bg-white px-[14px] text-[12px] font-medium text-[#111827] shadow-sm transition-all hover:border-[#155EEF] hover:bg-[#EEF4FF] hover:text-[#155EEF]"
+                  className="flex h-[38px] items-center gap-[8px] rounded-[8px] outline outline-1 outline-[#D0D5DD] bg-white px-[14px] text-[12px] font-medium text-[#111827] shadow-sm transition-all hover:border-[#155EEF] hover:bg-[#EEF4FF] hover:text-[#155EEF]"
                 >
-                    <FiFilter className="h-4 w-4" />
-                    Filter
+                  <FiFilter className="h-4 w-4" />
+                  Filter
                 </button>
 
                 <button className="h-[36px] rounded-[7px] bg-[#155EEF] px-[18px] text-[12px] font-semibold text-white transition hover:bg-[#0B4FDA]">
@@ -366,9 +373,8 @@ const DashboardSistem = () => {
 
                       <td className="py-[11px]">
                         <span
-                          className={`rounded-[5px] px-[9px] py-[4px] text-[10px] font-semibold ${
-                            roleClass[user.role] ?? roleClass.Viewer
-                          }`}
+                          className={`rounded-[5px] px-[9px] py-[4px] text-[10px] font-semibold ${roleClass[user.role] ?? roleClass.Viewer
+                            }`}
                         >
                           {user.role}
                         </span>
@@ -376,9 +382,8 @@ const DashboardSistem = () => {
 
                       <td className="py-[11px]">
                         <span
-                          className={`rounded-[6px] px-[12px] py-[4px] text-[10px] font-semibold ${
-                            statusClass[user.status] ?? statusClass.Nonaktif
-                          }`}
+                          className={`rounded-[6px] px-[12px] py-[4px] text-[10px] font-semibold ${statusClass[user.status] ?? statusClass.Nonaktif
+                            }`}
                         >
                           {user.status}
                         </span>
@@ -438,12 +443,22 @@ const DashboardSistem = () => {
                 <button className="text-[#94A3B8]">›</button>
               </div>
             </div>
-          </>
+              </>
+            </div>
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/20 backdrop-blur-[2px] hover:bg-white/30 transition-colors rounded-[10px]">
+              <div className="flex h-[40px] w-[40px] items-center justify-center rounded-full bg-[#EAF1FF] mb-[8px] shadow-sm">
+                <FiLock className="h-[20px] w-[20px] text-[#155EEF]" />
+              </div>
+              <span className="text-[14px] font-bold text-[#0B3478]">Halaman Belum Tersedia</span>
+            </div>
+          </div>
         )}
 
         {/* TAB 2: MANAJEMEN ROLE */}
         {activeTab === "Manajemen Role" && (
-          <div className="grid grid-cols-[300px_1fr]">
+          <div className="relative cursor-pointer" onClick={() => setShowPremiumPopup(true)}>
+            <div className="blur-[4px] opacity-60 pointer-events-none select-none bg-white rounded-[10px] p-[1px]">
+              <div className="grid grid-cols-[300px_1fr]">
             <div className="border-r border-[#E5EAF3] pr-[20px]">
               <div className="mb-[18px] flex items-start justify-between">
                 <div>
@@ -471,11 +486,10 @@ const DashboardSistem = () => {
                   <button
                     key={role.name}
                     onClick={() => setSelectedRole(role.name)}
-                    className={`flex items-center gap-[12px] rounded-[10px] border p-[12px] text-left transition-all ${
-                      selectedRole === role.name
+                    className={`flex items-center gap-[12px] rounded-[10px] border p-[12px] text-left transition-all ${selectedRole === role.name
                         ? "border-[#155EEF] bg-[#EAF2FF]"
                         : "border-[#E5EAF3] bg-white hover:border-[#155EEF]"
-                    }`}
+                      }`}
                   >
                     <div className={`flex h-[38px] w-[38px] items-center justify-center rounded-[8px] text-[13px] font-semibold ${role.color}`}>
                       {role.code}
@@ -577,6 +591,14 @@ const DashboardSistem = () => {
               <button className="flex items-center gap-[8px] rounded-[7px] bg-[#155EEF] px-[26px] py-[11px] text-[12px] font-semibold text-white">
                 <HiOutlineSave className="h-4 w-4" /> Simpan Perubahan
               </button>
+            </div>
+              </div>
+            </div>
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/20 backdrop-blur-[2px] hover:bg-white/30 transition-colors rounded-[10px]">
+              <div className="flex h-[40px] w-[40px] items-center justify-center rounded-full bg-[#EAF1FF] mb-[8px] shadow-sm">
+                <FiLock className="h-[20px] w-[20px] text-[#155EEF]" />
+              </div>
+              <span className="text-[14px] font-bold text-[#0B3478]">Fitur Premium - Tidak Tersedia</span>
             </div>
           </div>
         )}

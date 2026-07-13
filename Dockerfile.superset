@@ -1,0 +1,9 @@
+FROM apache/superset:4.1.3
+
+USER root
+
+RUN pip install --no-cache-dir \
+    psycopg2-binary \
+    flask-cors
+
+USER superset
