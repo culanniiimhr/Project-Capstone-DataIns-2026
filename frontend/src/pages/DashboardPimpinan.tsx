@@ -313,7 +313,7 @@ export default function DashboardPimpinan() {
                         <div className="h-[320px] w-full overflow-hidden">
                             <SupersetEmbedDefault
                                 dashboardId={supersetDashboards.topFakultas}
-                                contentClassName="w-[125%] h-[118%] -translate-x-[70px] -translate-y-[75px] scale-[1.03] origin-top-left"
+                                contentClassName="w-[145%] h-[110%] -translate-x-[70px] -translate-y-[80px] scale-[0.9] origin-top-left"
                             />
                         </div>
                     </HoverCard>

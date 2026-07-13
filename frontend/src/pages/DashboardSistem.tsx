@@ -141,6 +141,8 @@ const SummaryCard = ({
           </div>
         </div>
       </div>
+      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/20 backdrop-blur-[1px] hover:bg-white/30 transition-colors">
+      </div>
     </div>
   );
 };
