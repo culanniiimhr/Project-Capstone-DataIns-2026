@@ -17,6 +17,9 @@ app.add_middleware(
      allow_origins=[
         "http://localhost:3000",
         "http://localhost:3001",
+        "http://localhost:3005",
+        "https://eduinsight.windsight.id",
+        "https://api-eduinsight.windsight.id"
     ],
     allow_credentials=True,
     allow_methods=["*"],

@@ -32,6 +32,12 @@ class Settings(BaseSettings):
     # AI
     OPENAI_API_KEY: str = ""
 
+    # SUPERSET
+    SUPERSET_URL: str = ""
+    SUPERSET_ADMIN_USER: str = ""
+    SUPERSET_ADMIN_PASSWORD: str = ""
+
+
     # --- Properti URL (Otomatis ngerakit alamat DB) ---
 
     @property

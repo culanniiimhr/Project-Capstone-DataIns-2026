@@ -5,9 +5,9 @@ from app.core.config import settings  # 👈 Import konfigurasi global
 
 router = APIRouter()
 
-SUPERSET_URL = settings.SUPERSET_ADMIN_USER
-SUPERSET_USERNAME = "admin"
-SUPERSET_PASSWORD = "admin123"
+SUPERSET_URL = settings.SUPERSET_URL
+SUPERSET_USERNAME = settings.SUPERSET_ADMIN_USER
+SUPERSET_PASSWORD = settings.SUPERSET_ADMIN_PASSWORD
 
 
 @router.get("/guest-token")
@@ -47,10 +47,13 @@ def get_superset_guest_token(dashboard_id: str = Query(...),
 
         rls = []
         if tahunAkademik:
-            rls.append(f"tahun_akademik = '{tahunAkademik}'")
+          # rls.append(f"tahun_akademik = '{tahunAkademik}'")
+          pass
 
         if semester:
-            rls.append(f"status_semester = '{semester}'")
+          # rls.append(f"status_semester = '{semester}'")
+          pass
+
         clause = "AND ".join(rls)
 
         guest_token_data = {
