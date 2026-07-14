@@ -3,7 +3,7 @@ import Layout from "../components/Layout";
 import SupersetEmbedDefault from "../components/SupersetEmbedDefault";
 import { supersetDashboards } from "../config/SupersetDb";
 import { FilterProvider } from "../context/FilterContext";
-import api from "../lib/api";
+import { getAcademicSummary } from "../lib/api";
 
 /* GLOBAL STYLES */
 const globalStyles = `
@@ -120,10 +120,10 @@ export default function DashboardAkademik() {
 
   useEffect(() => {
     // 🌟 PATH DIPERBAIKI: Langsung menembak ke endpoint router backend tanpa sub-path penyasar
-    api.get("/dashboard-utama/academic-summary")
+    getAcademicSummary()
       .then((res) => {
-        if (res.data.status === "success" && res.data.data) {
-          setAcademicData(res.data.data);
+        if (res && res.status === "success" && res.data) {
+          setAcademicData(res.data);
         }
       })
       .catch((err) => console.error("Gagal sinkronisasi data akademik dari Supabase:", err));
@@ -133,7 +133,7 @@ export default function DashboardAkademik() {
     <>
       <style>{globalStyles}</style>
       <Layout
-        title="Dashboard Academic"
+        title="Dashboard Akademik"
         active="Akademik"
         filters={{
           tahunAkademik,
@@ -145,10 +145,10 @@ export default function DashboardAkademik() {
         {/*KPI CARDS*/}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginBottom: 16 }}>
           {[
-            { icon: <IconBarChartKPI />, label: "Rata-rata IPK", value: "3,45", change: "0,15 (4,55%)" },
-            { icon: <IconStudents />, label: "Kehadiran Mahasiswa", value: "92,3%", change: "3,12%" },
-            { icon: <IconGraduate />, label: "Mahasiswa Aktif", value: "12.458", change: "4,21%" },
-            { icon: <IconTarget />, label: "Rata-rata SKS", value: "20,3", change: "1,25" },
+            { icon: <IconBarChartKPI />, label: "Rata-rata IPK", value: academicData.rata_rata_ipk.toFixed(2), change: "0,15 (4,55%)" },
+            { icon: <IconStudents />, label: "Kehadiran Mahasiswa", value: `${academicData.kehadiran_mahasiswa}%`, change: "3,12%" },
+            { icon: <IconGraduate />, label: "Mahasiswa Aktif", value: academicData.mahasiswa_aktif.toLocaleString("id-ID"), change: "4,21%" },
+            { icon: <IconTarget />, label: "Rata-rata SKS", value: academicData.rata_rata_sks.toFixed(1), change: "1,25" },
           ].map(({ icon, label, value, change }) => (
             <div key={label} className="card-hover kpi-card" style={{ background: "#fff", borderRadius: 12, padding: "16px 18px 14px", border: "1px solid #E8EDF5", boxShadow: "0 1px 4px rgba(30,58,138,0.05)" }}>
               <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>

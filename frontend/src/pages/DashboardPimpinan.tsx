@@ -135,10 +135,10 @@ export default function DashboardPimpinan() {
             .then((resData) => {
                 if (resData.status === "success" && resData.data) {
                     setKpiData({
-                        avg_ipk: resData.data.avg_ipk,
-                        tingkat_kelulusan: resData.data.tingkat_kelulusan,
-                        capaian_iku: resData.data.capaian_iku,
-                        kepuasan_mahasiswa: resData.data.kepuasan_mahasiswa || 4.32
+                        avg_ipk: resData.data.avg_ipk || 0,
+                        tingkat_kelulusan: resData.data.tingkat_kelulusan || 0,
+                        capaian_iku: resData.data.capaian_iku || 0,
+                        kepuasan_mahasiswa: resData.data.kepuasan_mahasiswa || 0
                     });
                 }
             })
@@ -313,7 +313,7 @@ export default function DashboardPimpinan() {
                         <div className="h-[320px] w-full overflow-hidden">
                             <SupersetEmbedDefault
                                 dashboardId={supersetDashboards.topFakultas}
-                                contentClassName="w-[125%] h-[118%] -translate-x-[70px] -translate-y-[75px] scale-[1.03] origin-top-left"
+                                contentClassName="w-[145%] h-[110%] -translate-x-[70px] -translate-y-[80px] scale-[0.9] origin-top-left"
                             />
                         </div>
                     </HoverCard>

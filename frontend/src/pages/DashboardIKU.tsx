@@ -1,11 +1,9 @@
 import Layout from "../components/Layout";
-import { FunctionComponent, useState } from "react";
-import { FiAlertTriangle, FiHome, FiInfo, FiLock } from "react-icons/fi";
-import { LuGraduationCap, LuSparkles } from "react-icons/lu";
-import { IoSettingsOutline } from "react-icons/io5";
-import { TbDeviceDesktopAnalytics, TbTargetArrow } from "react-icons/tb";
-import { FaArrowRight, FaArrowUp, FaRegBell, FaRegSmile } from "react-icons/fa";
-import { FaRegCircleUser, FaRegUser } from "react-icons/fa6";
+import { FunctionComponent, useState, useEffect } from "react";
+import { FiAlertTriangle, FiInfo, FiLock } from "react-icons/fi";
+import { LuSparkles } from "react-icons/lu";
+import { TbTargetArrow } from "react-icons/tb";
+import { FaArrowRight, FaArrowUp, FaRegSmile } from "react-icons/fa";
 import { TfiTarget } from "react-icons/tfi";
 import { RiMedalLine } from "react-icons/ri";
 import { VscHubot } from "react-icons/vsc";
@@ -84,14 +82,6 @@ const globalStyles = `
   .kpi-card:nth-child(2){animation-delay:0.10s}
   .kpi-card:nth-child(3){animation-delay:0.15s}
   .kpi-card:nth-child(4){animation-delay:0.20s}
-  .nav-btn { transition: background 0.15s ease, transform 0.15s ease, color 0.15s ease; }
-  .nav-btn:hover:not(.active) {
-    background: #EFF6FF !important; color: #1D4ED8 !important; transform: translateX(3px);
-  }
-  .tr-hover { transition: background 0.15s ease; }
-  .tr-hover:hover { background: #EFF6FF !important; }
-  .bar-item { transition: opacity 0.15s ease; }
-  .bar-item:hover { opacity: 0.82; }
 `;
 
 /*HOVER CARD*/
@@ -130,9 +120,7 @@ const KpiIKUPlaceholder = ({
 
   return (
     <div className="flex h-full items-center px-[10px] py-[2px]">
-      <div
-        className={`mr-[10px] flex h-[58px] w-[58px] shrink-0 items-center justify-center rounded-full ${toneStyles[tone]}`}
-      >
+      <div className={`mr-[10px] flex h-[58px] w-[58px] shrink-0 items-center justify-center rounded-full ${toneStyles[tone]}`}>
         {icon}
       </div>
 
@@ -141,11 +129,10 @@ const KpiIKUPlaceholder = ({
           <div className="text-[12px] font-medium leading-[14px] text-black">
             {title}
           </div>
-          {onInfoClick ? (
+          {onInfoClick && (
             <button
               type="button"
               className="relative z-10 -mr-2 -mt-2 cursor-pointer p-2 transition-transform hover:scale-110 bg-transparent border-none outline-none"
-              style={{ backgroundColor: "transparent" }}
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -154,8 +141,6 @@ const KpiIKUPlaceholder = ({
             >
               <FiInfo className="h-4 w-4 text-black" />
             </button>
-          ) : (
-            <FiInfo className="h-4 w-4 text-black" />
           )}
         </div>
 
@@ -163,10 +148,7 @@ const KpiIKUPlaceholder = ({
           {value}
         </div>
 
-        <div
-          className={`mt-[1px] flex items-center gap-1 text-[10px] font-semibold ${tone === "red" || tone === "yellow" ? "text-[#155EEF]" : "text-[#00C853]"
-            }`}
-        >
+        <div className={`mt-[1px] flex items-center gap-1 text-[10px] font-semibold ${tone === "red" || tone === "yellow" ? "text-[#155EEF]" : "text-[#00C853]"}`}>
           {tone === "darkgrey" || tone === "green" ? <FaArrowUp className="h-3 w-3" /> : null}
           <span>{change}</span>
         </div>
@@ -178,12 +160,6 @@ const KpiIKUPlaceholder = ({
     </div>
   );
 };
-
-const ChartFallback = ({ title }: { title: string }) => (
-  <div className="flex h-full w-full items-center justify-center rounded-[10px] border border-dashed border-[#B9C8E8] text-[12px] font-medium text-slate-400">
-    Embed Superset: {title}
-  </div>
-);
 
 const InsightRow = ({
   tone,
@@ -202,9 +178,7 @@ const InsightRow = ({
 
   return (
     <div className="flex items-start gap-[8px]">
-      <div
-        className={`flex h-[21px] w-[21px] shrink-0 items-center justify-center rounded-[5px] ${styles[tone]}`}
-      >
+      <div className={`flex h-[21px] w-[21px] shrink-0 items-center justify-center rounded-[5px] ${styles[tone]}`}>
         {icon}
       </div>
       <p className="text-[9px] leading-[12px] text-[#4B5563]">{text}</p>
@@ -233,8 +207,7 @@ const InsightOtomatis = () => {
           </div>
 
           <p className="mb-[9px] text-[9px] font-medium leading-[12px] text-[#0B3478]">
-            Capaian IKU institusi sebesar 76,8%, meningkat 4,35% dibanding semester
-            lalu
+            Capaian IKU institusi sebesar 76,8%, meningkat 4,35% dibanding semester lalu
           </p>
 
           <div className="flex flex-col gap-[1px]">
@@ -307,7 +280,7 @@ const InsightOtomatis = () => {
             </div>
             <h3 style={{ margin: "0 0 16px", color: "#0F172A", fontSize: 22, fontWeight: 600 }}>Coming Soon</h3>
             <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6, padding: "0 12px" }}>
-              Fitur ini sedang dalam tahap pengembangan dan akan segera tersedia. Nantikan pembaruan berikutnya untuk menikmati pengalaman yang lebih baik..
+              Fitur ini sedang dalam tahap pengembangan dan akan segera tersedia. Nantikan pembaruan berikutnya untuk menikmati pengalaman yang lebih baik.
             </p>
             <button
               onClick={() => setShowPremiumPopup(false)}
@@ -327,83 +300,91 @@ const DashboardIKU: FunctionComponent<DashboardIKUProps> = ({
   kpiTargetUrl,
   kpiTercapaiUrl,
   kpiPerhatianUrl,
-  trendIkuUrl,
-  perspektifIkuUrl,
-  indikatorTableUrl,
-  perbandinganUrl,
 }) => {
   const [showCapaianInfo, setShowCapaianInfo] = useState(false);
   const [showTargetInfo, setShowTargetInfo] = useState(false);
   const [showTercapaiInfo, setShowTercapaiInfo] = useState(false);
   const [showPerhatianInfo, setShowPerhatianInfo] = useState(false);
 
+  const [ikuData, setIkuData] = useState({
+    capaian_institusi: 0,
+    sub_text_capaian: "Memuat data...",
+    target_tahunan: 0,
+    sub_text_target: "Memuat data...",
+    iku_tercapai: 0,
+    sub_text_tercapai: "Memuat data...",
+    iku_perlu_perhatian: 0,
+    sub_text_perhatian: "Memuat data..."
+  });
+
+  useEffect(() => {
+    fetch("https://api-eduinsight.windsight.id/api/v1/dashboard-utama/iku-summary")
+      .then((res) => res.json())
+      .then((resData) => {
+        if (resData.status === "success" && resData.data) {
+          setIkuData({
+            capaian_institusi: resData.data.capaian_institusi || 0,
+            sub_text_capaian: resData.data.sub_text_capaian || "",
+            target_tahunan: resData.data.target_tahunan || 0,
+            sub_text_target: resData.data.sub_text_target || "",
+            iku_tercapai: resData.data.iku_tercapai || 0,
+            sub_text_tercapai: resData.data.sub_text_tercapai || "",
+            iku_perlu_perhatian: resData.data.iku_perlu_perhatian || 0,
+            sub_text_perhatian: resData.data.sub_text_perhatian || ""
+          });
+        }
+      })
+      .catch((err) => console.error("Gagal sinkronisasi data IKU:", err));
+  }, []);
+
   return (
     <>
       <style>{globalStyles}</style>
-      <Layout
-        title="Dashboard Monitoring IKU"
-        active="Monitoring IKU"
-      >
+      <Layout title="Dashboard Monitoring IKU" active="Monitoring IKU">
         <section className="grid grid-cols-4 gap-[12px]">
-          <EmbedBox
-            src={kpiCapaianUrl}
-            title="KPI Capaian IKU Institusi"
-            className="h-[102px]"
-          >
+          <EmbedBox src={kpiCapaianUrl} title="KPI Capaian IKU Institusi" className="h-[102px]">
             <KpiIKUPlaceholder
               icon={<TfiTarget className="h-9 w-9" />}
               title="Capaian IKU Institusi"
-              value="76,8%"
-              change="4,35 dari semester lalu"
-              description="Total Capaian 23 dari 30 Indikator"
+              value={`${ikuData.capaian_institusi}%`}
+              change="4,35% dari semester lalu"
+              description={ikuData.sub_text_capaian}
               tone="blue"
               onInfoClick={() => setShowCapaianInfo(true)}
             />
           </EmbedBox>
 
-          <EmbedBox
-            src={kpiTargetUrl}
-            title="KPI Target Tahunan"
-            className="h-[102px]"
-          >
+          <EmbedBox src={kpiTargetUrl} title="KPI Target Tahunan" className="h-[102px]">
             <KpiIKUPlaceholder
               icon={<TbTargetArrow className="h-8 w-8" />}
               title="Target Tahunan"
-              value="85,0%"
+              value={`${ikuData.target_tahunan}%`}
               change="Target akhir tahun"
-              description="Sisa 8,2% untuk mencapai target"
+              description={ikuData.sub_text_target}
               tone="yellow"
               onInfoClick={() => setShowTargetInfo(true)}
             />
           </EmbedBox>
 
-          <EmbedBox
-            src={kpiTercapaiUrl}
-            title="KPI IKU Tercapai"
-            className="h-[102px]"
-          >
+          <EmbedBox src={kpiTercapaiUrl} title="KPI IKU Tercapai" className="h-[102px]">
             <KpiIKUPlaceholder
               icon={<RiMedalLine className="h-8 w-8" />}
               title="IKU Tercapai"
-              value="15"
-              change="50% dari total indikator"
-              description="IKU tercapai atau melebihi target"
+              value={`${ikuData.iku_tercapai}`}
+              change="Memenuhi Target"
+              description={ikuData.sub_text_tercapai}
               tone="green"
               onInfoClick={() => setShowTercapaiInfo(true)}
             />
           </EmbedBox>
 
-          <EmbedBox
-            src={kpiPerhatianUrl}
-            title="KPI IKU Perlu Perhatian"
-            className="h-[102px]"
-          >
+          <EmbedBox src={kpiPerhatianUrl} title="KPI IKU Perlu Perhatian" className="h-[102px]">
             <KpiIKUPlaceholder
               icon={<FiAlertTriangle className="h-8 w-8" />}
               title="IKU Perlu Perhatian"
-              value="85,0%"
-              change="Target akhir tahun"
-              description="Sisa 8,2% untuk mencapai target"
+              value={`${ikuData.iku_perlu_perhatian}`}
+              change="Di bawah Target"
+              description={ikuData.sub_text_perhatian}
               tone="red"
               onInfoClick={() => setShowPerhatianInfo(true)}
             />
@@ -460,200 +441,39 @@ const DashboardIKU: FunctionComponent<DashboardIKUProps> = ({
           <VscHubot className="h-10 w-10 text-white" />
         </button>
 
-        {/* Capaian IKU Info Pop up */}
+        {/* Pop-up Modals Info */}
         {showCapaianInfo && (
-          <div
-            onClick={() => setShowCapaianInfo(false)}
-            style={{
-              position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
-              backgroundColor: "rgba(0,0,0,0.4)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              zIndex: 9999,
-              animation: "fadeIn 0.2s ease",
-              backdropFilter: "blur(2px)"
-            } as any}
-          >
-            <div
-              onClick={(e) => e.stopPropagation()}
-              style={{
-                background: "#fff",
-                borderRadius: 16,
-                padding: "40px 32px",
-                width: "420px",
-                maxWidth: "90%",
-                textAlign: "center",
-                boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-                animation: "scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-                border: "1px solid #E2E8F0"
-              }}
-            >
-              <div style={{
-                background: "#F8FAFC",
-                width: 72, height: 72,
-                borderRadius: 18,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                margin: "0 auto 24px",
-                border: "1px solid #F1F5F9"
-              }}>
-                <TbTargetArrow className="h-[36px] w-[36px] text-[#0F3294]" />
-              </div>
+          <div onClick={() => setShowCapaianInfo(false)} style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.4)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999, animation: "fadeIn 0.2s ease", backdropFilter: "blur(2px)" } as any}>
+            <div onClick={(e) => e.stopPropagation()} style={{ background: "#fff", borderRadius: 16, padding: "40px 32px", width: "420px", maxWidth: "90%", textAlign: "center", boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1)", border: "1px solid #E2E8F0" }}>
               <h3 style={{ margin: "0 0 16px", color: "#0F172A", fontSize: 22, fontWeight: 600 }}>Capaian IKU Institusi</h3>
-              <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6, padding: "0 12px" }}>
-                Persentase rata-rata ketercapaian seluruh Indikator Kinerja Utama (IKU) institusi pada tahun berjalan dibandingkan dengan target tahunan yang telah ditetapkan.
-              </p>
+              <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6 }}>Persentase rata-rata ketercapaian seluruh Indikator Kinerja Utama (IKU) institusi.</p>
             </div>
           </div>
         )}
 
-        {/* Target Tahunan Info Pop up */}
         {showTargetInfo && (
-          <div
-            onClick={() => setShowTargetInfo(false)}
-            style={{
-              position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
-              backgroundColor: "rgba(0,0,0,0.4)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              zIndex: 9999,
-              animation: "fadeIn 0.2s ease",
-              backdropFilter: "blur(2px)"
-            } as any}
-          >
-            <div
-              onClick={(e) => e.stopPropagation()}
-              style={{
-                background: "#fff",
-                borderRadius: 16,
-                padding: "40px 32px",
-                width: "420px",
-                maxWidth: "90%",
-                textAlign: "center",
-                boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-                animation: "scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-                border: "1px solid #E2E8F0"
-              }}
-            >
-              <div style={{
-                background: "#F8FAFC",
-                width: 72, height: 72,
-                borderRadius: 18,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                margin: "0 auto 24px",
-                border: "1px solid #F1F5F9"
-              }}>
-                <TbTargetArrow className="h-[36px] w-[36px] text-[#0F3294]" />
-              </div>
+          <div onClick={() => setShowTargetInfo(false)} style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.4)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999, animation: "fadeIn 0.2s ease", backdropFilter: "blur(2px)" } as any}>
+            <div onClick={(e) => e.stopPropagation()} style={{ background: "#fff", borderRadius: 16, padding: "40px 32px", width: "420px", maxWidth: "90%", textAlign: "center", boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1)", border: "1px solid #E2E8F0" }}>
               <h3 style={{ margin: "0 0 16px", color: "#0F172A", fontSize: 22, fontWeight: 600 }}>Target Tahunan</h3>
-              <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6, padding: "0 12px" }}>
-                Sasaran kinerja yang harus dicapai oleh institusi dalam satu tahun anggaran atau akademik.
-              </p>
+              <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6 }}>Sasaran target akumulatif IKU Perguruan Tinggi yang wajib dipenuhi dalam satu periode anggaran.</p>
             </div>
           </div>
         )}
 
-        {/* IKU Tercapai Info Pop up */}
         {showTercapaiInfo && (
-          <div
-            onClick={() => setShowTercapaiInfo(false)}
-            style={{
-              position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
-              backgroundColor: "rgba(0,0,0,0.4)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              zIndex: 9999,
-              animation: "fadeIn 0.2s ease",
-              backdropFilter: "blur(2px)"
-            } as any}
-          >
-            <div
-              onClick={(e) => e.stopPropagation()}
-              style={{
-                background: "#fff",
-                borderRadius: 16,
-                padding: "40px 32px",
-                width: "420px",
-                maxWidth: "90%",
-                textAlign: "center",
-                boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-                animation: "scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-                border: "1px solid #E2E8F0"
-              }}
-            >
-              <div style={{
-                background: "#F8FAFC",
-                width: 72, height: 72,
-                borderRadius: 18,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                margin: "0 auto 24px",
-                border: "1px solid #F1F5F9"
-              }}>
-                <div style={{
-                  background: "#047857",
-                  width: 36, height: 36,
-                  borderRadius: "50%",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  color: "white"
-                }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                </div>
-              </div>
+          <div onClick={() => setShowTercapaiInfo(false)} style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.4)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999, animation: "fadeIn 0.2s ease", backdropFilter: "blur(2px)" } as any}>
+            <div onClick={(e) => e.stopPropagation()} style={{ background: "#fff", borderRadius: 16, padding: "40px 32px", width: "420px", maxWidth: "90%", textAlign: "center", boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1)", border: "1px solid #E2E8F0" }}>
               <h3 style={{ margin: "0 0 16px", color: "#0F172A", fontSize: 22, fontWeight: 600 }}>IKU Tercapai</h3>
-              <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6, padding: "0 12px" }}>
-                Jumlah indikator kinerja yang telah memenuhi atau melampaui target yang ditetapkan.
-              </p>
+              <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6 }}>Jumlah sub-indikator tingkat prodi/fakultas yang berhasil menembus atau melewati batas target (hijau).</p>
             </div>
           </div>
         )}
 
-        {/* IKU Perlu Perhatian Info Pop up */}
         {showPerhatianInfo && (
-          <div
-            onClick={() => setShowPerhatianInfo(false)}
-            style={{
-              position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
-              backgroundColor: "rgba(0,0,0,0.4)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              zIndex: 9999,
-              animation: "fadeIn 0.2s ease",
-              backdropFilter: "blur(2px)"
-            } as any}
-          >
-            <div
-              onClick={(e) => e.stopPropagation()}
-              style={{
-                background: "#fff",
-                borderRadius: 16,
-                padding: "40px 32px",
-                width: "420px",
-                maxWidth: "90%",
-                textAlign: "center",
-                boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-                animation: "scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-                border: "1px solid #E2E8F0"
-              }}
-            >
-              <div style={{
-                background: "#F8FAFC",
-                width: 72, height: 72,
-                borderRadius: 18,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                margin: "0 auto 24px",
-                border: "1px solid #F1F5F9"
-              }}>
-                <div style={{
-                  background: "#EF4444",
-                  width: 36, height: 36,
-                  borderRadius: "50%",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  color: "white"
-                }}>
-                  <FiAlertTriangle size={20} strokeWidth={2.5} />
-                </div>
-              </div>
+          <div onClick={() => setShowPerhatianInfo(false)} style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.4)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999, animation: "fadeIn 0.2s ease", backdropFilter: "blur(2px)" } as any}>
+            <div onClick={(e) => e.stopPropagation()} style={{ background: "#fff", borderRadius: 16, padding: "40px 32px", width: "420px", maxWidth: "90%", textAlign: "center", boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1)", border: "1px solid #E2E8F0" }}>
               <h3 style={{ margin: "0 0 16px", color: "#0F172A", fontSize: 22, fontWeight: 600 }}>IKU Perlu Perhatian</h3>
-              <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6, padding: "0 12px" }}>
-                Indikator kinerja yang capaiannya masih di bawah target yang ditetapkan dan memerlukan evaluasi serta tindak lanjut.
-              </p>
+              <p style={{ margin: 0, color: "#475569", fontSize: 15, lineHeight: 1.6 }}>Jumlah indikator berstatus kritis karena realisasinya masih jauh tertinggal dari garis target nasional.</p>
             </div>
           </div>
         )}

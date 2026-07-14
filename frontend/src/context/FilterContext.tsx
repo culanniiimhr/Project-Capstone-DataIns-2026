@@ -1,39 +1,29 @@
-import { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState } from 'react';
 
-type FilterContextType = {
+interface FilterContextType {
   tahunAkademik: string;
   semester: string;
-  setTahunAkademik: (value: string) => void;
-  setSemester: (value: string) => void;
-};
+  setTahunAkademik: (tahun: string) => void;
+  setSemester: (sem: string) => void;
+}
 
-const FilterContext = createContext<FilterContextType>({
-  tahunAkademik: "",
-  semester: "",
-  setTahunAkademik: () => {},
-  setSemester: () => {},
-});
+const FilterContext = createContext<FilterContextType | undefined>(undefined);
 
-export const FilterProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
-  const [tahunAkademik, setTahunAkademik] = useState("");
-  const [semester, setSemester] = useState("");
+export const FilterProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [tahunAkademik, setTahunAkademik] = useState('');
+  const [semester, setSemester] = useState('');
 
   return (
-    <FilterContext.Provider
-      value={{
-        tahunAkademik,
-        semester,
-        setTahunAkademik,
-        setSemester,
-      }}
-    >
+    <FilterContext.Provider value={{ tahunAkademik, semester, setTahunAkademik, setSemester }}>
       {children}
     </FilterContext.Provider>
   );
 };
 
-export const useFilter = () => useContext(FilterContext);
+export const useFilter = () => {
+  const context = useContext(FilterContext);
+  if (!context) {
+    throw new Error('useFilter must be used within a FilterProvider');
+  }
+  return context;
+};

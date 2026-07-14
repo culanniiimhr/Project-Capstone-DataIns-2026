@@ -78,7 +78,7 @@ services:
     restart: unless-stopped
     env_file: .env
     ports:
-      - "8005:8000"
+      - "8000:8000"
     depends_on:
       db_oltp:
         condition: service_healthy
@@ -90,8 +90,6 @@ services:
       - ./backend:/app
     networks:
       - datains_net
-    extra_hosts:
-      - "dash.varguard.id:host-gateway"
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
   # ─────────────────────────────────────────
@@ -105,12 +103,13 @@ services:
     restart: unless-stopped
     env_file: .env
     ports:
-      - "3005:3000"
+      - "3000:3000"
     depends_on:
       - backend
     volumes:
       - ./frontend:/app
       - /app/node_modules
+      # REVISI: Hapus baris .next di sini untuk membuang cache Next.js
     networks:
       - datains_net
 
@@ -139,16 +138,14 @@ services:
   # APACHE SUPERSET (BI Dashboard)
   # ─────────────────────────────────────────
   superset:
-    build:
-      context: .
-      dockerfile: Dockerfile.superset
+    image: apache/superset:3.1.0
     container_name: datains_superset
     restart: unless-stopped
     env_file: .env
     environment:
       SUPERSET_SECRET_KEY: ${SUPERSET_SECRET_KEY}
-  #  ports:
-  #   - "8088:8088"
+    ports:
+      - "8088:8088"
     depends_on:
       db_warehouse:
         condition: service_healthy
@@ -165,8 +162,8 @@ services:
     image: n8nio/n8n:latest
     container_name: datains_n8n
     restart: unless-stopped
-  #  ports:
-  #    - "5678:5678"
+    ports:
+      - "5678:5678"
     environment:
       N8N_BASIC_AUTH_ACTIVE: "true"
       N8N_BASIC_AUTH_USER: ${N8N_USER}
@@ -192,7 +189,7 @@ services:
     depends_on:
       - frontend
       - backend
-    #  - superset
+      - superset
     networks:
       - datains_net
 

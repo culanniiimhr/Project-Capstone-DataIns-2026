@@ -5,15 +5,19 @@ from app.core.config import settings  # 👈 Import konfigurasi global
 
 router = APIRouter()
 
+SUPERSET_URL = settings.SUPERSET_URL
+SUPERSET_USERNAME = settings.SUPERSET_ADMIN_USER
+SUPERSET_PASSWORD = settings.SUPERSET_ADMIN_PASSWORD
+
+
 @router.get("/guest-token")
 def get_superset_guest_token(dashboard_id: str = Query(...),
     tahunAkademik: str | None = Query(None),
     semester: str | None = Query(None),):
     try:
-        # 1. Login ke Superset menggunakan API Security resmi (Ambil dari .env via settings)
         login_data = {
-            "username": settings.SUPERSET_ADMIN_USER,
-            "password": settings.SUPERSET_ADMIN_PASSWORD,
+            "username": SUPERSET_USERNAME,
+            "password": SUPERSET_PASSWORD,
             "provider": "db",
             "refresh": True
         }
@@ -21,7 +25,7 @@ def get_superset_guest_token(dashboard_id: str = Query(...),
         print("Login ke Superset...")
 
         login_res = requests.post(
-            f"{settings.SUPERSET_URL}/api/v1/security/login",
+            f"{SUPERSET_URL}/api/v1/security/login",
             json=login_data,
             timeout=10
         )
@@ -29,7 +33,7 @@ def get_superset_guest_token(dashboard_id: str = Query(...),
         if login_res.status_code != 200:
             raise HTTPException(
                 status_code=500,
-                detail=f"Gagal login ke Superset Mitra: {login_res.status_code} - {login_res.text}"
+                detail=f"Gagal login ke Superset: {login_res.status_code} - {login_res.text}"
             )
 
         access_token = login_res.json()["access_token"]
@@ -43,13 +47,15 @@ def get_superset_guest_token(dashboard_id: str = Query(...),
 
         rls = []
         if tahunAkademik:
-            rls.append(f"tahun_akademik = '{tahunAkademik}'")
+          # rls.append(f"tahun_akademik = '{tahunAkademik}'")
+          pass
 
         if semester:
-            rls.append(f"status_semester = '{semester}'")
+          # rls.append(f"status_semester = '{semester}'")
+          pass
+
         clause = "AND ".join(rls)
 
-        # 2. Minta Guest Token sesuai dengan dashboard_id yang dikirim oleh Front-End
         guest_token_data = {
             "user": {
                 "username": "guest_user",
@@ -70,7 +76,7 @@ def get_superset_guest_token(dashboard_id: str = Query(...),
         }
 
         token_res = requests.post(
-            f"{settings.SUPERSET_URL}/api/v1/security/guest_token/",  # Menggunakan trailing slash '/'
+            f"{SUPERSET_URL}/api/v1/security/guest_token",
             json=guest_token_data,
             headers=headers,
             timeout=10
@@ -79,7 +85,7 @@ def get_superset_guest_token(dashboard_id: str = Query(...),
         if token_res.status_code != 200:
             raise HTTPException(
                 status_code=500,
-                detail=f"Gagal generate guest token dari Mitra: {token_res.status_code} - {token_res.text}"
+                detail=f"Gagal generate guest token: {token_res.status_code} - {token_res.text}"
             )
 
         return {"token": token_res.json()["token"]}
