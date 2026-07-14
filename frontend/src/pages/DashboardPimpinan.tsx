@@ -283,7 +283,7 @@ export default function DashboardPimpinan() {
                                     <span style={{ fontSize: 12, fontWeight: 700, color: "#16A34A" }}>Peningkatan Signifikan</span>
                                 </div>
                                 <p style={{ fontSize: 12, color: "#374151", margin: 0, lineHeight: 1.55 }}>
-                                    Fakultas Ilmu Komputer mengalami peningkatan IPK tertinggi (+0,32 poin).
+                                    Fakultas Ekonomi dan Bisnis memimpin peningkatan dengan IPK tertinggi sebesar 2,90, mendukung kenaikan rata-rata IPK universitas menjadi 2,55 (+4,55%).
                                 </p>
                             </div>
                             <div className="sorotan-card" style={{ border: "1.5px solid #FDE68A", borderRadius: 10, padding: "14px 14px", background: "#FFFBEB", cursor: "pointer" }}>
@@ -292,7 +292,7 @@ export default function DashboardPimpinan() {
                                     <span style={{ fontSize: 12, fontWeight: 700, color: "#CA8A04" }}>Perlu Perhatian</span>
                                 </div>
                                 <p style={{ fontSize: 12, color: "#374151", margin: 0, lineHeight: 1.55 }}>
-                                    Tingkat kehadiran di Fakultas Keguruan turun 2,8% dibanding semester lalu
+                                    Rata-rata kehadiran mahasiswa turun menjadi 79,5% dibanding periode lalu, dengan Fakultas Psikologi dan Hukum sebagai area utama yang perlu dievaluasi.
                                 </p>
                             </div>
                             <div className="sorotan-card" style={{ border: "1.5px solid #BFDBFE", borderRadius: 10, padding: "14px 14px", background: "#EFF6FF", cursor: "pointer" }}>
@@ -301,7 +301,7 @@ export default function DashboardPimpinan() {
                                     <span style={{ fontSize: 12, fontWeight: 700, color: "#1D4ED8" }}>Capaian Positif</span>
                                 </div>
                                 <p style={{ fontSize: 12, color: "#374151", margin: 0, lineHeight: 1.55 }}>
-                                    Tingkat kelulusan secara keseluruhan mencapai 87,6%, melebihi target 85%
+                                    Indeks kepuasan mahasiswa naik 0,18 poin hingga mencapai 4,32 dari skala 5, mencerminkan tingkat kepuasan yang sangat tinggi terhadap layanan kampus.
                                 </p>
                             </div>
                             <div className="sorotan-card" style={{ border: "1.5px solid #FECACA", borderRadius: 10, padding: "14px 14px", background: "#FFF5F5", cursor: "pointer" }}>
@@ -310,7 +310,7 @@ export default function DashboardPimpinan() {
                                     <span style={{ fontSize: 12, fontWeight: 700, color: "#DC2626" }}>Penurunan Performa</span>
                                 </div>
                                 <p style={{ fontSize: 12, color: "#374151", margin: 0, lineHeight: 1.55 }}>
-                                    Fakultas Psikologi mengalami penurunan kepuasan mahasiswa sebesar 0,15 poin
+                                    Persentase kelulusan akumulatif turun signifikan dari 36,79% menjadi 10,34% pada periode ini, memerlukan peninjauan proses kelulusan akhir.
                                 </p>
                             </div>
                         </div>
