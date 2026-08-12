@@ -127,14 +127,4 @@ Platform ini dikembangkan dengan arsitektur **Microservices** terisolasi yang di
    - Backend Docs: `http://localhost:8005/docs`
    - Superset Lokal: `http://localhost:8088`
 
----
 
-## 📝 7. Checklist Serah Terima Project (Handover Checklist)
-
-| Item Serah Terima | Status | Keterangan |
-| :--- | :--- | :--- |
-| **Source Code** | ✅ Ready | Bersih, terstruktur, `.gitignore` aktif, siap di-build |
-| **Repository Git** | ✅ Ready | Branch utama `main` memuat kode versi produksi terbaru |
-| **File `.env.example`** | ✅ Ready | Template variabel lingkungan lengkap tanpa secret asli |
-| **Dokumen SRS** | ✅ Ready | Terlampir di [docs/SRS.md](file:///home/akbarydhh/Downloads/datains-capstone/docs/SRS.md) |
-| **Akses Server & Partner** | 🔄 Terlampir | Kredensial Supabase, n8n, Superset diserahterimakan terpisah |
