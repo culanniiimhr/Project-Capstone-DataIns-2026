@@ -35,7 +35,7 @@ cp .env.example .env
 ```bash
 git clone <repository-url>
 cd datains-capstone
-git checkout main
+git checkout feat/etl-data-warehouse
 ```
 
 ### 2. Jalankan Semua Service

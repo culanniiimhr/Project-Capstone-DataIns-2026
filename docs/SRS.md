@@ -64,7 +64,7 @@ Platform ini dikembangkan dengan arsitektur **Microservices** terisolasi yang di
 - **Backend**: FastAPI (Python 3.10), SQLAlchemy, Pydantic, Uvicorn.
 - **Database**: PostgreSQL (OLTP & SDM), Supabase (OLAP Data Warehouse).
 - **Business Intelligence**: Apache Superset.
-- **AI Agent & Workflows**: n8n Workflow Manager + OpenAI / Groq LLM API.
+- **AI Agent & Workflows**: n8n Workflow Manager + Groq LLM API.
 - **Deployment & Proxy**: Docker, Docker Compose, Nginx Reverse Proxy.
 
 ---
@@ -108,7 +108,7 @@ Platform ini dikembangkan dengan arsitektur **Microservices** terisolasi yang di
    ```bash
    git clone <repository-url>
    cd datains-capstone
-   git checkout main
+   git checkout feat/etl-data-warehouse
    ```
 
 2. **Setup File Environment**:
